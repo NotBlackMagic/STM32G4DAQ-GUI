@@ -1,1 +1,1 @@
-# TelemetryGUI
+# STM32G4DAQ GUI
