@@ -28,3 +28,33 @@ C:\Users\Fabian Näf\Documents\Visual Studio 2019\Projects\STM32G4DAQ\obj\Debug\
 C:\Users\Fabian Näf\Documents\Visual Studio 2019\Projects\STM32G4DAQ\obj\Debug\netcoreapp3.1\STM32G4DAQ.dll
 C:\Users\Fabian Näf\Documents\Visual Studio 2019\Projects\STM32G4DAQ\obj\Debug\netcoreapp3.1\STM32G4DAQ.pdb
 C:\Users\Fabian Näf\Documents\Visual Studio 2019\Projects\STM32G4DAQ\obj\Debug\netcoreapp3.1\STM32G4DAQ.genruntimeconfig.cache
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\STM32G4DAQ.exe
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\STM32G4DAQ.deps.json
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\STM32G4DAQ.runtimeconfig.json
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\STM32G4DAQ.runtimeconfig.dev.json
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\STM32G4DAQ.dll
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\STM32G4DAQ.pdb
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\LiveCharts.dll
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\LiveCharts.Wpf.dll
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\System.IO.Ports.dll
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\runtimes\linux-arm\native\System.IO.Ports.Native.so
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\runtimes\linux-arm64\native\System.IO.Ports.Native.so
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\runtimes\linux-x64\native\System.IO.Ports.Native.so
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\runtimes\osx-x64\native\System.IO.Ports.Native.dylib
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\runtimes\linux\lib\netstandard2.0\System.IO.Ports.dll
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\runtimes\osx\lib\netstandard2.0\System.IO.Ports.dll
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.IO.Ports.dll
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\obj\Debug\netcoreapp3.1\STM32G4DAQ.csprojAssemblyReference.cache
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\obj\Debug\netcoreapp3.1\MainWindow.g.cs
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\obj\Debug\netcoreapp3.1\App.g.cs
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\obj\Debug\netcoreapp3.1\STM32G4DAQ_MarkupCompile.cache
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\obj\Debug\netcoreapp3.1\STM32G4DAQ_MarkupCompile.lref
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\obj\Debug\netcoreapp3.1\MainWindow.baml
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\obj\Debug\netcoreapp3.1\STM32G4DAQ.g.resources
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\obj\Debug\netcoreapp3.1\STM32G4DAQ.AssemblyInfoInputs.cache
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\obj\Debug\netcoreapp3.1\STM32G4DAQ.AssemblyInfo.cs
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\obj\Debug\netcoreapp3.1\STM32G4DAQ.csproj.CoreCompileInputs.cache
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\obj\Debug\netcoreapp3.1\STM32G4DAQ.csproj.CopyComplete
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\obj\Debug\netcoreapp3.1\STM32G4DAQ.dll
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\obj\Debug\netcoreapp3.1\STM32G4DAQ.pdb
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\obj\Debug\netcoreapp3.1\STM32G4DAQ.genruntimeconfig.cache

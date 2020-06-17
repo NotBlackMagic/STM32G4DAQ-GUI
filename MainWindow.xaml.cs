@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,32 +27,75 @@ namespace STM32G4DAQ {
 	public partial class MainWindow : Window {
 		private SerialPort serialPort = new SerialPort();
 
+		Stopwatch rxUSBStopwatch = new Stopwatch();
+
+		int rxCount = 0;
+		float rxUSBDatarate = 0;
+		float txUSBDatarate = 0;
 		byte[] txBuffer = new byte[34];
 
+		public SeriesCollection SeriesAnalogIn { get; set; }
 		public MainWindow() {
 			InitializeComponent();
+
+			rxUSBStopwatch.Start();
+
+			//Init Graph Series
+			SeriesAnalogIn = new SeriesCollection {
+				new LineSeries {
+					Title = "CH1",
+					Values = new ChartValues<double> { },
+					PointGeometry = null,
+					LineSmoothness = 0,
+					Fill = Brushes.Transparent
+				},
+				new LineSeries {
+					Title = "CH2",
+					Values = new ChartValues<double> { },
+					PointGeometry = null,
+					LineSmoothness = 0,
+					Fill = Brushes.Transparent
+				},
+				new LineSeries {
+					Title = "CH3",
+					Values = new ChartValues<double> { },
+					PointGeometry = null,
+					LineSmoothness = 0,
+					Fill = Brushes.Transparent
+				}
+			};
 		}
 
-		private delegate void SerialRecevieDelegate(byte[] rxData, int length);
+		private delegate void SerialReceiveDelegate(byte[] rxData, int length);
 
 		private void OnSerialReceive(object sender, SerialDataReceivedEventArgs e) {
-			SerialPort sp = (SerialPort)sender;
+			byte[] rxData = new byte[1024];
+			int rxLength = serialPort.BytesToRead;
 
-			byte[] rxData = new byte[100];
-			int rxLength = serialPort.ReadByte();
+			if(rxLength > 1024) {
+				serialPort.DiscardInBuffer();
+			}
+			else {
+				serialPort.Read(rxData, 0, rxLength);
 
-			serialPort.Read(rxData, 0, rxLength);
-			//int i;
-			//for(i = 0; i < rxLength; i++) {
-			//	rxData[i] = (byte)serialPort.ReadByte();
-			//}
-			int crc = serialPort.ReadByte();
+				rxCount += rxLength;
 
-			Dispatcher.Invoke(DispatcherPriority.Send, new SerialRecevieDelegate(SerialReceiveProcessing), rxData, rxLength);
+				if(rxUSBStopwatch.ElapsedMilliseconds > 1000) {
+					rxUSBStopwatch.Reset();
+
+					rxUSBDatarate = (float)rxCount * 0.001f;
+					rxCount = 0;
+
+					rxUSBStopwatch.Start();
+				}
+			}
+
+			Dispatcher.Invoke(DispatcherPriority.Send, new SerialReceiveDelegate(SerialReceiveProcessing), rxData, rxLength);
 		}
 
 		private void SerialReceiveProcessing(byte[] rxData, int length) {
-
+			rxUSBDatarateLabel.Content = rxUSBDatarate.ToString("0.0");
+			txUSBDatarateLabel.Content = txUSBDatarate.ToString("0.0");
 		}
 
 		private void SerialButtonClick(object sender, RoutedEventArgs e) {
@@ -59,10 +104,10 @@ namespace STM32G4DAQ {
 				try {
 					serialPort.PortName = portNamesComboBox.Text;
 					serialPort.BaudRate = Convert.ToInt32(baudRatesComboBox.Text);
-					//serialPort.DataBits = 8;
-					//serialPort.StopBits = StopBits.None;
-					//serialPort.Handshake = 0;
-					//serialPort.Parity = Parity.None;
+					serialPort.DataBits = 8;
+					serialPort.StopBits = StopBits.One;
+					serialPort.Parity = Parity.None;
+					//serialPort.DtrEnable = true;
 					serialPort.Open();
 
 					serialPort.DataReceived += new SerialDataReceivedEventHandler(OnSerialReceive);
