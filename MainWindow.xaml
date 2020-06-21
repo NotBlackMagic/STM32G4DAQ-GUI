@@ -36,21 +36,13 @@
 							<ComboBoxItem Content="2500000"/>
 							<ComboBoxItem Content="3000000"/>
 						</ComboBox>
-						<Button x:Name="serialButton" Content="Connect" FontWeight="Bold" Click="SerialButtonClick" Margin="0,0,0,3" Padding="5,0,5,0" Background="Red"/>
-						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
-							<Label Content="RX (kbps): " Padding="0" Width="50" FontSize="10"/>
-							<Label x:Name="rxUSBDatarateLabel" Content="0000,0" Padding="0" FontSize="10"/>
-						</StackPanel>
-						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
-							<Label Content="TX (kbps): " Padding="0" Width="50" FontSize="10"/>
-							<Label x:Name="txUSBDatarateLabel" Content="0000,0" Padding="0" FontSize="10"/>
-						</StackPanel>
+						<Button x:Name="serialButton" Content="Connect" FontWeight="Bold" Click="SerialButtonClick" Margin="0,0,0,3" Padding="5,0,5,0" Width="80px" Background="Red"/>
 					</StackPanel>
 
 					<Border Grid.Column="2" BorderThickness="1" BorderBrush="DarkGray"/>
 					<StackPanel Grid.Column="2" Margin="5,3,5,3">
 						<Label FontWeight="Bold" Padding="0" HorizontalContentAlignment="Center">Current Output</Label>
-						<Label FontWeight="Bold" Padding="0">Output A:</Label>
+						<Label FontWeight="Bold" Padding="0" >Output A:</Label>
 						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
 							<Label  Padding="0" Width="50" HorizontalAlignment="Left" VerticalContentAlignment="Center">Source:</Label>
 							<ComboBox x:Name="currentSourceAComboBox" SelectedIndex="0" SelectionChanged="CurrentOutputAChanged" Width="60" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
@@ -120,14 +112,16 @@
 						<ColumnDefinition Width="Auto"/>
 						<ColumnDefinition Width="Auto"/>
 						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="Auto"/>
 						<ColumnDefinition/>
 					</Grid.ColumnDefinitions>
 					<Border Grid.Column="0" BorderThickness="1" BorderBrush="DarkGray"/>
 					<StackPanel Grid.Column="0" Margin="5,3,5,3">
-						<Label Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" FontWeight="Bold" Padding="0">Channel 1</Label>
+						<Label Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" FontWeight="Bold" Padding="0">Analog In A</Label>
 						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
 							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Mode:</Label>
-							<ComboBox x:Name="analogInAChannel1Mode" SelectedIndex="0" SelectionChanged="AnalogInAChannel1Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+							<ComboBox x:Name="analogInAMode" SelectedIndex="1" SelectionChanged="AnalogInAChanged" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
 								<ComboBoxItem Content="OFF"/>
 								<ComboBoxItem Content="DIFF"/>
 								<ComboBoxItem Content="IN+"/>
@@ -136,9 +130,51 @@
 						</StackPanel>
 						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
 							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Sample (ksps):</Label>
-							<ComboBox x:Name="analogInAChannel1Samplerate" SelectedIndex="0" SelectionChanged="AnalogInAChannel1Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+							<ComboBox x:Name="analogInASamplerate" SelectedIndex="1" SelectionChanged="AnalogInAChanged" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
 								<ComboBoxItem Content="250"/>
 								<ComboBoxItem Content="125"/>
+								<ComboBoxItem Content="62.5"/>
+								<ComboBoxItem Content="31.25"/>
+								<ComboBoxItem Content="15.63"/>
+								<ComboBoxItem Content="7.81"/>
+								<ComboBoxItem Content="3.91"/>
+								<ComboBoxItem Content="1.95"/>
+								<ComboBoxItem Content="0.98"/>
+								<ComboBoxItem Content="0.49"/>
+								<ComboBoxItem Content="0.24"/>
+								<ComboBoxItem Content="0.12"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Scale (V/V):</Label>
+							<ComboBox x:Name="analogInAScale" SelectedIndex="0" SelectionChanged="AnalogInAChanged" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="1.0"/>
+								<ComboBoxItem Content="1.25"/>
+								<ComboBoxItem Content="1.375"/>
+							</ComboBox>
+						</StackPanel>
+					</StackPanel>
+					<Border Grid.Column="1" BorderThickness="1" BorderBrush="DarkGray"/>
+					<StackPanel Grid.Column="1" Margin="5,3,5,3">
+						<Label Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" FontWeight="Bold" Padding="0">Channel 1</Label>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Enable:</Label>
+							<ComboBox x:Name="analogInAChannel1Enabled" SelectedIndex="0" SelectionChanged="AnalogInAChannel1Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="OFF"/>
+								<ComboBoxItem Content="ON"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Rate Sub-Div:</Label>
+							<ComboBox x:Name="analogInAChannel1RateDiv" SelectedIndex="0" SelectionChanged="AnalogInAChannel1Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="1/1"/>
+								<ComboBoxItem Content="1/2"/>
+								<ComboBoxItem Content="1/4"/>
+								<ComboBoxItem Content="1/8"/>
+								<ComboBoxItem Content="1/16"/>
+								<ComboBoxItem Content="1/32"/>
+								<ComboBoxItem Content="1/64"/>
+								<ComboBoxItem Content="1/128"/>
 							</ComboBox>
 						</StackPanel>
 						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
@@ -156,8 +192,8 @@
 							</ComboBox>
 						</StackPanel>
 						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
-							<Label Padding="0" Width="80" HorizontalAlignment="Left">Gain (x1):</Label>
-							<ComboBox x:Name="analogInAChannel1Gain" SelectedIndex="4" SelectionChanged="AnalogInAChannel1Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Gain (x1):</Label>
+							<ComboBox x:Name="analogInAChannel1Gain" SelectedIndex="0" SelectionChanged="AnalogInAChannel1Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
 								<ComboBoxItem Content="1/16"/>
 								<ComboBoxItem Content="1/8"/>
 								<ComboBoxItem Content="1/4"/>
@@ -172,12 +208,169 @@
 								<ComboBoxItem Content="128"/>
 							</ComboBox>
 						</StackPanel>
+					</StackPanel>
+					<Border Grid.Column="2" BorderThickness="1" BorderBrush="DarkGray"/>
+					<StackPanel Grid.Column="2" Margin="5,3,5,3">
+						<Label Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" FontWeight="Bold" Padding="0">Channel 2</Label>
 						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
-							<Label Padding="0" Width="80" HorizontalAlignment="Left">Scale (V/V):</Label>
-							<ComboBox x:Name="analogInAChannel1Scale" SelectedIndex="0" SelectionChanged="AnalogInAChannel1Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
-								<ComboBoxItem Content="1.0"/>
-								<ComboBoxItem Content="1.25"/>
-								<ComboBoxItem Content="1.375"/>
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Enable:</Label>
+							<ComboBox x:Name="analogInAChannel2Enabled" SelectedIndex="0" SelectionChanged="AnalogInAChannel2Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="OFF"/>
+								<ComboBoxItem Content="ON"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Rate Sub-Div:</Label>
+							<ComboBox x:Name="analogInAChannel2RateDiv" SelectedIndex="0" SelectionChanged="AnalogInAChannel2Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="1/1"/>
+								<ComboBoxItem Content="1/2"/>
+								<ComboBoxItem Content="1/4"/>
+								<ComboBoxItem Content="1/8"/>
+								<ComboBoxItem Content="1/16"/>
+								<ComboBoxItem Content="1/32"/>
+								<ComboBoxItem Content="1/64"/>
+								<ComboBoxItem Content="1/128"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Resolution:</Label>
+							<ComboBox x:Name="analogInAChannel2Resolution" SelectedIndex="4" SelectionChanged="AnalogInAChannel2Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="8 Bits"/>
+								<ComboBoxItem Content="9 Bits"/>
+								<ComboBoxItem Content="10 Bits"/>
+								<ComboBoxItem Content="11 Bits"/>
+								<ComboBoxItem Content="12 Bits"/>
+								<ComboBoxItem Content="13 Bits"/>
+								<ComboBoxItem Content="14 Bits"/>
+								<ComboBoxItem Content="15 Bits"/>
+								<ComboBoxItem Content="16 Bits"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Gain (x1):</Label>
+							<ComboBox x:Name="analogInAChannel2Gain" SelectedIndex="0" SelectionChanged="AnalogInAChannel2Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="1/16"/>
+								<ComboBoxItem Content="1/8"/>
+								<ComboBoxItem Content="1/4"/>
+								<ComboBoxItem Content="1/2"/>
+								<ComboBoxItem Content="1"/>
+								<ComboBoxItem Content="2"/>
+								<ComboBoxItem Content="4"/>
+								<ComboBoxItem Content="8"/>
+								<ComboBoxItem Content="16"/>
+								<ComboBoxItem Content="32"/>
+								<ComboBoxItem Content="64"/>
+								<ComboBoxItem Content="128"/>
+							</ComboBox>
+						</StackPanel>
+					</StackPanel>
+					<Border Grid.Column="3" BorderThickness="1" BorderBrush="DarkGray"/>
+					<StackPanel Grid.Column="3" Margin="5,3,5,3">
+						<Label Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" FontWeight="Bold" Padding="0">Channel 3</Label>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Enable:</Label>
+							<ComboBox x:Name="analogInAChannel3Enabled" SelectedIndex="0" SelectionChanged="AnalogInAChannel3Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="OFF"/>
+								<ComboBoxItem Content="ON"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Rate Sub-Div:</Label>
+							<ComboBox x:Name="analogInAChannel3RateDiv" SelectedIndex="0" SelectionChanged="AnalogInAChannel3Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="1/1"/>
+								<ComboBoxItem Content="1/2"/>
+								<ComboBoxItem Content="1/4"/>
+								<ComboBoxItem Content="1/8"/>
+								<ComboBoxItem Content="1/16"/>
+								<ComboBoxItem Content="1/32"/>
+								<ComboBoxItem Content="1/64"/>
+								<ComboBoxItem Content="1/128"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Resolution:</Label>
+							<ComboBox x:Name="analogInAChannel3Resolution" SelectedIndex="4" SelectionChanged="AnalogInAChannel3Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="8 Bits"/>
+								<ComboBoxItem Content="9 Bits"/>
+								<ComboBoxItem Content="10 Bits"/>
+								<ComboBoxItem Content="11 Bits"/>
+								<ComboBoxItem Content="12 Bits"/>
+								<ComboBoxItem Content="13 Bits"/>
+								<ComboBoxItem Content="14 Bits"/>
+								<ComboBoxItem Content="15 Bits"/>
+								<ComboBoxItem Content="16 Bits"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Gain (x1):</Label>
+							<ComboBox x:Name="analogInAChannel3Gain" SelectedIndex="0" SelectionChanged="AnalogInAChannel3Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="1/16"/>
+								<ComboBoxItem Content="1/8"/>
+								<ComboBoxItem Content="1/4"/>
+								<ComboBoxItem Content="1/2"/>
+								<ComboBoxItem Content="1"/>
+								<ComboBoxItem Content="2"/>
+								<ComboBoxItem Content="4"/>
+								<ComboBoxItem Content="8"/>
+								<ComboBoxItem Content="16"/>
+								<ComboBoxItem Content="32"/>
+								<ComboBoxItem Content="64"/>
+								<ComboBoxItem Content="128"/>
+							</ComboBox>
+						</StackPanel>
+					</StackPanel>
+					<Border Grid.Column="4" BorderThickness="1" BorderBrush="DarkGray"/>
+					<StackPanel Grid.Column="4" Margin="5,3,5,3">
+						<Label Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" FontWeight="Bold" Padding="0">Channel 4</Label>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Enable:</Label>
+							<ComboBox x:Name="analogInAChannel4Enabled" SelectedIndex="0" SelectionChanged="AnalogInAChannel4Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="OFF"/>
+								<ComboBoxItem Content="ON"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Rate Sub-Div:</Label>
+							<ComboBox x:Name="analogInAChannel4RateDiv" SelectedIndex="0" SelectionChanged="AnalogInAChannel4Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="1/1"/>
+								<ComboBoxItem Content="1/2"/>
+								<ComboBoxItem Content="1/4"/>
+								<ComboBoxItem Content="1/8"/>
+								<ComboBoxItem Content="1/16"/>
+								<ComboBoxItem Content="1/32"/>
+								<ComboBoxItem Content="1/64"/>
+								<ComboBoxItem Content="1/128"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Resolution:</Label>
+							<ComboBox x:Name="analogInAChannel4Resolution" SelectedIndex="4" SelectionChanged="AnalogInAChannel4Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="8 Bits"/>
+								<ComboBoxItem Content="9 Bits"/>
+								<ComboBoxItem Content="10 Bits"/>
+								<ComboBoxItem Content="11 Bits"/>
+								<ComboBoxItem Content="12 Bits"/>
+								<ComboBoxItem Content="13 Bits"/>
+								<ComboBoxItem Content="14 Bits"/>
+								<ComboBoxItem Content="15 Bits"/>
+								<ComboBoxItem Content="16 Bits"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Gain (x1):</Label>
+							<ComboBox x:Name="analogInAChannel4Gain" SelectedIndex="0" SelectionChanged="AnalogInAChannel4Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="1/16"/>
+								<ComboBoxItem Content="1/8"/>
+								<ComboBoxItem Content="1/4"/>
+								<ComboBoxItem Content="1/2"/>
+								<ComboBoxItem Content="1"/>
+								<ComboBoxItem Content="2"/>
+								<ComboBoxItem Content="4"/>
+								<ComboBoxItem Content="8"/>
+								<ComboBoxItem Content="16"/>
+								<ComboBoxItem Content="32"/>
+								<ComboBoxItem Content="64"/>
+								<ComboBoxItem Content="128"/>
 							</ComboBox>
 						</StackPanel>
 					</StackPanel>
@@ -195,13 +388,32 @@
 			</TabItem>
 		</TabControl>
 
+		<StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Background="LightGray">
+			<StackPanel Orientation="Horizontal" Margin="10,3,0,3">
+				<Label Content="RX (kbps): " Padding="0" Width="50" FontSize="10"/>
+				<Label x:Name="rxUSBDatarateLabel" Content="0000,0" Padding="0" FontSize="10"/>
+			</StackPanel>
+			<StackPanel Orientation="Horizontal" Margin="10,3,0,3">
+				<Label Content="TX (kbps): " Padding="0" Width="50" FontSize="10"/>
+				<Label x:Name="txUSBDatarateLabel" Content="0000,0" Padding="0" FontSize="10"/>
+			</StackPanel>
+			<StackPanel Orientation="Horizontal" Margin="10,3,0,3">
+				<Label Content="RXE (kbps): " Padding="0" Width="55" FontSize="10"/>
+				<Label x:Name="rxUSBDroppedLabel" Content="0000,0" Padding="0" FontSize="10"/>
+			</StackPanel>
+		</StackPanel>
+
 		<Grid>
 			<lvc:CartesianChart Series="{Binding SeriesAnalogIn}" LegendLocation="Top" DisableAnimations="True" Hoverable="False" DataTooltip="{x:Null}">
 				<lvc:CartesianChart.AxisX>
 					<lvc:Axis MinValue="0" MaxValue="1000"/>
 				</lvc:CartesianChart.AxisX>
 				<lvc:CartesianChart.AxisY>
-					<lvc:Axis Title="Voltage (V)" MinValue="-15" MaxValue="15"/>
+					<lvc:Axis Title="Voltage (V)" MinValue="-15" MaxValue="15">
+						<lvc:Axis.Separator>
+							<lvc:Separator Step="1"/>
+						</lvc:Axis.Separator>
+					</lvc:Axis>
 				</lvc:CartesianChart.AxisY>
 			</lvc:CartesianChart>
 		</Grid>

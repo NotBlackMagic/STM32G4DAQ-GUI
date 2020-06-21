@@ -6,8 +6,8 @@
       "version": "3.1.0"
     },
     "additionalProbingPaths": [
-      "C:\\Users\\fabia\\.dotnet\\store\\|arch|\\|tfm|",
-      "C:\\Users\\fabia\\.nuget\\packages"
+      "C:\\Users\\Fabian Näf\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\Fabian Näf\\.nuget\\packages"
     ],
     "configProperties": {
       "Microsoft.NETCore.DotNetHostPolicy.SetAppPaths": true
