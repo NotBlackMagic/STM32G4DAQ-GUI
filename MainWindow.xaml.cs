@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO.Ports;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -29,6 +30,8 @@ namespace STM32G4DAQ {
 
 		public const byte setAnalogInA = 0x03;
 		public const byte setAnalogInACH = 0x04;
+
+		public const byte setAnalogOutACH = 0x05;
 
 		public const byte txAnalogInA = 0x81;
 	}
@@ -304,6 +307,145 @@ namespace STM32G4DAQ {
 			data[4] = (byte)analogInAChannel4Gain.SelectedIndex;
 
 			SerialSendCommand(Opcodes.setAnalogInACH, data);
+		}
+
+		private void AnalogOutOffsetValidation(object sender, TextCompositionEventArgs e) {
+			Regex regex = new Regex("[^0-9-]+");
+
+			bool isNumber = regex.IsMatch(e.Text);
+
+			if(isNumber) {
+				//Get Whole text in textbox
+				string offsetStr = ((TextBox)sender).Text + e.Text;
+
+				//Convert to int
+				int offset = 0;
+				int.TryParse(offsetStr, out offset);
+
+				//Check input range
+				if(offset > 15000) {
+					offset = 15000;
+				}
+				else if(offset < -15000) {
+					offset = -15000;
+				}
+
+				//Convert to valid values, DAC steps
+				float step = 30000 / 4096;
+				offset = offset + 15000;
+				int nSteps = Convert.ToInt32( offset / step);
+				offset = Convert.ToInt32(nSteps * step) - 15000;
+
+				((TextBox)sender).Text = offset.ToString();
+
+				e.Handled = true;
+			}
+			else {
+				e.Handled = false;
+			}
+		}
+
+		private void AnalogOutFrequencyValidation(object sender, TextCompositionEventArgs e) {
+			Regex regex = new Regex("[^0-9]+");
+
+			bool isNumber = regex.IsMatch(e.Text);
+			if (isNumber) {
+				e.Handled = true;
+			}
+			else {
+				e.Handled = false;
+			}
+		}
+
+		private void AnalogOutAmplitudeValidation(object sender, TextCompositionEventArgs e) {
+			Regex regex = new Regex("[^0-9]+");
+
+			bool isNumber = regex.IsMatch(e.Text);
+			if (isNumber) {
+				//Get Whole text in textbox
+				string ampStr = ((TextBox)sender).Text + e.Text;
+
+				//Convert to int
+				int amplitude = 0;
+				int.TryParse(ampStr, out amplitude);
+
+				//Check input range
+				if (amplitude > 30000) {
+					amplitude = 30000;
+				}
+
+				//Convert to valid values, DAC steps
+				float step = 30000 / 4096;
+				int nSteps = Convert.ToInt32(amplitude / step);
+				amplitude = Convert.ToInt32(nSteps * step);
+
+				((TextBox)sender).Text = amplitude.ToString();
+
+				e.Handled = true;
+			}
+			else {
+				e.Handled = false;
+			}
+		}
+
+		private void AnalogOutDCValidation(object sender, TextCompositionEventArgs e) {
+			Regex regex = new Regex("[^0-9]+");
+
+			bool isNumber = regex.IsMatch(e.Text);
+			if (isNumber) {
+				//Get Whole text in textbox
+				string dcStr = ((TextBox)sender).Text + e.Text;
+
+				//Convert to int
+				int dc = 0;
+				int.TryParse(dcStr, out dc);
+
+				//Check input range
+				if (dc > 100) {
+					dc = 100;
+				}
+
+				((TextBox)sender).Text = dc.ToString();
+
+				e.Handled = true;
+			}
+			else {
+				e.Handled = false;
+			}
+		}
+		private void AnalogOutAChannel1Changed(object sender, RoutedEventArgs e) {
+			if (enableValueChangedEvents == false) {
+				return;
+			}
+
+			int offset = 0;
+			int.TryParse(analogOutAChannel1Offset.Text, out offset);
+			float step = 30000 / 4096;
+			int nSteps = Convert.ToInt32(offset / step);
+
+			int freq = 0;
+			int.TryParse(analogOutAChannel1Freq.Text, out freq);
+
+			int amp = 0;
+			int.TryParse(analogOutAChannel1Amp.Text, out amp);
+
+			int dc = 0;
+			int.TryParse(analogOutAChannel1DC.Text, out dc);
+
+			byte[] data = new byte[10];
+
+			data[0] = 1;
+			data[1] = (byte)analogOutAChannel1Mode.SelectedIndex;
+			data[2] = (byte)(nSteps >> 8);
+			data[3] = (byte)nSteps;
+			data[4] = (byte)(freq >> 16);
+			data[5] = (byte)(freq >> 8);
+			data[6] = (byte)freq;
+			data[7] = (byte)(amp >> 8);
+			data[8] = (byte)amp;
+			data[9] = (byte)dc;
+
+			//SerialSendCommand(Opcodes.setAnalogOutACH, data);
 		}
 	}
 }
