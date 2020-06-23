@@ -436,7 +436,7 @@
 		<Grid>
 			<lvc:CartesianChart Series="{Binding SeriesAnalogIn}" LegendLocation="Top" DisableAnimations="True" Hoverable="False" DataTooltip="{x:Null}">
 				<lvc:CartesianChart.AxisX>
-					<lvc:Axis MinValue="0" MaxValue="1000"/>
+					<lvc:Axis MinValue="0" MaxValue="1024"/>
 				</lvc:CartesianChart.AxisX>
 				<lvc:CartesianChart.AxisY>
 					<lvc:Axis Title="Voltage (V)" MinValue="-15" MaxValue="15">
