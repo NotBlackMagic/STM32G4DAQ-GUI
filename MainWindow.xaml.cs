@@ -470,18 +470,48 @@ namespace STM32G4DAQ {
 			int dc = 0;
 			int.TryParse(analogOutAChannel1DC.Text, out dc);
 
-			byte[] data = new byte[10];
+			float baseFreq = 10000000;
+			float freqDiv = baseFreq / freq;
+
+			//Generate the signal pointds
+			UInt16[] buffer = new UInt16[20];
+			buffer[0] = 2048;
+			buffer[1] = 2680;
+			buffer[2] = 3252;
+			buffer[3] = 3705;
+			buffer[4] = 3996;
+			buffer[5] = 4095;
+			buffer[6] = 3996;
+			buffer[7] = 3705;
+			buffer[8] = 3252;
+			buffer[9] = 2680;
+			buffer[10] = 2048;
+			buffer[11] = 1415;
+			buffer[12] = 844;
+			buffer[13] = 391;
+			buffer[14] = 100;
+			buffer[15] = 0;
+			buffer[16] = 100;
+			buffer[17] = 391;
+			buffer[18] = 844;
+			buffer[19] = 1415;
+
+			int bufferLength = buffer.Length;
+
+			//Generate the packet
+			byte[] data = new byte[6 + (bufferLength*2)];
 
 			data[0] = 1;
-			data[1] = (byte)analogOutAChannel1Mode.SelectedIndex;
-			data[2] = (byte)(nSteps >> 8);
-			data[3] = (byte)nSteps;
-			data[4] = (byte)(freq >> 16);
-			data[5] = (byte)(freq >> 8);
-			data[6] = (byte)freq;
-			data[7] = (byte)(amp >> 8);
-			data[8] = (byte)amp;
-			data[9] = (byte)dc;
+			data[1] = (byte)(freq >> 16);
+			data[2] = (byte)(freq >> 8);
+			data[3] = (byte)freq;
+			data[4] = (byte)(bufferLength >> 8);
+			data[5] = (byte)(bufferLength);
+
+			for(int i = 0; i < bufferLength; i++) {
+				data[6 + (2 * i)] = (byte)(buffer[i] >> 8);
+				data[6 + (2 * i + 1)] = (byte)(buffer[i]);
+			}
 
 			SerialSendCommand(Opcodes.setAnalogOutACH, data);
 		}
