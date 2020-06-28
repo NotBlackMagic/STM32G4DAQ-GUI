@@ -419,24 +419,42 @@
 		</TabControl>
 
 		<StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Background="LightGray">
-			<StackPanel Orientation="Horizontal" Margin="10,3,0,3">
+			<Label Content="USB: " FontWeight="Bold" Margin="10,3,0,3" Padding="0" FontSize="10" VerticalContentAlignment="Top"/>
+			<StackPanel Orientation="Horizontal" Margin="5,3,0,3">
 				<Label Content="RX (kbps): " Padding="0" Width="50" FontSize="10"/>
 				<Label x:Name="rxUSBDatarateLabel" Content="0000,0" Padding="0" FontSize="10"/>
 			</StackPanel>
-			<StackPanel Orientation="Horizontal" Margin="10,3,0,3">
+			<StackPanel Orientation="Horizontal" Margin="5,3,0,3">
 				<Label Content="TX (kbps): " Padding="0" Width="50" FontSize="10"/>
 				<Label x:Name="txUSBDatarateLabel" Content="0000,0" Padding="0" FontSize="10"/>
 			</StackPanel>
-			<StackPanel Orientation="Horizontal" Margin="10,3,0,3">
+			<StackPanel Orientation="Horizontal" Margin="5,3,0,3">
 				<Label Content="RXE (kbps): " Padding="0" Width="55" FontSize="10"/>
 				<Label x:Name="rxUSBDroppedLabel" Content="0000,0" Padding="0" FontSize="10"/>
+			</StackPanel>
+			<Label Content="Analog IN A: " FontWeight="Bold" Margin="10,3,0,3" Padding="0" FontSize="10" VerticalContentAlignment="Top"/>
+			<StackPanel Orientation="Horizontal" Margin="5,3,0,3">
+				<Label Content="CH1 (ksps): " Padding="0" Width="55" FontSize="10"/>
+				<Label x:Name="analogInACH1kspsLabel" Content="0000,0" Padding="0" FontSize="10"/>
+			</StackPanel>
+			<StackPanel Orientation="Horizontal" Margin="5,3,0,3">
+				<Label Content="CH2 (ksps): " Padding="0" Width="55" FontSize="10"/>
+				<Label x:Name="analogInACH2kspsLabel" Content="0000,0" Padding="0" FontSize="10"/>
+			</StackPanel>
+			<StackPanel Orientation="Horizontal" Margin="5,3,0,3">
+				<Label Content="CH3 (ksps): " Padding="0" Width="55" FontSize="10"/>
+				<Label x:Name="analogInACH3kspsLabel" Content="0000,0" Padding="0" FontSize="10"/>
+			</StackPanel>
+			<StackPanel Orientation="Horizontal" Margin="5,3,0,3">
+				<Label Content="CH4 (ksps): " Padding="0" Width="55" FontSize="10"/>
+				<Label x:Name="analogInACH4kspsLabel" Content="0000,0" Padding="0" FontSize="10"/>
 			</StackPanel>
 		</StackPanel>
 
 		<Grid>
 			<lvc:CartesianChart Series="{Binding SeriesAnalogIn}" LegendLocation="Top" DisableAnimations="True" Hoverable="False" DataTooltip="{x:Null}">
 				<lvc:CartesianChart.AxisX>
-					<lvc:Axis MinValue="0" MaxValue="1024"/>
+					<lvc:Axis MinValue="0" MaxValue="1000"/>
 				</lvc:CartesianChart.AxisX>
 				<lvc:CartesianChart.AxisY>
 					<lvc:Axis Title="Voltage (V)" MinValue="-15" MaxValue="15">

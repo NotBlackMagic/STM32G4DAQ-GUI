@@ -493,19 +493,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\fabia\\.nuget\\packages\\": {}
+    "C:\\Users\\Fabian Näf\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\fabia\\Documents\\Visual Studio 2019\\Projects\\STM32G4DAQ\\STM32G4DAQ.csproj",
+      "projectUniqueName": "C:\\Users\\Fabian Näf\\Documents\\Visual Studio 2019\\Projects\\STM32G4DAQ\\STM32G4DAQ.csproj",
       "projectName": "STM32G4DAQ",
-      "projectPath": "C:\\Users\\fabia\\Documents\\Visual Studio 2019\\Projects\\STM32G4DAQ\\STM32G4DAQ.csproj",
-      "packagesPath": "C:\\Users\\fabia\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\fabia\\Documents\\Visual Studio 2019\\Projects\\STM32G4DAQ\\obj\\",
+      "projectPath": "C:\\Users\\Fabian Näf\\Documents\\Visual Studio 2019\\Projects\\STM32G4DAQ\\STM32G4DAQ.csproj",
+      "packagesPath": "C:\\Users\\Fabian Näf\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Fabian Näf\\Documents\\Visual Studio 2019\\Projects\\STM32G4DAQ\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\fabia\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Fabian Näf\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -556,7 +556,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.301\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.201\\RuntimeIdentifierGraph.json"
       }
     }
   },

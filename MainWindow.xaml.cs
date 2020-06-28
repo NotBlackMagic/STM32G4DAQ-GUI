@@ -22,6 +22,8 @@ using LiveCharts;
 using LiveCharts.Helpers;
 using LiveCharts.Wpf;
 
+using NotBlackMagic;
+
 namespace STM32G4DAQ {
 
 	public static class Opcodes {
@@ -36,15 +38,8 @@ namespace STM32G4DAQ {
 		public const byte txAnalogInA = 0x81;
 	}
 	public partial class MainWindow : Window {
-		private SerialPort serialPort = new SerialPort();
+		STMDAQ daq = new STMDAQ();
 
-		Stopwatch rxUSBStopwatch = new Stopwatch();
-
-		int rxCount = 0;
-		float rxUSBDatarate = 0;
-		float txUSBDatarate = 0;
-		int rxDroppedCount = 0;
-		float rxUSBDroppedRate = 0;
 		byte[] txBuffer = new byte[34];
 
 		int[] analogInADataIndex = new int[4];
@@ -74,34 +69,32 @@ namespace STM32G4DAQ {
 			dispatcherTimer.Tick += GUIUpdateHandler;
 			dispatcherTimer.Start();
 
-			rxUSBStopwatch.Start();
-
 			//Init Graph Series
 			SeriesAnalogIn = new SeriesCollection {
 				new LineSeries {
 					Title = "CH1",
-					Values = new ChartValues<double>(),
+					Values = new ChartValues<float>(),
 					PointGeometry = null,
 					LineSmoothness = 0,
 					Fill = Brushes.Transparent
 				},
 				new LineSeries {
 					Title = "CH2",
-					Values = new ChartValues<double>(),
+					Values = new ChartValues<float>(),
 					PointGeometry = null,
 					LineSmoothness = 0,
 					Fill = Brushes.Transparent
 				},
 				new LineSeries {
 					Title = "CH3",
-					Values = new ChartValues<double>(),
+					Values = new ChartValues<float>(),
 					PointGeometry = null,
 					LineSmoothness = 0,
 					Fill = Brushes.Transparent
 				},
 				new LineSeries {
 					Title = "CH4",
-					Values = new ChartValues<double>(),
+					Values = new ChartValues<float>(),
 					PointGeometry = null,
 					LineSmoothness = 0,
 					Fill = Brushes.Transparent
@@ -112,48 +105,24 @@ namespace STM32G4DAQ {
 		}
 
 		private void GUIUpdateHandler(object sender, EventArgs e) {
-			rxUSBDatarateLabel.Content = rxUSBDatarate.ToString("0.0");
-			txUSBDatarateLabel.Content = txUSBDatarate.ToString("0.0");
-			rxUSBDroppedLabel.Content = rxUSBDroppedRate.ToString("0.0");
+			float rxRate = daq.USBRXDatarate() * 0.001f;
+			rxUSBDatarateLabel.Content = rxRate.ToString("0.0");
+			//txUSBDatarateLabel.Content = txUSBDatarate.ToString("0.0");
+			//rxUSBDroppedLabel.Content = rxUSBDroppedRate.ToString("0.0");
 
-			//SeriesAnalogIn[0].Values = new ChartValues<double>(analogInAData[0]);
-			//SeriesAnalogIn[1].Values = new ChartValues<double>(analogInAData[1]);
-			//SeriesAnalogIn[2].Values = new ChartValues<double>(analogInAData[2]);
-			//SeriesAnalogIn[3].Values = new ChartValues<double>(analogInAData[3]);
-		}
+			//analogInACH1kspsLabel.Content = analogInAksps[0].ToString("0.0");
+			//analogInACH2kspsLabel.Content = analogInAksps[1].ToString("0.0");
+			//analogInACH3kspsLabel.Content = analogInAksps[2].ToString("0.0");
+			//analogInACH4kspsLabel.Content = analogInAksps[3].ToString("0.0");
 
-		private delegate void SerialReceiveDelegate(byte[] rxData, int length);
-
-		private void OnSerialReceive(object sender, SerialDataReceivedEventArgs e) {
-			byte[] rxData = new byte[2048];
-			int rxLength = serialPort.BytesToRead;
-
-			//Discard if to many bytes to read
-			if (rxLength > 2048 || serialPort.BytesToRead > (serialPort.ReadBufferSize * 0.9)) {
-				rxDroppedCount += serialPort.BytesToRead;
-				serialPort.ReadExisting();
+			float[] channel1 = daq.AnalogIn(1, 1000);
+			if(channel1 != null) {
+				SeriesAnalogIn[0].Values = new ChartValues<float>(channel1);
 			}
-			else {
-				serialPort.Read(rxData, 0, rxLength);
 
-				if (rxLength > 5) {
-					Dispatcher.Invoke(DispatcherPriority.Send, new SerialReceiveDelegate(SerialReceiveProcessing), rxData, rxLength);
-				}
-
-				rxCount += rxLength;
-
-				if (rxUSBStopwatch.ElapsedMilliseconds > 1000) {
-					rxUSBStopwatch.Reset();
-
-					rxUSBDatarate = (float)rxCount * 0.001f;
-					rxCount = 0;
-
-					rxUSBDroppedRate = (float)rxDroppedCount * 0.001f;
-					rxDroppedCount = 0;
-
-					rxUSBStopwatch.Start();
-				}
-			}
+			//SeriesAnalogIn[1].Values = new ChartValues<float>(analogInAData[1]);
+			//SeriesAnalogIn[2].Values = new ChartValues<float>(analogInAData[2]);
+			//SeriesAnalogIn[3].Values = new ChartValues<float>(analogInAData[3]);
 		}
 
 		private void SerialSendCommand(byte opcode, byte[] data) {
@@ -172,12 +141,14 @@ namespace STM32G4DAQ {
 			txData[3 + txLength] = 0;
 			txData[4 + txLength] = 0;
 
-			if(serialPort.IsOpen) {
-				serialPort.Write(txData, 0, (txLength + 5));
-			}
+			//if(serialPort.IsOpen) {
+			//	serialPort.Write(txData, 0, (txLength + 5));
+			//}
 		}
 
 		private void SerialReceiveProcessing(byte[] rxData, int length) {
+			return;
+
 			int index = 0;
 			while (index < length) {
 				int opcode = rxData[index++];
@@ -193,15 +164,15 @@ namespace STM32G4DAQ {
 							value = value * 2.048 / 4095 - 1.024;
 							value = value * 8 * 2;
 
-							//analogInAData[channel - 1][analogInADataIndex[channel - 1]++] = value;
-							//if (analogInADataIndex[channel - 1] >= 1024) {
-							//	analogInADataIndex[channel - 1] = 0;
-							//}
-
-							SeriesAnalogIn[channel - 1].Values.Add(value);
-							if (SeriesAnalogIn[channel - 1].Values.Count > 1024) {
-								SeriesAnalogIn[channel - 1].Values.RemoveAt(0);
+							analogInAData[channel - 1][analogInADataIndex[channel - 1]++] = value;
+							if (analogInADataIndex[channel - 1] >= 1024) {
+								analogInADataIndex[channel - 1] = 0;
 							}
+
+							//SeriesAnalogIn[channel - 1].Values.Add(value);
+							//if (SeriesAnalogIn[channel - 1].Values.Count > 1024) {
+							//	SeriesAnalogIn[channel - 1].Values.RemoveAt(0);
+							//}
 						}
 						break;
 					}
@@ -217,26 +188,14 @@ namespace STM32G4DAQ {
 		}
 
 		private void SerialButtonClick(object sender, RoutedEventArgs e) {
-			if (serialPort.IsOpen == false) {
-				try {
-					serialPort.PortName = portNamesComboBox.Text;
-					serialPort.BaudRate = Convert.ToInt32(baudRatesComboBox.Text);
-					serialPort.DataBits = 8;
-					serialPort.StopBits = StopBits.One;
-					serialPort.Parity = Parity.None;
-					serialPort.Open();
-
-					serialPort.DataReceived += new SerialDataReceivedEventHandler(OnSerialReceive);
-
+			if (daq.IsConnected() == false) {
+				if(daq.Connect(portNamesComboBox.Text)) {
 					serialButton.Content = "Disconnect";
 					serialButton.Background = Brushes.LimeGreen;
 				}
-				catch (Exception ex) {
-
-				}
 			}
 			else {
-				serialPort.Close();
+				daq.Disconnect();
 
 				serialButton.Content = "Connect";
 				serialButton.Background = Brushes.Red;
@@ -279,7 +238,7 @@ namespace STM32G4DAQ {
 			data[1] = (byte)analogInASamplerate.SelectedIndex;
 			data[2] = (byte)analogInAScale.SelectedIndex;
 
-			SerialSendCommand(Opcodes.setAnalogInA, data);
+			//SerialSendCommand(Opcodes.setAnalogInA, data);
 		}
 
 		private void AnalogInAChannel1Changed(object sender, RoutedEventArgs e) {
@@ -295,7 +254,8 @@ namespace STM32G4DAQ {
 			data[3] = (byte)analogInAChannel1Resolution.SelectedIndex;
 			data[4] = (byte)analogInAChannel1Gain.SelectedIndex;
 
-			SerialSendCommand(Opcodes.setAnalogInACH, data);
+			//SerialSendCommand(Opcodes.setAnalogInACH, data);
+			daq.AddAnalogIn(1, 15, (AnalogInMode)analogInAMode.SelectedIndex);
 		}
 
 		private void AnalogInAChannel2Changed(object sender, RoutedEventArgs e) {
