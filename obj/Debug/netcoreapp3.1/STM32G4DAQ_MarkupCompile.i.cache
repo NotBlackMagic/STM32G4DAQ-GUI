@@ -1,20 +1,20 @@
 ﻿STM32G4DAQ
-
+1.0.0.0
 
 winexe
 C#
 .cs
-C:\Users\Fabian Näf\Documents\Visual Studio 2019\Projects\STM32G4DAQ\obj\Debug\netcoreapp3.1\
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\obj\Debug\netcoreapp3.1\
 STM32G4DAQ
 none
 false
 TRACE;DEBUG;NETCOREAPP;NETCOREAPP3_1
-C:\Users\Fabian Näf\Documents\Visual Studio 2019\Projects\STM32G4DAQ\App.xaml
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\App.xaml
 11151548125
 
-5706263171
-195-2020659169
+6-2080365169
+1951491527557
 MainWindow.xaml;
 
-False
+True
 
