@@ -65,15 +65,18 @@ namespace NotBlackMagic {
 		volatile int index = 0;
 		volatile float[] values = new float[1024];
 
-		public AnalogInChannel(int channel, int range, AnalogInMode mode) {
+		public AnalogInChannel(int channel, float range, AnalogInMode mode) {
 			this.channel = channel;
-			//this.gain = range;
 			this.mode = mode;
+
+			double g = Math.Log2(vRef / range);
+
+			this.gain = (float)Math.Pow(2, Math.Round(g));
 		}
 
 		public void AddValues(int[] values) {
 			for(int i = 0; i < values.Length; i++) {
-				float scaling = (vRef * 2 * 1 / gain) / (1 << resolution);
+				float scaling = (vRef / gain) / (1 << (resolution - 1));
 				this.values[index++] = (float)(values[i] - (1 << (resolution - 1))) * scaling;
 
 				if (index >= this.values.Length) {
@@ -161,10 +164,10 @@ namespace NotBlackMagic {
 			int rxDataPacketLength = 0;
 			byte[] rxDataPacket = new byte[550];
 
-			byte[] rxBuffer = new byte[2048];
+			byte[] rxBuffer = new byte[1024];
 			while (true) {
 				if (serialPort.IsOpen) {
-					int rxLength = await serialPort.BaseStream.ReadAsync(rxBuffer, 0, 256);
+					int rxLength = await serialPort.BaseStream.ReadAsync(rxBuffer, 0, rxBuffer.Length);
 
 					for (int i = 0; i < rxLength; i++) {
 						if (index == 0) {
@@ -211,6 +214,10 @@ namespace NotBlackMagic {
 				case Opcodes.txAnalogInA:  {
 					int channel = packet.payload[0];
 
+					if(channel > 4) {
+						return;
+					}
+
 					if (analogInAChannels[channel - 1] != null) {
 						int sampleNum = (packet.payloadLength - 1) / 2;
 						int[] values = new int[sampleNum];
@@ -232,27 +239,37 @@ namespace NotBlackMagic {
 			}
 		}
 
-		public void AddAnalogIn(int channel, int range, AnalogInMode mode) {
+		public void AddAnalogIn(int channel, float range, AnalogInMode mode) {
 			analogInAChannels[channel - 1] = new AnalogInChannel(channel, range, mode);
 
 			//Set DAQ settings: Set Analog In Block
-			byte[] data = new byte[3];
-			data[0] = (byte)mode;		//Set Mode
-			data[1] = 0;				//Set Sample Rate
-			data[2] = 0;				//Set Scale
-			USBWrite(Opcodes.setAnalogInA, data);
+			//byte[] data = new byte[3];
+			//data[0] = (byte)mode;		//Set Mode
+			//data[1] = 1;				//Set Sample Rate
+			//data[2] = 0;				//Set Scale
+			//USBWrite(Opcodes.setAnalogInA, data);
 
 			//Set DAQ settings: Set Analog In Channel
-			data = new byte[5];
+			byte[] data = new byte[5];
 			data[0] = (byte)channel;	//To set channel
 			data[1] = 1;				//If Enabled or Disabeld
 			data[2] = 0;				//Set Sampling Rate/Time division
 			data[3] = 4;				//Set Resolution
-			data[4] = 1;                //Set Gain
+			data[4] = (byte)(3 + (int)Math.Ceiling(Math.Log2(2.048 / range)));	//Set Gain
 			USBWrite(Opcodes.setAnalogInACH, data);
 		}
 
-		public float[] AnalogIn(int channel, int count) {
+		public void SetAnalogInSampligRate(int samplingRate) {
+			int rate = (int)((250000.0 / samplingRate) - 1.0);
+
+			byte[] data = new byte[3];
+			data[0] = 1;				//Set Mode
+			data[1] = (byte)rate;		//Set Sample Rate
+			data[2] = 0;				//Set Scale
+			USBWrite(Opcodes.setAnalogInA, data);
+		}
+
+		public float[] ReadAnalogIn(int channel, int count) {
 			if(analogInAChannels[channel - 1] != null) {
 				return analogInAChannels[channel - 1].GetValues(count);
 			}

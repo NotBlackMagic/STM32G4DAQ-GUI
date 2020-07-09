@@ -190,20 +190,20 @@
 							</ComboBox>
 						</StackPanel>
 						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
-							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Gain (x1):</Label>
-							<ComboBox x:Name="analogInAChannel1Gain" SelectedIndex="1" SelectionChanged="AnalogInAChannel1Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
-								<ComboBoxItem Content="1/16"/>
-								<ComboBoxItem Content="1/8"/>
-								<ComboBoxItem Content="1/4"/>
-								<ComboBoxItem Content="1/2"/>
-								<ComboBoxItem Content="1"/>
-								<ComboBoxItem Content="2"/>
-								<ComboBoxItem Content="4"/>
-								<ComboBoxItem Content="8"/>
-								<ComboBoxItem Content="16"/>
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Range (V):</Label>
+							<ComboBox x:Name="analogInAChannel1Range" SelectedIndex="1" SelectionChanged="AnalogInAChannel1Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
 								<ComboBoxItem Content="32"/>
-								<ComboBoxItem Content="64"/>
-								<ComboBoxItem Content="128"/>
+								<ComboBoxItem Content="16"/>
+								<ComboBoxItem Content="8"/>
+								<ComboBoxItem Content="4"/>
+								<ComboBoxItem Content="2"/>
+								<ComboBoxItem Content="1"/>
+								<ComboBoxItem Content="0.5"/>
+								<ComboBoxItem Content="0.25"/>
+								<ComboBoxItem Content="0.125"/>
+								<ComboBoxItem Content="0.064"/>
+								<ComboBoxItem Content="0.032"/>
+								<ComboBoxItem Content="0.016"/>
 							</ComboBox>
 						</StackPanel>
 					</StackPanel>
@@ -452,14 +452,14 @@
 		</StackPanel>
 
 		<Grid>
-			<lvc:CartesianChart Series="{Binding SeriesAnalogIn}" LegendLocation="Top" DisableAnimations="True" Hoverable="False" DataTooltip="{x:Null}">
+			<lvc:CartesianChart x:Name="analogInChart" Series="{Binding SeriesAnalogIn}" LegendLocation="Top" DisableAnimations="True" Hoverable="False" DataTooltip="{x:Null}">
 				<lvc:CartesianChart.AxisX>
 					<lvc:Axis MinValue="0" MaxValue="1000"/>
 				</lvc:CartesianChart.AxisX>
 				<lvc:CartesianChart.AxisY>
-					<lvc:Axis Title="Voltage (V)" MinValue="-15" MaxValue="15">
+					<lvc:Axis Title="Voltage (V)" MinValue="-16" MaxValue="16">
 						<lvc:Axis.Separator>
-							<lvc:Separator Step="1"/>
+							<lvc:Separator Step="2"/>
 						</lvc:Axis.Separator>
 					</lvc:Axis>
 				</lvc:CartesianChart.AxisY>

@@ -115,76 +115,26 @@ namespace STM32G4DAQ {
 			//analogInACH3kspsLabel.Content = analogInAksps[2].ToString("0.0");
 			//analogInACH4kspsLabel.Content = analogInAksps[3].ToString("0.0");
 
-			float[] channel1 = daq.AnalogIn(1, 1000);
-			if(channel1 != null) {
+			float[] channel1 = daq.ReadAnalogIn(1, 1000);
+			if (channel1 != null) {
 				SeriesAnalogIn[0].Values = new ChartValues<float>(channel1);
+			}
+			float[] channel2 = daq.ReadAnalogIn(2, 1000);
+			if (channel2 != null) {
+				SeriesAnalogIn[1].Values = new ChartValues<float>(channel2);
+			}
+			float[] channel3 = daq.ReadAnalogIn(3, 1000);
+			if (channel3 != null) {
+				SeriesAnalogIn[2].Values = new ChartValues<float>(channel3);
+			}
+			float[] channel4 = daq.ReadAnalogIn(4, 1000);
+			if (channel4 != null) {
+				SeriesAnalogIn[3].Values = new ChartValues<float>(channel4);
 			}
 
 			//SeriesAnalogIn[1].Values = new ChartValues<float>(analogInAData[1]);
 			//SeriesAnalogIn[2].Values = new ChartValues<float>(analogInAData[2]);
 			//SeriesAnalogIn[3].Values = new ChartValues<float>(analogInAData[3]);
-		}
-
-		private void SerialSendCommand(byte opcode, byte[] data) {
-			byte[] txData = new byte[1024];
-			int txLength = data.Length;
-
-			//Add Header
-			txData[0] = opcode;
-			txData[1] = (byte)(txLength >> 8);
-			txData[2] = (byte)txLength;
-
-			//Add Payload
-			Array.Copy(data, 0, txData, 3, txLength);
-
-			//Add CRC
-			txData[3 + txLength] = 0;
-			txData[4 + txLength] = 0;
-
-			//if(serialPort.IsOpen) {
-			//	serialPort.Write(txData, 0, (txLength + 5));
-			//}
-		}
-
-		private void SerialReceiveProcessing(byte[] rxData, int length) {
-			return;
-
-			int index = 0;
-			while (index < length) {
-				int opcode = rxData[index++];
-				int packetLength = (rxData[index++] << 8) + rxData[index++];
-				int crc = (rxData[index + packetLength] << 8) + rxData[index + packetLength];
-
-				switch (opcode) {
-					case Opcodes.txAnalogInA: {
-						int channel = rxData[index++];
-
-						for(int i = 1; i < packetLength; i += 2) {
-							double value = (rxData[index++] << 8) + rxData[index++];
-							value = value * 2.048 / 4095 - 1.024;
-							value = value * 8 * 2;
-
-							analogInAData[channel - 1][analogInADataIndex[channel - 1]++] = value;
-							if (analogInADataIndex[channel - 1] >= 1024) {
-								analogInADataIndex[channel - 1] = 0;
-							}
-
-							//SeriesAnalogIn[channel - 1].Values.Add(value);
-							//if (SeriesAnalogIn[channel - 1].Values.Count > 1024) {
-							//	SeriesAnalogIn[channel - 1].Values.RemoveAt(0);
-							//}
-						}
-						break;
-					}
-					default: {
-						index += packetLength;
-						break;
-					}
-				}
-
-				//Add CRC length, read already
-				index += 2;
-			}
 		}
 
 		private void SerialButtonClick(object sender, RoutedEventArgs e) {
@@ -212,7 +162,7 @@ namespace STM32G4DAQ {
 			data[0] = (byte)currentSourceAComboBox.SelectedIndex;
 			data[1] = (byte)currentOutAComboBox.SelectedIndex;
 
-			SerialSendCommand(Opcodes.setCurrentA, data);
+			//SerialSendCommand(Opcodes.setCurrentA, data);
 		}
 		private void CurrentOutputBChanged(object sender, RoutedEventArgs e) {
 			if (enableValueChangedEvents == false) {
@@ -224,13 +174,16 @@ namespace STM32G4DAQ {
 			data[0] = (byte)currentSourceBComboBox.SelectedIndex;
 			data[1] = (byte)currentOutBComboBox.SelectedIndex;
 
-			SerialSendCommand(Opcodes.setCurrentB, data);
+			//SerialSendCommand(Opcodes.setCurrentB, data);
 		}
 
 		private void AnalogInAChanged(object sender, RoutedEventArgs e) {
 			if (enableValueChangedEvents == false) {
 				return;
 			}
+
+			int sampligRate = (int)(250000.0 / (1 + analogInASamplerate.SelectedIndex));
+			daq.SetAnalogInSampligRate(sampligRate);
 
 			byte[] data = new byte[6];
 
@@ -246,16 +199,20 @@ namespace STM32G4DAQ {
 				return;
 			}
 
-			byte[] data = new byte[6];
+			float range = (float)Math.Pow(2, (5 - analogInAChannel1Range.SelectedIndex));
 
-			data[0] = 1;
-			data[1] = (byte)analogInAChannel1Enabled.SelectedIndex;
-			data[2] = (byte)analogInAChannel1RateDiv.SelectedIndex;
-			data[3] = (byte)analogInAChannel1Resolution.SelectedIndex;
-			data[4] = (byte)analogInAChannel1Gain.SelectedIndex;
+			//analogInChart.AxisY.Clear();
+			//analogInChart.AxisY.Add(
+			//	new Axis { MinValue = -range, MaxValue = range} 
+			//);
+
+			analogInChart.AxisY.Clear();
+			Axis axisY = new Axis { MinValue = -range, MaxValue = range };
+			axisY.Separator = new LiveCharts.Wpf.Separator { Step = (range/16.0) };
+			analogInChart.AxisY.Add(axisY);
 
 			//SerialSendCommand(Opcodes.setAnalogInACH, data);
-			daq.AddAnalogIn(1, 15, (AnalogInMode)analogInAMode.SelectedIndex);
+			daq.AddAnalogIn(1, range, (AnalogInMode)analogInAMode.SelectedIndex);
 		}
 
 		private void AnalogInAChannel2Changed(object sender, RoutedEventArgs e) {
@@ -271,7 +228,7 @@ namespace STM32G4DAQ {
 			data[3] = (byte)analogInAChannel2Resolution.SelectedIndex;
 			data[4] = (byte)analogInAChannel2Gain.SelectedIndex;
 
-			SerialSendCommand(Opcodes.setAnalogInACH, data);
+			//SerialSendCommand(Opcodes.setAnalogInACH, data);
 		}
 
 		private void AnalogInAChannel3Changed(object sender, RoutedEventArgs e) {
@@ -287,7 +244,7 @@ namespace STM32G4DAQ {
 			data[3] = (byte)analogInAChannel3Resolution.SelectedIndex;
 			data[4] = (byte)analogInAChannel3Gain.SelectedIndex;
 
-			SerialSendCommand(Opcodes.setAnalogInACH, data);
+			//SerialSendCommand(Opcodes.setAnalogInACH, data);
 		}
 
 		private void AnalogInAChannel4Changed(object sender, RoutedEventArgs e) {
@@ -303,7 +260,7 @@ namespace STM32G4DAQ {
 			data[3] = (byte)analogInAChannel4Resolution.SelectedIndex;
 			data[4] = (byte)analogInAChannel4Gain.SelectedIndex;
 
-			SerialSendCommand(Opcodes.setAnalogInACH, data);
+			//SerialSendCommand(Opcodes.setAnalogInACH, data);
 		}
 
 		private void AnalogOutOffsetValidation(object sender, TextCompositionEventArgs e) {
@@ -473,7 +430,7 @@ namespace STM32G4DAQ {
 				data[6 + (2 * i + 1)] = (byte)(buffer[i]);
 			}
 
-			SerialSendCommand(Opcodes.setAnalogOutACH, data);
+			//SerialSendCommand(Opcodes.setAnalogOutACH, data);
 		}
 	}
 }
