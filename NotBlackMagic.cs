@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO.Ports;
+using System.Reflection.Emit;
 using System.Runtime.InteropServices.ComTypes;
 using System.Threading;
 
@@ -9,17 +10,20 @@ namespace NotBlackMagic {
 	public enum AnalogInMode {
 		Mode_Off,
 		Mode_Diff,
-		Mode_INP,
-		Mode_INN
+		Mode_Single,
 	}
 	static class Opcodes {
-		public const byte setCurrentA = 0x01;
-		public const byte setCurrentB = 0x02;
+		public const byte reset = 0x01;
+		public const byte connect = 0x02;
+		public const byte disconnect = 0x03;
 
-		public const byte setAnalogInA = 0x03;
-		public const byte setAnalogInACH = 0x04;
+		public const byte setCurrentA = 0x11;
+		public const byte setCurrentB = 0x12;
 
-		public const byte setAnalogOutACH = 0x05;
+		public const byte setAnalogInA = 0x13;
+		public const byte setAnalogInACH = 0x14;
+
+		public const byte setAnalogOutACH = 0x15;
 
 		public const byte txAnalogInA = 0x81;
 	}
@@ -37,17 +41,25 @@ namespace NotBlackMagic {
 		}
 
 		public static byte[] Encode(int opcode, byte[] payload) {
-			byte[] packet = new byte[payload.Length + 5];
+			int payloadLength = 0;
+			
+			if(payload != null) {
+				payloadLength = payload.Length;
+			}
+
+			byte[] packet = new byte[payloadLength + 5];
 
 			packet[0] = (byte)opcode;
-			packet[1] = (byte)(payload.Length >> 8);
-			packet[2] = (byte)(payload.Length);
+			packet[1] = (byte)(payloadLength >> 8);
+			packet[2] = (byte)(payloadLength);
 
-			Array.Copy(payload, 0, packet, 3, payload.Length);
+			if(payloadLength > 0) {
+				Array.Copy(payload, 0, packet, 3, payloadLength);
+			}
 
 			int crc = 0;
-			packet[payload.Length + 3] = (byte)(crc >> 8);
-			packet[payload.Length + 4] = (byte)(crc);
+			packet[payloadLength + 3] = (byte)(crc >> 8);
+			packet[payloadLength + 4] = (byte)(crc);
 
 			return packet;
 		}
@@ -76,8 +88,9 @@ namespace NotBlackMagic {
 
 		public void AddValues(int[] values) {
 			for(int i = 0; i < values.Length; i++) {
-				float scaling = (vRef / gain) / (1 << (resolution - 1));
-				this.values[index++] = (float)(values[i] - (1 << (resolution - 1))) * scaling;
+				double scaling = (vRef / gain) / (1 << (resolution - 1));
+				double voltValue = (values[i] - (1 << (resolution - 1))) * scaling;
+				this.values[index++] = (float)voltValue;
 
 				if (index >= this.values.Length) {
 					index = 0;
@@ -92,7 +105,12 @@ namespace NotBlackMagic {
 		public float[] GetValues(int count) {
 			float[] temp = new float[count];
 
-			int tempIndex = this.index;
+			int tempIndex = this.index - count;
+
+			if(tempIndex < 0) {
+				tempIndex += this.values.Length;
+			}
+
 			for(int i = 0; i < count; i++) {
 				temp[i] = this.values[tempIndex++];
 				if(tempIndex >= this.values.Length) {
@@ -112,7 +130,7 @@ namespace NotBlackMagic {
 		int usbRXPacketCount = 0;
 		float usbRXDatarate = 0;
 
-		AnalogInChannel[] analogInAChannels = new AnalogInChannel[4];
+		AnalogInChannel[] analogInAChannels = new AnalogInChannel[8];
 
 		public bool Connect(string port) {
 			if(serialPort.IsOpen == false) {
@@ -123,6 +141,8 @@ namespace NotBlackMagic {
 					serialPort.StopBits = StopBits.One;
 					serialPort.Parity = Parity.None;
 					serialPort.Open();
+
+					USBWrite(Opcodes.connect, null);
 
 					usbRXStopwatch.Start();
 
@@ -140,7 +160,9 @@ namespace NotBlackMagic {
 		}
 
 		public bool Disconnect() {
-			if (serialPort.IsOpen == false) {
+			if (serialPort.IsOpen == true) {
+				USBWrite(Opcodes.disconnect, null);
+
 				serialPort.Close();
 			}
 			else {
@@ -214,7 +236,7 @@ namespace NotBlackMagic {
 				case Opcodes.txAnalogInA:  {
 					int channel = packet.payload[0];
 
-					if(channel > 4) {
+					if(channel < 1 || channel > analogInAChannels.Length) {
 						return;
 					}
 
@@ -249,12 +271,19 @@ namespace NotBlackMagic {
 			//data[2] = 0;				//Set Scale
 			//USBWrite(Opcodes.setAnalogInA, data);
 
+			int nChannels = 0;
+			for(int i = 0; i < analogInAChannels.Length; i++) {
+				if(analogInAChannels[i] != null) {
+					nChannels += 1;
+				}
+			}
+
 			//Set DAQ settings: Set Analog In Channel
 			byte[] data = new byte[5];
-			data[0] = (byte)channel;	//To set channel
-			data[1] = 1;				//If Enabled or Disabeld
-			data[2] = 0;				//Set Sampling Rate/Time division
-			data[3] = 4;				//Set Resolution
+			data[0] = (byte)channel;			//To set channel
+			data[1] = (byte)mode;				//Channel Mode, Differential or Single Ended
+			data[2] = (byte)nChannels;			//Set Sampling Rate/Time division
+			data[3] = 4;						//Set Resolution
 			data[4] = (byte)(3 + (int)Math.Ceiling(Math.Log2(2.048 / range)));	//Set Gain
 			USBWrite(Opcodes.setAnalogInACH, data);
 		}
@@ -262,10 +291,9 @@ namespace NotBlackMagic {
 		public void SetAnalogInSampligRate(int samplingRate) {
 			int rate = (int)((250000.0 / samplingRate) - 1.0);
 
-			byte[] data = new byte[3];
-			data[0] = 1;				//Set Mode
-			data[1] = (byte)rate;		//Set Sample Rate
-			data[2] = 0;				//Set Scale
+			byte[] data = new byte[2];
+			data[0] = (byte)rate;		//Set Sample Rate
+			data[1] = 0;				//Set Scale
 			USBWrite(Opcodes.setAnalogInA, data);
 		}
 
@@ -278,8 +306,47 @@ namespace NotBlackMagic {
 			}
 		}
 
+		public void AddCurrentOut(int channel, int value) {
+			byte[] data = new byte[2];
+
+			data[0] = 0x01;
+			data[1] = (byte)(value / 100);
+
+			if (channel == 1) {
+				USBWrite(Opcodes.setCurrentA, data);
+			}
+			else if(channel == 2) {
+				USBWrite(Opcodes.setCurrentB, data);
+			}
+		}
+
+		const int rg1 = 12000;
+		const int rg2 = 10000;
+		const int rf = 62000;
+		public void AddAnalogOutput(int channel, double value) {
+			byte[] data = new byte[8];
+
+			double dacValue = value + ((double)rf / rg2 * 2.048);
+			dacValue = dacValue / (1.0 + (double)rf / rg2 + (double)rf / rg1);
+
+			int offset = Convert.ToInt32(dacValue * (4096 / 2.048));
+
+			data[0] = (byte)channel;	//Output Channel
+			data[1] = 0;				//Output Sampling Frequncy (3 bytes)
+			data[2] = 0;				
+			data[3] = 0;
+			data[4] = 0;				//Output Sampling Buffer Length (uint16_t)
+			data[5] = 1;
+			data[6] = (byte)(offset >> 8);                //Output buffer values (uint16_t)
+			data[7] = (byte)offset;
+
+			USBWrite(Opcodes.setAnalogOutACH, data);
+		}
+
 		~STMDAQ() {
-			if (serialPort.IsOpen == false) {
+			if (serialPort.IsOpen == true) {
+				USBWrite(Opcodes.disconnect, null);
+
 				serialPort.Close();
 
 				rxUSBThread.Abort();

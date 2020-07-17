@@ -40,10 +40,12 @@ namespace STM32G4DAQ {
 	public partial class MainWindow : Window {
 		STMDAQ daq = new STMDAQ();
 
+		const int graphPoints = 512;
+
 		byte[] txBuffer = new byte[34];
 
-		int[] analogInADataIndex = new int[4];
-		double[][] analogInAData = new double[4][];
+		int[] analogInADataIndex = new int[8];
+		double[][] analogInAData = new double[8][];
 
 		bool enableValueChangedEvents = false;
 
@@ -58,10 +60,18 @@ namespace STM32G4DAQ {
 			analogInADataIndex[1] = 0;
 			analogInADataIndex[2] = 0;
 			analogInADataIndex[3] = 0;
-			analogInAData[0] = new double[1024];
-			analogInAData[1] = new double[1024];
-			analogInAData[2] = new double[1024];
-			analogInAData[3] = new double[1024];
+			analogInADataIndex[4] = 0;
+			analogInADataIndex[5] = 0;
+			analogInADataIndex[6] = 0;
+			analogInADataIndex[7] = 0;
+			analogInAData[0] = new double[graphPoints];
+			analogInAData[1] = new double[graphPoints];
+			analogInAData[2] = new double[graphPoints];
+			analogInAData[3] = new double[graphPoints];
+			analogInAData[4] = new double[graphPoints];
+			analogInAData[5] = new double[graphPoints];
+			analogInAData[6] = new double[graphPoints];
+			analogInAData[7] = new double[graphPoints];
 
 			//Init GUI Update dispatcher
 			DispatcherTimer dispatcherTimer = new DispatcherTimer();
@@ -76,6 +86,7 @@ namespace STM32G4DAQ {
 					Values = new ChartValues<float>(),
 					PointGeometry = null,
 					LineSmoothness = 0,
+					Stroke = Brushes.Red,
 					Fill = Brushes.Transparent
 				},
 				new LineSeries {
@@ -83,6 +94,7 @@ namespace STM32G4DAQ {
 					Values = new ChartValues<float>(),
 					PointGeometry = null,
 					LineSmoothness = 0,
+					Stroke = Brushes.Orange,
 					Fill = Brushes.Transparent
 				},
 				new LineSeries {
@@ -90,6 +102,7 @@ namespace STM32G4DAQ {
 					Values = new ChartValues<float>(),
 					PointGeometry = null,
 					LineSmoothness = 0,
+					Stroke = Brushes.Green,
 					Fill = Brushes.Transparent
 				},
 				new LineSeries {
@@ -97,9 +110,47 @@ namespace STM32G4DAQ {
 					Values = new ChartValues<float>(),
 					PointGeometry = null,
 					LineSmoothness = 0,
+					Stroke = Brushes.Lime,
+					Fill = Brushes.Transparent
+				},
+				new LineSeries {
+					Title = "CH5",
+					Values = new ChartValues<float>(),
+					PointGeometry = null,
+					LineSmoothness = 0,
+					Stroke = Brushes.Blue,
+					Fill = Brushes.Transparent
+				},
+				new LineSeries {
+					Title = "CH6",
+					Values = new ChartValues<float>(),
+					PointGeometry = null,
+					LineSmoothness = 0,
+					Stroke = Brushes.Aqua,
+					Fill = Brushes.Transparent
+				},
+				new LineSeries {
+					Title = "CH7",
+					Values = new ChartValues<float>(),
+					PointGeometry = null,
+					LineSmoothness = 0,
+					Stroke = Brushes.Purple,
+					Fill = Brushes.Transparent
+				},
+				new LineSeries {
+					Title = "CH8",
+					Values = new ChartValues<float>(),
+					PointGeometry = null,
+					LineSmoothness = 0,
+					Stroke = Brushes.Violet,
 					Fill = Brushes.Transparent
 				}
 			};
+
+			analogInChart.AxisX.Clear();
+			Axis axisX = new Axis { MinValue = 0, MaxValue = graphPoints};
+			axisX.Separator = new LiveCharts.Wpf.Separator { Step = (graphPoints / 16.0) };
+			analogInChart.AxisX.Add(axisX);
 
 			DataContext = this;
 		}
@@ -115,22 +166,29 @@ namespace STM32G4DAQ {
 			//analogInACH3kspsLabel.Content = analogInAksps[2].ToString("0.0");
 			//analogInACH4kspsLabel.Content = analogInAksps[3].ToString("0.0");
 
-			float[] channel1 = daq.ReadAnalogIn(1, 1000);
-			if (channel1 != null) {
-				SeriesAnalogIn[0].Values = new ChartValues<float>(channel1);
+			for(int ch = 1; ch < 9; ch++) {
+				float[] chValues = daq.ReadAnalogIn(ch, graphPoints);
+				if (chValues != null) {
+					SeriesAnalogIn[ch-1].Values = new ChartValues<float>(chValues);
+				}
 			}
-			float[] channel2 = daq.ReadAnalogIn(2, 1000);
-			if (channel2 != null) {
-				SeriesAnalogIn[1].Values = new ChartValues<float>(channel2);
-			}
-			float[] channel3 = daq.ReadAnalogIn(3, 1000);
-			if (channel3 != null) {
-				SeriesAnalogIn[2].Values = new ChartValues<float>(channel3);
-			}
-			float[] channel4 = daq.ReadAnalogIn(4, 1000);
-			if (channel4 != null) {
-				SeriesAnalogIn[3].Values = new ChartValues<float>(channel4);
-			}
+
+			//float[] channel1 = daq.ReadAnalogIn(1, 1000);
+			//if (channel1 != null) {
+			//	SeriesAnalogIn[0].Values = new ChartValues<float>(channel1);
+			//}
+			//float[] channel3 = daq.ReadAnalogIn(3, 1000);
+			//if (channel3 != null) {
+			//	SeriesAnalogIn[2].Values = new ChartValues<float>(channel3);
+			//}
+			//float[] channel5 = daq.ReadAnalogIn(5, 1000);
+			//if (channel5 != null) {
+			//	SeriesAnalogIn[4].Values = new ChartValues<float>(channel5);
+			//}
+			//float[] channel7 = daq.ReadAnalogIn(7, 1000);
+			//if (channel7 != null) {
+			//	SeriesAnalogIn[6].Values = new ChartValues<float>(channel7);
+			//}
 
 			//SeriesAnalogIn[1].Values = new ChartValues<float>(analogInAData[1]);
 			//SeriesAnalogIn[2].Values = new ChartValues<float>(analogInAData[2]);
@@ -157,24 +215,18 @@ namespace STM32G4DAQ {
 				return;
 			}
 
-			byte[] data = new byte[2];
+			int current = currentOutAComboBox.SelectedIndex * 100;
 
-			data[0] = (byte)currentSourceAComboBox.SelectedIndex;
-			data[1] = (byte)currentOutAComboBox.SelectedIndex;
-
-			//SerialSendCommand(Opcodes.setCurrentA, data);
+			daq.AddCurrentOut(1, current);
 		}
 		private void CurrentOutputBChanged(object sender, RoutedEventArgs e) {
 			if (enableValueChangedEvents == false) {
 				return;
 			}
 
-			byte[] data = new byte[2];
+			int current = currentOutBComboBox.SelectedIndex * 100;
 
-			data[0] = (byte)currentSourceBComboBox.SelectedIndex;
-			data[1] = (byte)currentOutBComboBox.SelectedIndex;
-
-			//SerialSendCommand(Opcodes.setCurrentB, data);
+			daq.AddCurrentOut(2, current);
 		}
 
 		private void AnalogInAChanged(object sender, RoutedEventArgs e) {
@@ -187,7 +239,7 @@ namespace STM32G4DAQ {
 
 			byte[] data = new byte[6];
 
-			data[0] = (byte)analogInAMode.SelectedIndex;
+			//data[0] = (byte)analogInAMode.SelectedIndex;
 			data[1] = (byte)analogInASamplerate.SelectedIndex;
 			data[2] = (byte)analogInAScale.SelectedIndex;
 
@@ -201,18 +253,15 @@ namespace STM32G4DAQ {
 
 			float range = (float)Math.Pow(2, (5 - analogInAChannel1Range.SelectedIndex));
 
-			//analogInChart.AxisY.Clear();
-			//analogInChart.AxisY.Add(
-			//	new Axis { MinValue = -range, MaxValue = range} 
-			//);
+			Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
 
 			analogInChart.AxisY.Clear();
-			Axis axisY = new Axis { MinValue = -range, MaxValue = range };
+			Axis axisY = new Axis { MinValue = -range, MaxValue = range, LabelFormatter = formatFunc };
 			axisY.Separator = new LiveCharts.Wpf.Separator { Step = (range/16.0) };
 			analogInChart.AxisY.Add(axisY);
 
 			//SerialSendCommand(Opcodes.setAnalogInACH, data);
-			daq.AddAnalogIn(1, range, (AnalogInMode)analogInAMode.SelectedIndex);
+			daq.AddAnalogIn(1, range, (AnalogInMode)analogInAChannel1Mode.SelectedIndex);
 		}
 
 		private void AnalogInAChannel2Changed(object sender, RoutedEventArgs e) {
@@ -220,15 +269,15 @@ namespace STM32G4DAQ {
 				return;
 			}
 
-			byte[] data = new byte[6];
+			float range = (float)Math.Pow(2, (5 - analogInAChannel2Range.SelectedIndex));
 
-			data[0] = 2;
-			data[1] = (byte)analogInAChannel2Enabled.SelectedIndex;
-			data[2] = (byte)analogInAChannel2RateDiv.SelectedIndex;
-			data[3] = (byte)analogInAChannel2Resolution.SelectedIndex;
-			data[4] = (byte)analogInAChannel2Gain.SelectedIndex;
+			//analogInChart.AxisY.Clear();
+			//Axis axisY = new Axis { MinValue = -range, MaxValue = range };
+			//axisY.Separator = new LiveCharts.Wpf.Separator { Step = (range / 16.0) };
+			//analogInChart.AxisY.Add(axisY);
 
 			//SerialSendCommand(Opcodes.setAnalogInACH, data);
+			daq.AddAnalogIn(2, range, (AnalogInMode)analogInAChannel1Mode.SelectedIndex);
 		}
 
 		private void AnalogInAChannel3Changed(object sender, RoutedEventArgs e) {
@@ -236,15 +285,15 @@ namespace STM32G4DAQ {
 				return;
 			}
 
-			byte[] data = new byte[6];
+			float range = (float)Math.Pow(2, (5 - analogInAChannel3Range.SelectedIndex));
 
-			data[0] = 3;
-			data[1] = (byte)analogInAChannel3Enabled.SelectedIndex;
-			data[2] = (byte)analogInAChannel3RateDiv.SelectedIndex;
-			data[3] = (byte)analogInAChannel3Resolution.SelectedIndex;
-			data[4] = (byte)analogInAChannel3Gain.SelectedIndex;
+			//analogInChart.AxisY.Clear();
+			//Axis axisY = new Axis { MinValue = -range, MaxValue = range };
+			//axisY.Separator = new LiveCharts.Wpf.Separator { Step = (range / 16.0) };
+			//analogInChart.AxisY.Add(axisY);
 
 			//SerialSendCommand(Opcodes.setAnalogInACH, data);
+			daq.AddAnalogIn(3, range, (AnalogInMode)analogInAChannel3Mode.SelectedIndex);
 		}
 
 		private void AnalogInAChannel4Changed(object sender, RoutedEventArgs e) {
@@ -252,15 +301,79 @@ namespace STM32G4DAQ {
 				return;
 			}
 
-			byte[] data = new byte[6];
+			float range = (float)Math.Pow(2, (5 - analogInAChannel4Range.SelectedIndex));
 
-			data[0] = 4;
-			data[1] = (byte)analogInAChannel4Enabled.SelectedIndex;
-			data[2] = (byte)analogInAChannel4RateDiv.SelectedIndex;
-			data[3] = (byte)analogInAChannel4Resolution.SelectedIndex;
-			data[4] = (byte)analogInAChannel4Gain.SelectedIndex;
+			//analogInChart.AxisY.Clear();
+			//Axis axisY = new Axis { MinValue = -range, MaxValue = range };
+			//axisY.Separator = new LiveCharts.Wpf.Separator { Step = (range / 16.0) };
+			//analogInChart.AxisY.Add(axisY);
 
 			//SerialSendCommand(Opcodes.setAnalogInACH, data);
+			daq.AddAnalogIn(4, range, (AnalogInMode)analogInAChannel3Mode.SelectedIndex);
+		}
+
+		private void AnalogInAChannel5Changed(object sender, RoutedEventArgs e) {
+			if (enableValueChangedEvents == false) {
+				return;
+			}
+
+			float range = (float)Math.Pow(2, (5 - analogInAChannel5Range.SelectedIndex));
+
+			//analogInChart.AxisY.Clear();
+			//Axis axisY = new Axis { MinValue = -range, MaxValue = range };
+			//axisY.Separator = new LiveCharts.Wpf.Separator { Step = (range / 16.0) };
+			//analogInChart.AxisY.Add(axisY);
+
+			//SerialSendCommand(Opcodes.setAnalogInACH, data);
+			daq.AddAnalogIn(5, range, (AnalogInMode)analogInAChannel5Mode.SelectedIndex);
+		}
+
+		private void AnalogInAChannel6Changed(object sender, RoutedEventArgs e) {
+			if (enableValueChangedEvents == false) {
+				return;
+			}
+
+			float range = (float)Math.Pow(2, (5 - analogInAChannel6Range.SelectedIndex));
+
+			//analogInChart.AxisY.Clear();
+			//Axis axisY = new Axis { MinValue = -range, MaxValue = range };
+			//axisY.Separator = new LiveCharts.Wpf.Separator { Step = (range / 16.0) };
+			//analogInChart.AxisY.Add(axisY);
+
+			//SerialSendCommand(Opcodes.setAnalogInACH, data);
+			daq.AddAnalogIn(6, range, (AnalogInMode)analogInAChannel5Mode.SelectedIndex);
+		}
+
+		private void AnalogInAChannel7Changed(object sender, RoutedEventArgs e) {
+			if (enableValueChangedEvents == false) {
+				return;
+			}
+
+			float range = (float)Math.Pow(2, (5 - analogInAChannel7Range.SelectedIndex));
+
+			//analogInChart.AxisY.Clear();
+			//Axis axisY = new Axis { MinValue = -range, MaxValue = range };
+			//axisY.Separator = new LiveCharts.Wpf.Separator { Step = (range / 16.0) };
+			//analogInChart.AxisY.Add(axisY);
+
+			//SerialSendCommand(Opcodes.setAnalogInACH, data);
+			daq.AddAnalogIn(7, range, (AnalogInMode)analogInAChannel7Mode.SelectedIndex);
+		}
+
+		private void AnalogInAChannel8Changed(object sender, RoutedEventArgs e) {
+			if (enableValueChangedEvents == false) {
+				return;
+			}
+
+			float range = (float)Math.Pow(2, (5 - analogInAChannel8Range.SelectedIndex));
+
+			//analogInChart.AxisY.Clear();
+			//Axis axisY = new Axis { MinValue = -range, MaxValue = range };
+			//axisY.Separator = new LiveCharts.Wpf.Separator { Step = (range / 16.0) };
+			//analogInChart.AxisY.Add(axisY);
+
+			//SerialSendCommand(Opcodes.setAnalogInACH, data);
+			daq.AddAnalogIn(8, range, (AnalogInMode)analogInAChannel7Mode.SelectedIndex);
 		}
 
 		private void AnalogOutOffsetValidation(object sender, TextCompositionEventArgs e) {
@@ -277,18 +390,12 @@ namespace STM32G4DAQ {
 				int.TryParse(offsetStr, out offset);
 
 				//Check input range
-				if(offset > 15000) {
-					offset = 15000;
+				if(offset > 12500) {
+					offset = 12500;
 				}
-				else if(offset < -15000) {
-					offset = -15000;
+				else if(offset < -12500) {
+					offset = -12500;
 				}
-
-				//Convert to valid values, DAC steps
-				float step = 30000 / 4096;
-				offset = offset + 15000;
-				int nSteps = Convert.ToInt32( offset / step);
-				offset = Convert.ToInt32(nSteps * step) - 15000;
 
 				((TextBox)sender).Text = offset.ToString();
 
@@ -374,9 +481,6 @@ namespace STM32G4DAQ {
 
 			int offset = 0;
 			int.TryParse(analogOutAChannel1Offset.Text, out offset);
-			offset += 15000;
-			float step = 30000 / 4096;
-			int nSteps = Convert.ToInt32(offset / step);
 
 			int freq = 0;
 			int.TryParse(analogOutAChannel1Freq.Text, out freq);
@@ -429,6 +533,33 @@ namespace STM32G4DAQ {
 				data[6 + (2 * i)] = (byte)(buffer[i] >> 8);
 				data[6 + (2 * i + 1)] = (byte)(buffer[i]);
 			}
+
+			daq.AddAnalogOutput(1, (offset / 1000.0));
+
+			//SerialSendCommand(Opcodes.setAnalogOutACH, data);
+		}
+
+		private void AnalogOutAChannel2Changed(object sender, RoutedEventArgs e) {
+			if (enableValueChangedEvents == false) {
+				return;
+			}
+
+			int offset = 0;
+			int.TryParse(analogOutAChannel2Offset.Text, out offset);
+
+			int freq = 0;
+			int.TryParse(analogOutAChannel2Freq.Text, out freq);
+
+			int amp = 0;
+			int.TryParse(analogOutAChannel2Amp.Text, out amp);
+
+			int dc = 0;
+			int.TryParse(analogOutAChannel2DC.Text, out dc);
+
+			float baseFreq = 10000000;
+			float freqDiv = baseFreq / freq;
+
+			daq.AddAnalogOutput(2, (offset / 1000.0));
 
 			//SerialSendCommand(Opcodes.setAnalogOutACH, data);
 		}
