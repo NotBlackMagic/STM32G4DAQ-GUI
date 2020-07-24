@@ -42,9 +42,8 @@ namespace STM32G4DAQ {
 
 		const int graphPoints = 512;
 
-		byte[] txBuffer = new byte[34];
-
 		int[] analogInADataIndex = new int[8];
+		float[] analogInRanges = new float[8];
 		double[][] analogInAData = new double[8][];
 
 		bool enableValueChangedEvents = false;
@@ -64,6 +63,14 @@ namespace STM32G4DAQ {
 			analogInADataIndex[5] = 0;
 			analogInADataIndex[6] = 0;
 			analogInADataIndex[7] = 0;
+			analogInRanges[0] = 0;
+			analogInRanges[1] = 0;
+			analogInRanges[2] = 0;
+			analogInRanges[3] = 0;
+			analogInRanges[4] = 0;
+			analogInRanges[5] = 0;
+			analogInRanges[6] = 0;
+			analogInRanges[7] = 0;
 			analogInAData[0] = new double[graphPoints];
 			analogInAData[1] = new double[graphPoints];
 			analogInAData[2] = new double[graphPoints];
@@ -153,6 +160,10 @@ namespace STM32G4DAQ {
 			analogInChart.AxisX.Add(axisX);
 
 			DataContext = this;
+		}
+
+		private void OnWindowClosing(object sender, EventArgs e) {
+			daq.Disconnect();
 		}
 
 		private void GUIUpdateHandler(object sender, EventArgs e) {
@@ -253,14 +264,22 @@ namespace STM32G4DAQ {
 
 			float range = (float)Math.Pow(2, (5 - analogInAChannel1Range.SelectedIndex));
 
+			analogInRanges[0] = range;
+
+			float maxRange = 0;
+			for(int i = 0; i < analogInRanges.Length; i++) {
+				if(analogInRanges[i] > maxRange) {
+					maxRange = analogInRanges[i];
+				}
+			}
+
 			Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
 
 			analogInChart.AxisY.Clear();
-			Axis axisY = new Axis { MinValue = -range, MaxValue = range, LabelFormatter = formatFunc };
-			axisY.Separator = new LiveCharts.Wpf.Separator { Step = (range/16.0) };
+			Axis axisY = new Axis { MinValue = -maxRange, MaxValue = maxRange, LabelFormatter = formatFunc };
+			axisY.Separator = new LiveCharts.Wpf.Separator { Step = (maxRange / 16.0) };
 			analogInChart.AxisY.Add(axisY);
 
-			//SerialSendCommand(Opcodes.setAnalogInACH, data);
 			daq.AddAnalogIn(1, range, (AnalogInMode)analogInAChannel1Mode.SelectedIndex);
 		}
 
@@ -271,12 +290,22 @@ namespace STM32G4DAQ {
 
 			float range = (float)Math.Pow(2, (5 - analogInAChannel2Range.SelectedIndex));
 
-			//analogInChart.AxisY.Clear();
-			//Axis axisY = new Axis { MinValue = -range, MaxValue = range };
-			//axisY.Separator = new LiveCharts.Wpf.Separator { Step = (range / 16.0) };
-			//analogInChart.AxisY.Add(axisY);
+			analogInRanges[1] = range;
 
-			//SerialSendCommand(Opcodes.setAnalogInACH, data);
+			float maxRange = 0;
+			for (int i = 0; i < analogInRanges.Length; i++) {
+				if (analogInRanges[i] > maxRange) {
+					maxRange = analogInRanges[i];
+				}
+			}
+
+			Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
+
+			analogInChart.AxisY.Clear();
+			Axis axisY = new Axis { MinValue = -maxRange, MaxValue = maxRange, LabelFormatter = formatFunc };
+			axisY.Separator = new LiveCharts.Wpf.Separator { Step = (maxRange / 16.0) };
+			analogInChart.AxisY.Add(axisY);
+
 			daq.AddAnalogIn(2, range, (AnalogInMode)analogInAChannel1Mode.SelectedIndex);
 		}
 
@@ -287,12 +316,22 @@ namespace STM32G4DAQ {
 
 			float range = (float)Math.Pow(2, (5 - analogInAChannel3Range.SelectedIndex));
 
-			//analogInChart.AxisY.Clear();
-			//Axis axisY = new Axis { MinValue = -range, MaxValue = range };
-			//axisY.Separator = new LiveCharts.Wpf.Separator { Step = (range / 16.0) };
-			//analogInChart.AxisY.Add(axisY);
+			analogInRanges[2] = range;
 
-			//SerialSendCommand(Opcodes.setAnalogInACH, data);
+			float maxRange = 0;
+			for (int i = 0; i < analogInRanges.Length; i++) {
+				if (analogInRanges[i] > maxRange) {
+					maxRange = analogInRanges[i];
+				}
+			}
+
+			Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
+
+			analogInChart.AxisY.Clear();
+			Axis axisY = new Axis { MinValue = -maxRange, MaxValue = maxRange, LabelFormatter = formatFunc };
+			axisY.Separator = new LiveCharts.Wpf.Separator { Step = (maxRange / 16.0) };
+			analogInChart.AxisY.Add(axisY);
+
 			daq.AddAnalogIn(3, range, (AnalogInMode)analogInAChannel3Mode.SelectedIndex);
 		}
 
@@ -303,12 +342,22 @@ namespace STM32G4DAQ {
 
 			float range = (float)Math.Pow(2, (5 - analogInAChannel4Range.SelectedIndex));
 
-			//analogInChart.AxisY.Clear();
-			//Axis axisY = new Axis { MinValue = -range, MaxValue = range };
-			//axisY.Separator = new LiveCharts.Wpf.Separator { Step = (range / 16.0) };
-			//analogInChart.AxisY.Add(axisY);
+			analogInRanges[3] = range;
 
-			//SerialSendCommand(Opcodes.setAnalogInACH, data);
+			float maxRange = 0;
+			for (int i = 0; i < analogInRanges.Length; i++) {
+				if (analogInRanges[i] > maxRange) {
+					maxRange = analogInRanges[i];
+				}
+			}
+
+			Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
+
+			analogInChart.AxisY.Clear();
+			Axis axisY = new Axis { MinValue = -maxRange, MaxValue = maxRange, LabelFormatter = formatFunc };
+			axisY.Separator = new LiveCharts.Wpf.Separator { Step = (maxRange / 16.0) };
+			analogInChart.AxisY.Add(axisY);
+
 			daq.AddAnalogIn(4, range, (AnalogInMode)analogInAChannel3Mode.SelectedIndex);
 		}
 
@@ -319,12 +368,22 @@ namespace STM32G4DAQ {
 
 			float range = (float)Math.Pow(2, (5 - analogInAChannel5Range.SelectedIndex));
 
-			//analogInChart.AxisY.Clear();
-			//Axis axisY = new Axis { MinValue = -range, MaxValue = range };
-			//axisY.Separator = new LiveCharts.Wpf.Separator { Step = (range / 16.0) };
-			//analogInChart.AxisY.Add(axisY);
+			analogInRanges[4] = range;
 
-			//SerialSendCommand(Opcodes.setAnalogInACH, data);
+			float maxRange = 0;
+			for (int i = 0; i < analogInRanges.Length; i++) {
+				if (analogInRanges[i] > maxRange) {
+					maxRange = analogInRanges[i];
+				}
+			}
+
+			Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
+
+			analogInChart.AxisY.Clear();
+			Axis axisY = new Axis { MinValue = -maxRange, MaxValue = maxRange, LabelFormatter = formatFunc };
+			axisY.Separator = new LiveCharts.Wpf.Separator { Step = (maxRange / 16.0) };
+			analogInChart.AxisY.Add(axisY);
+
 			daq.AddAnalogIn(5, range, (AnalogInMode)analogInAChannel5Mode.SelectedIndex);
 		}
 
@@ -335,12 +394,22 @@ namespace STM32G4DAQ {
 
 			float range = (float)Math.Pow(2, (5 - analogInAChannel6Range.SelectedIndex));
 
-			//analogInChart.AxisY.Clear();
-			//Axis axisY = new Axis { MinValue = -range, MaxValue = range };
-			//axisY.Separator = new LiveCharts.Wpf.Separator { Step = (range / 16.0) };
-			//analogInChart.AxisY.Add(axisY);
+			analogInRanges[5] = range;
 
-			//SerialSendCommand(Opcodes.setAnalogInACH, data);
+			float maxRange = 0;
+			for (int i = 0; i < analogInRanges.Length; i++) {
+				if (analogInRanges[i] > maxRange) {
+					maxRange = analogInRanges[i];
+				}
+			}
+
+			Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
+
+			analogInChart.AxisY.Clear();
+			Axis axisY = new Axis { MinValue = -maxRange, MaxValue = maxRange, LabelFormatter = formatFunc };
+			axisY.Separator = new LiveCharts.Wpf.Separator { Step = (maxRange / 16.0) };
+			analogInChart.AxisY.Add(axisY);
+
 			daq.AddAnalogIn(6, range, (AnalogInMode)analogInAChannel5Mode.SelectedIndex);
 		}
 
@@ -351,12 +420,22 @@ namespace STM32G4DAQ {
 
 			float range = (float)Math.Pow(2, (5 - analogInAChannel7Range.SelectedIndex));
 
-			//analogInChart.AxisY.Clear();
-			//Axis axisY = new Axis { MinValue = -range, MaxValue = range };
-			//axisY.Separator = new LiveCharts.Wpf.Separator { Step = (range / 16.0) };
-			//analogInChart.AxisY.Add(axisY);
+			analogInRanges[6] = range;
 
-			//SerialSendCommand(Opcodes.setAnalogInACH, data);
+			float maxRange = 0;
+			for (int i = 0; i < analogInRanges.Length; i++) {
+				if (analogInRanges[i] > maxRange) {
+					maxRange = analogInRanges[i];
+				}
+			}
+
+			Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
+
+			analogInChart.AxisY.Clear();
+			Axis axisY = new Axis { MinValue = -maxRange, MaxValue = maxRange, LabelFormatter = formatFunc };
+			axisY.Separator = new LiveCharts.Wpf.Separator { Step = (maxRange / 16.0) };
+			analogInChart.AxisY.Add(axisY);
+
 			daq.AddAnalogIn(7, range, (AnalogInMode)analogInAChannel7Mode.SelectedIndex);
 		}
 
@@ -367,12 +446,22 @@ namespace STM32G4DAQ {
 
 			float range = (float)Math.Pow(2, (5 - analogInAChannel8Range.SelectedIndex));
 
-			//analogInChart.AxisY.Clear();
-			//Axis axisY = new Axis { MinValue = -range, MaxValue = range };
-			//axisY.Separator = new LiveCharts.Wpf.Separator { Step = (range / 16.0) };
-			//analogInChart.AxisY.Add(axisY);
+			analogInRanges[7] = range;
 
-			//SerialSendCommand(Opcodes.setAnalogInACH, data);
+			float maxRange = 0;
+			for (int i = 0; i < analogInRanges.Length; i++) {
+				if (analogInRanges[i] > maxRange) {
+					maxRange = analogInRanges[i];
+				}
+			}
+
+			Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
+
+			analogInChart.AxisY.Clear();
+			Axis axisY = new Axis { MinValue = -maxRange, MaxValue = maxRange, LabelFormatter = formatFunc };
+			axisY.Separator = new LiveCharts.Wpf.Separator { Step = (maxRange / 16.0) };
+			analogInChart.AxisY.Add(axisY);
+
 			daq.AddAnalogIn(8, range, (AnalogInMode)analogInAChannel7Mode.SelectedIndex);
 		}
 
@@ -560,8 +649,52 @@ namespace STM32G4DAQ {
 			float freqDiv = baseFreq / freq;
 
 			daq.AddAnalogOutput(2, (offset / 1000.0));
+		}
 
-			//SerialSendCommand(Opcodes.setAnalogOutACH, data);
+		private void AnalogOutBChannel1Changed(object sender, RoutedEventArgs e) {
+			if (enableValueChangedEvents == false) {
+				return;
+			}
+
+			int offset = 0;
+			int.TryParse(analogOutBChannel1Offset.Text, out offset);
+
+			int freq = 0;
+			int.TryParse(analogOutBChannel1Freq.Text, out freq);
+
+			int amp = 0;
+			int.TryParse(analogOutBChannel1Amp.Text, out amp);
+
+			int dc = 0;
+			int.TryParse(analogOutBChannel1DC.Text, out dc);
+
+			float baseFreq = 10000000;
+			float freqDiv = baseFreq / freq;
+
+			daq.AddAnalogOutput(3, (offset / 1000.0));
+		}
+
+		private void AnalogOutBChannel2Changed(object sender, RoutedEventArgs e) {
+			if (enableValueChangedEvents == false) {
+				return;
+			}
+
+			int offset = 0;
+			int.TryParse(analogOutBChannel2Offset.Text, out offset);
+
+			int freq = 0;
+			int.TryParse(analogOutBChannel2Freq.Text, out freq);
+
+			int amp = 0;
+			int.TryParse(analogOutBChannel2Amp.Text, out amp);
+
+			int dc = 0;
+			int.TryParse(analogOutBChannel2DC.Text, out dc);
+
+			float baseFreq = 10000000;
+			float freqDiv = baseFreq / freq;
+
+			daq.AddAnalogOutput(4, (offset / 1000.0));
 		}
 	}
 }

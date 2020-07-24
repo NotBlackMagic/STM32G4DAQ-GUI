@@ -7,7 +7,14 @@
 		xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
 		xmlns:ports="clr-namespace:System.IO.Ports;assembly=System"
 		mc:Ignorable="d"
-		Title="STM32G4DAQ" Height="900" Width="1600" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="SingleBorderWindow">
+		Title="STM32G4DAQ" 
+		Height="900" 
+		Width="1600" 
+		ResizeMode="NoResize" 
+		WindowStartupLocation="CenterScreen" 
+		WindowStyle="SingleBorderWindow" 
+		Icon="/TestLogoV3RoundWhiteGlow.png"
+		Closing="OnWindowClosing">
 
 	<Window.Resources>
 		<ObjectDataProvider ObjectType="{x:Type ports:SerialPort}" MethodName="GetPortNames" x:Key="portNames"/>
@@ -597,7 +604,7 @@
 					</StackPanel>
 				</Grid>
 			</TabItem>
-			<TabItem Header="Analog Out A">
+			<TabItem Header="Analog Out">
 				<Grid DockPanel.Dock="Top" Height="150px" Background="LightGray">
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="Auto"/>
@@ -608,7 +615,7 @@
 					</Grid.ColumnDefinitions>
 					<Border Grid.Column="0" BorderThickness="1" BorderBrush="DarkGray"/>
 					<StackPanel Grid.Column="0" Margin="5,3,5,3">
-						<Label Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" FontWeight="Bold" Padding="0">Channel 1</Label>
+						<Label Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" FontWeight="Bold" Padding="0">Channel 1A</Label>
 						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
 							<Label Padding="0" Width="90" HorizontalAlignment="Left" VerticalContentAlignment="Center">Mode:</Label>
 							<ComboBox x:Name="analogOutAChannel1Mode" SelectedIndex="0" SelectionChanged="AnalogOutAChannel1Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
@@ -639,7 +646,7 @@
 					</StackPanel>
 					<Border Grid.Column="1" BorderThickness="1" BorderBrush="DarkGray"/>
 					<StackPanel Grid.Column="1" Margin="5,3,5,3">
-						<Label Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" FontWeight="Bold" Padding="0">Channel 2</Label>
+						<Label Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" FontWeight="Bold" Padding="0">Channel 2A</Label>
 						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
 							<Label Padding="0" Width="90" HorizontalAlignment="Left" VerticalContentAlignment="Center">Mode:</Label>
 							<ComboBox x:Name="analogOutAChannel2Mode" SelectedIndex="0" SelectionChanged="AnalogOutAChannel2Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
@@ -666,6 +673,68 @@
 						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
 							<Label Padding="0" Width="90" HorizontalAlignment="Left" VerticalContentAlignment="Center">Duty Cycle (%):</Label>
 							<TextBox x:Name="analogOutAChannel2DC" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutAChannel2Changed" PreviewTextInput="AnalogOutDCValidation" MaxLength="3" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
+						</StackPanel>
+					</StackPanel>
+					<Border Grid.Column="2" BorderThickness="1" BorderBrush="DarkGray"/>
+					<StackPanel Grid.Column="2" Margin="5,3,5,3">
+						<Label Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" FontWeight="Bold" Padding="0">Channel 1B</Label>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="90" HorizontalAlignment="Left" VerticalContentAlignment="Center">Mode:</Label>
+							<ComboBox x:Name="analogOutBChannel1Mode" SelectedIndex="0" SelectionChanged="AnalogOutBChannel1Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="OFF"/>
+								<ComboBoxItem Content="DC"/>
+								<ComboBoxItem Content="Sine"/>
+								<ComboBoxItem Content="Square"/>
+								<ComboBoxItem Content="Ramp"/>
+								<ComboBoxItem Content="Noise"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="90" HorizontalAlignment="Left" VerticalContentAlignment="Center">Offset (mV):</Label>
+							<TextBox x:Name="analogOutBChannel1Offset" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutBChannel1Changed" PreviewTextInput="AnalogOutOffsetValidation" MaxLength="6" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="90" HorizontalAlignment="Left" VerticalContentAlignment="Center">Frequency (Hz):</Label>
+							<TextBox x:Name="analogOutBChannel1Freq" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutBChannel1Changed" PreviewTextInput="AnalogOutFrequencyValidation" MaxLength="6" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="90" HorizontalAlignment="Left" VerticalContentAlignment="Center">Amplitude (mV):</Label>
+							<TextBox x:Name="analogOutBChannel1Amp" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutBChannel1Changed" PreviewTextInput="AnalogOutAmplitudeValidation" MaxLength="6" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="90" HorizontalAlignment="Left" VerticalContentAlignment="Center">Duty Cycle (%):</Label>
+							<TextBox x:Name="analogOutBChannel1DC" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutBChannel1Changed" PreviewTextInput="AnalogOutDCValidation" MaxLength="3" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
+						</StackPanel>
+					</StackPanel>
+					<Border Grid.Column="3" BorderThickness="1" BorderBrush="DarkGray"/>
+					<StackPanel Grid.Column="3" Margin="5,3,5,3">
+						<Label Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" FontWeight="Bold" Padding="0">Channel 2B</Label>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="90" HorizontalAlignment="Left" VerticalContentAlignment="Center">Mode:</Label>
+							<ComboBox x:Name="analogOutBChannel2Mode" SelectedIndex="0" SelectionChanged="AnalogOutBChannel2Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="OFF"/>
+								<ComboBoxItem Content="DC"/>
+								<ComboBoxItem Content="Sine"/>
+								<ComboBoxItem Content="Square"/>
+								<ComboBoxItem Content="Ramp"/>
+								<ComboBoxItem Content="Noise"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="90" HorizontalAlignment="Left" VerticalContentAlignment="Center">Offset (mV):</Label>
+							<TextBox x:Name="analogOutBChannel2Offset" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutBChannel2Changed" PreviewTextInput="AnalogOutOffsetValidation" MaxLength="6" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="90" HorizontalAlignment="Left" VerticalContentAlignment="Center">Frequency (Hz):</Label>
+							<TextBox x:Name="analogOutBChannel2Freq" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutBChannel2Changed" PreviewTextInput="AnalogOutFrequencyValidation" MaxLength="6" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="90" HorizontalAlignment="Left" VerticalContentAlignment="Center">Amplitude (mV):</Label>
+							<TextBox x:Name="analogOutBChannel2Amp" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutBChannel2Changed" PreviewTextInput="AnalogOutAmplitudeValidation" MaxLength="6" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="90" HorizontalAlignment="Left" VerticalContentAlignment="Center">Duty Cycle (%):</Label>
+							<TextBox x:Name="analogOutBChannel2DC" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutBChannel2Changed" PreviewTextInput="AnalogOutDCValidation" MaxLength="3" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
 						</StackPanel>
 					</StackPanel>
 				</Grid>

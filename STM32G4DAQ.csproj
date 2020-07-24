@@ -7,8 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="TestLogoV3RoundWhiteGlow.png" />
+    <None Remove="TestLogoV3RoundWhiteGlowTrans.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="LiveCharts.Wpf" Version="0.9.7" />
     <PackageReference Include="System.IO.Ports" Version="4.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="TestLogoV3RoundWhiteGlow.png" />
+    <Resource Include="TestLogoV3RoundWhiteGlowTrans.png" />
   </ItemGroup>
 
 </Project>

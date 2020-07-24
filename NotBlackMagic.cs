@@ -24,6 +24,7 @@ namespace NotBlackMagic {
 		public const byte setAnalogInACH = 0x14;
 
 		public const byte setAnalogOutACH = 0x15;
+		public const byte setAnalogOutBCH = 0x16;
 
 		public const byte txAnalogInA = 0x81;
 	}
@@ -189,7 +190,12 @@ namespace NotBlackMagic {
 			byte[] rxBuffer = new byte[1024];
 			while (true) {
 				if (serialPort.IsOpen) {
-					int rxLength = await serialPort.BaseStream.ReadAsync(rxBuffer, 0, rxBuffer.Length);
+					int rxLength = 0;
+					try {
+						rxLength = await serialPort.BaseStream.ReadAsync(rxBuffer, 0, rxBuffer.Length);
+					} catch {
+						return;
+					}
 
 					for (int i = 0; i < rxLength; i++) {
 						if (index == 0) {
@@ -331,7 +337,6 @@ namespace NotBlackMagic {
 
 			int offset = Convert.ToInt32(dacValue * (4096 / 2.048));
 
-			data[0] = (byte)channel;	//Output Channel
 			data[1] = 0;				//Output Sampling Frequncy (3 bytes)
 			data[2] = 0;				
 			data[3] = 0;
@@ -340,7 +345,15 @@ namespace NotBlackMagic {
 			data[6] = (byte)(offset >> 8);                //Output buffer values (uint16_t)
 			data[7] = (byte)offset;
 
-			USBWrite(Opcodes.setAnalogOutACH, data);
+			if (channel == 1 || channel == 2) {
+				data[0] = (byte)channel;    //Output Channel
+				USBWrite(Opcodes.setAnalogOutACH, data);
+			}
+			else if(channel == 3 || channel == 4) {
+				data[0] = (byte)(channel - 2);    //Output Channel
+				USBWrite(Opcodes.setAnalogOutBCH, data);
+			}
+			
 		}
 
 		~STMDAQ() {
@@ -348,8 +361,6 @@ namespace NotBlackMagic {
 				USBWrite(Opcodes.disconnect, null);
 
 				serialPort.Close();
-
-				rxUSBThread.Abort();
 			}
 		}
 	}
