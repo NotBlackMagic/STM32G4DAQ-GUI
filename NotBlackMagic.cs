@@ -76,7 +76,7 @@ namespace NotBlackMagic {
 
 		volatile int valueLength = 0;
 		volatile int index = 0;
-		volatile float[] values = new float[1024];
+		volatile int[] values = new int[1024];
 
 		public AnalogInChannel(int channel, float range, AnalogInMode mode) {
 			this.channel = channel;
@@ -89,9 +89,9 @@ namespace NotBlackMagic {
 
 		public void AddValues(int[] values) {
 			for(int i = 0; i < values.Length; i++) {
-				double scaling = (vRef / gain) / (1 << (resolution - 1));
-				double voltValue = (values[i] - (1 << (resolution - 1))) * scaling;
-				this.values[index++] = (float)voltValue;
+				//double scaling = (vRef / gain) / (1 << (resolution - 1));
+				//double voltValue = (values[i] - (1 << (resolution - 1))) * scaling;
+				this.values[index++] = values[i];
 
 				if (index >= this.values.Length) {
 					index = 0;
@@ -103,8 +103,12 @@ namespace NotBlackMagic {
 			}
 		}
 
-		public float[] GetValues(int count) {
-			float[] temp = new float[count];
+		public double GetVoltageScaling() {
+			return (vRef / gain) / (1 << (resolution - 1));
+		}
+
+		public int[] GetValues(int count) {
+			int[] temp = new int[count];
 
 			int tempIndex = this.index - count;
 
@@ -123,13 +127,16 @@ namespace NotBlackMagic {
 		}
 	}
 	public class STMDAQ {
+		bool rxUSBThreadRun = true;
 		Thread rxUSBThread;
 		SerialPort serialPort = new SerialPort();
 
 		Stopwatch usbRXStopwatch = new Stopwatch();
 		int usbRXByteCount = 0;
 		int usbRXPacketCount = 0;
+		int usbRXErrorCount = 0;
 		float usbRXDatarate = 0;
+		float usbRXErrorRate = 0;
 
 		AnalogInChannel[] analogInAChannels = new AnalogInChannel[8];
 
@@ -147,6 +154,7 @@ namespace NotBlackMagic {
 
 					usbRXStopwatch.Start();
 
+					rxUSBThreadRun = true;
 					rxUSBThread = new Thread(USBRXThread);
 					rxUSBThread.Start();
 				}
@@ -164,6 +172,11 @@ namespace NotBlackMagic {
 			if (serialPort.IsOpen == true) {
 				USBWrite(Opcodes.disconnect, null);
 
+				rxUSBThreadRun = false;
+
+				//This delay gives time for the USBWrite to complete the write before destroying/closing the connection
+				Thread.Sleep(100);
+
 				serialPort.Close();
 			}
 			else {
@@ -180,7 +193,11 @@ namespace NotBlackMagic {
 			return usbRXDatarate;
 		}
 
-		private async void USBRXThread() {
+		public float USBRXErrorRate() {
+			return usbRXErrorRate;
+		}
+
+		private void USBRXThread() {
 			DAQPacket rxPacket = new DAQPacket();
 
 			int index = 0;
@@ -188,38 +205,50 @@ namespace NotBlackMagic {
 			byte[] rxDataPacket = new byte[550];
 
 			byte[] rxBuffer = new byte[1024];
-			while (true) {
+			while (rxUSBThreadRun) {
 				if (serialPort.IsOpen) {
 					int rxLength = 0;
 					try {
-						rxLength = await serialPort.BaseStream.ReadAsync(rxBuffer, 0, rxBuffer.Length);
+						//rxLength = await serialPort.BaseStream.ReadAsync(rxBuffer, 0, rxBuffer.Length);
+						rxLength = serialPort.BaseStream.Read(rxBuffer, 0, rxBuffer.Length);
 					} catch {
 						return;
 					}
 
 					for (int i = 0; i < rxLength; i++) {
 						if (index == 0) {
+							//First Byte of package is the Opcode
 							rxDataPacket[index++] = rxBuffer[i];
 						}
 						else if (index == 1) {
+							//Second and Third byte of package is the length
 							rxDataPacket[index++] = rxBuffer[i];
 							rxDataPacketLength = (rxBuffer[i] << 8);
 						}
 						else if (index == 2) {
+							//Second and Third byte of package is the length
 							rxDataPacket[index++] = rxBuffer[i];
 							rxDataPacketLength += rxBuffer[i];
 
 							if(rxDataPacketLength > 512) {
+								//RX Buffer overflow
 								index = 0;
+
+								usbRXErrorCount += 1;
 							}
 						}
 						else if (index < (rxDataPacketLength + 3 + 2)) {
+							//Rest bytes are payload
 							rxDataPacket[index++] = rxBuffer[i];
 						}
 						else {
+							//Full packet received
 							rxPacket.Decode(rxDataPacket);
 
-							USBRXProcessing(rxPacket);
+							if(USBRXProcessing(rxPacket) != 0) {
+								//Packet Processing Error
+								usbRXErrorCount += 1;
+							}
 
 							usbRXPacketCount += 1;
 							index = 0;
@@ -231,19 +260,22 @@ namespace NotBlackMagic {
 						usbRXDatarate = (float)usbRXByteCount;
 						usbRXByteCount = 0;
 
+						usbRXErrorRate = (float)usbRXErrorCount;
+						usbRXErrorCount = 0;
+
 						usbRXStopwatch.Restart();
 					}
 				}
 			}
 		}
 
-		private void USBRXProcessing(DAQPacket packet) {
+		private int USBRXProcessing(DAQPacket packet) {
 			switch(packet.opcode) {
 				case Opcodes.txAnalogInA:  {
 					int channel = packet.payload[0];
 
 					if(channel < 1 || channel > analogInAChannels.Length) {
-						return;
+						return 1;
 					}
 
 					if (analogInAChannels[channel - 1] != null) {
@@ -258,6 +290,8 @@ namespace NotBlackMagic {
 					break;
 				}
 			}
+
+			return 0;
 		}
 
 		private void USBWrite(int opcode, byte[] payload) {
@@ -303,9 +337,31 @@ namespace NotBlackMagic {
 			USBWrite(Opcodes.setAnalogInA, data);
 		}
 
-		public float[] ReadAnalogIn(int channel, int count) {
+		public int[] ReadAnalogIn(int channel, int count) {
 			if(analogInAChannels[channel - 1] != null) {
 				return analogInAChannels[channel - 1].GetValues(count);
+			}
+			else {
+				return null;
+			}
+		}
+
+		public float[] ReadAnalogInVolt(int channel, int count) {
+			if (analogInAChannels[channel - 1] != null) {
+				double scaling = analogInAChannels[channel - 1].GetVoltageScaling();
+
+				int[] values = new int[count];
+				values = analogInAChannels[channel - 1].GetValues(count);
+
+				//double scaling = (vRef / gain) / (1 << (resolution - 1));
+				//double voltValue = (values[i] - (1 << (resolution - 1))) * scaling;
+
+				float[] voltValue = new float[count];
+				for(int i = 0; i < count; i++) {
+					voltValue[i] = (float)((values[i] - 2048) * scaling);
+				}
+
+				return voltValue;
 			}
 			else {
 				return null;
@@ -329,21 +385,32 @@ namespace NotBlackMagic {
 		const int rg1 = 12000;
 		const int rg2 = 10000;
 		const int rf = 62000;
-		public void AddAnalogOutput(int channel, double value) {
-			byte[] data = new byte[8];
+		public void AddAnalogOutput(int channel, double[] value, int frequency) {
+			int length = value.Length;
 
-			double dacValue = value + ((double)rf / rg2 * 2.048);
-			dacValue = dacValue / (1.0 + (double)rf / rg2 + (double)rf / rg1);
+			byte[] data = new byte[6 + 2*length];
 
-			int offset = Convert.ToInt32(dacValue * (4096 / 2.048));
+			for(int i = 0; i < length; i++) {
+				double tempValue = value[i] + ((double)rf / rg2 * 2.048);
+				tempValue = tempValue / (1.0 + (double)rf / rg2 + (double)rf / rg1);
 
-			data[1] = 0;				//Output Sampling Frequncy (3 bytes)
-			data[2] = 0;				
-			data[3] = 0;
-			data[4] = 0;				//Output Sampling Buffer Length (uint16_t)
-			data[5] = 1;
-			data[6] = (byte)(offset >> 8);                //Output buffer values (uint16_t)
-			data[7] = (byte)offset;
+				int dacCount = Convert.ToInt32(tempValue * (4096 / 2.048));
+				if(dacCount > 4095) {
+					dacCount = 4095;
+				}
+				else if(dacCount < 0) {
+					dacCount = 0;
+				}
+
+				data[6 + 2 * i] = (byte)(dacCount >> 8);
+				data[7 + 2 * i] = (byte)(dacCount);
+			}
+
+			data[1] = (byte)(frequency >> 16);				//Output Sampling Frequncy (3 bytes)
+			data[2] = (byte)(frequency >> 8);				
+			data[3] = (byte)(frequency);
+			data[4] = (byte)(length >> 8);					//Output Sampling Buffer Length (uint16_t)
+			data[5] = (byte)(length);
 
 			if (channel == 1 || channel == 2) {
 				data[0] = (byte)channel;    //Output Channel
@@ -353,12 +420,16 @@ namespace NotBlackMagic {
 				data[0] = (byte)(channel - 2);    //Output Channel
 				USBWrite(Opcodes.setAnalogOutBCH, data);
 			}
-			
 		}
 
 		~STMDAQ() {
 			if (serialPort.IsOpen == true) {
 				USBWrite(Opcodes.disconnect, null);
+
+				rxUSBThreadRun = false;
+
+				//This delay gives time for the USBWrite to complete the write before destroying/closing the connection
+				Thread.Sleep(100);
 
 				serialPort.Close();
 			}

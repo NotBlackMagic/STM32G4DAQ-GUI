@@ -169,41 +169,45 @@ namespace STM32G4DAQ {
 		private void GUIUpdateHandler(object sender, EventArgs e) {
 			float rxRate = daq.USBRXDatarate() * 0.001f;
 			rxUSBDatarateLabel.Content = rxRate.ToString("0.0");
-			//txUSBDatarateLabel.Content = txUSBDatarate.ToString("0.0");
-			//rxUSBDroppedLabel.Content = rxUSBDroppedRate.ToString("0.0");
+
+			float rxErrorRate = daq.USBRXErrorRate();
+			rxUSBDroppedLabel.Content = rxErrorRate.ToString("0.0");
 
 			//analogInACH1kspsLabel.Content = analogInAksps[0].ToString("0.0");
 			//analogInACH2kspsLabel.Content = analogInAksps[1].ToString("0.0");
 			//analogInACH3kspsLabel.Content = analogInAksps[2].ToString("0.0");
 			//analogInACH4kspsLabel.Content = analogInAksps[3].ToString("0.0");
-
-			for(int ch = 1; ch < 9; ch++) {
-				float[] chValues = daq.ReadAnalogIn(ch, graphPoints);
+			double avg = 0;
+			double sumSquares = 0;
+			for (int ch = 1; ch < 9; ch++) {
+				float[] chValues = daq.ReadAnalogInVolt(ch, graphPoints);
 				if (chValues != null) {
-					SeriesAnalogIn[ch-1].Values = new ChartValues<float>(chValues);
+					SeriesAnalogIn[ch - 1].Values = new ChartValues<float>(chValues);
+
+					//Calculate Standart Deviation in ADC counts, raw mode
+					int[] rawValues = daq.ReadAnalogIn(ch, graphPoints);
+
+					avg = rawValues.Average();
+					sumSquares = 0;
+					for (int i = 0; i < rawValues.Length; i++) {
+						sumSquares += (rawValues[i] - avg) * (rawValues[i] - avg);
+					}
+					double stdDev = Math.Sqrt(sumSquares / rawValues.Length);
+
+					if (ch == 1) {
+						stdCH1Label.Content = "CH1 Std: " + stdDev.ToString("F2");
+					}
+					else if (ch == 3) {
+						stdCH3Label.Content = "CH3 Std: " + stdDev.ToString("F2");
+					}
+					else if (ch == 5) {
+						stdCH5Label.Content = "CH5 Std: " + stdDev.ToString("F2");
+					}
+					else if (ch == 7) {
+						stdCH7Label.Content = "CH7 Std: " + stdDev.ToString("F2");
+					}
 				}
 			}
-
-			//float[] channel1 = daq.ReadAnalogIn(1, 1000);
-			//if (channel1 != null) {
-			//	SeriesAnalogIn[0].Values = new ChartValues<float>(channel1);
-			//}
-			//float[] channel3 = daq.ReadAnalogIn(3, 1000);
-			//if (channel3 != null) {
-			//	SeriesAnalogIn[2].Values = new ChartValues<float>(channel3);
-			//}
-			//float[] channel5 = daq.ReadAnalogIn(5, 1000);
-			//if (channel5 != null) {
-			//	SeriesAnalogIn[4].Values = new ChartValues<float>(channel5);
-			//}
-			//float[] channel7 = daq.ReadAnalogIn(7, 1000);
-			//if (channel7 != null) {
-			//	SeriesAnalogIn[6].Values = new ChartValues<float>(channel7);
-			//}
-
-			//SeriesAnalogIn[1].Values = new ChartValues<float>(analogInAData[1]);
-			//SeriesAnalogIn[2].Values = new ChartValues<float>(analogInAData[2]);
-			//SeriesAnalogIn[3].Values = new ChartValues<float>(analogInAData[3]);
 		}
 
 		private void SerialButtonClick(object sender, RoutedEventArgs e) {
@@ -500,6 +504,20 @@ namespace STM32G4DAQ {
 
 			bool isNumber = regex.IsMatch(e.Text);
 			if (isNumber) {
+				//Get Whole text in textbox
+				string freqStr = ((TextBox)sender).Text + e.Text;
+
+				//Convert to int
+				int frequency = 0;
+				int.TryParse(freqStr, out frequency);
+
+				//Check input range
+				if (frequency > 100000) {
+					frequency = 100000;
+				}
+
+				((TextBox)sender).Text = frequency.ToString();
+
 				e.Handled = true;
 			}
 			else {
@@ -520,12 +538,12 @@ namespace STM32G4DAQ {
 				int.TryParse(ampStr, out amplitude);
 
 				//Check input range
-				if (amplitude > 30000) {
-					amplitude = 30000;
+				if (amplitude > 25000) {
+					amplitude = 25000;
 				}
 
 				//Convert to valid values, DAC steps
-				float step = 30000 / 4096;
+				float step = 25000 / 4096;
 				int nSteps = Convert.ToInt32(amplitude / step);
 				amplitude = Convert.ToInt32(nSteps * step);
 
@@ -570,62 +588,137 @@ namespace STM32G4DAQ {
 
 			int offset = 0;
 			int.TryParse(analogOutAChannel1Offset.Text, out offset);
+			if (offset > 12500) {
+				offset = 12500;
+			}
+			else if (offset < -12500) {
+				offset = -12500;
+			}
 
 			int freq = 0;
 			int.TryParse(analogOutAChannel1Freq.Text, out freq);
-
-			int amp = 0;
-			int.TryParse(analogOutAChannel1Amp.Text, out amp);
-
-			int dc = 0;
-			int.TryParse(analogOutAChannel1DC.Text, out dc);
-
-			float baseFreq = 10000000;
-			float freqDiv = baseFreq / freq;
-
-			//Generate the signal pointds
-			UInt16[] buffer = new UInt16[20];
-			buffer[0] = 2048;
-			buffer[1] = 2680;
-			buffer[2] = 3252;
-			buffer[3] = 3705;
-			buffer[4] = 3996;
-			buffer[5] = 4095;
-			buffer[6] = 3996;
-			buffer[7] = 3705;
-			buffer[8] = 3252;
-			buffer[9] = 2680;
-			buffer[10] = 2048;
-			buffer[11] = 1415;
-			buffer[12] = 844;
-			buffer[13] = 391;
-			buffer[14] = 100;
-			buffer[15] = 0;
-			buffer[16] = 100;
-			buffer[17] = 391;
-			buffer[18] = 844;
-			buffer[19] = 1415;
-
-			int bufferLength = buffer.Length;
-
-			//Generate the packet
-			byte[] data = new byte[6 + (bufferLength*2)];
-
-			data[0] = 1;
-			data[1] = (byte)(freq >> 16);
-			data[2] = (byte)(freq >> 8);
-			data[3] = (byte)freq;
-			data[4] = (byte)(bufferLength >> 8);
-			data[5] = (byte)(bufferLength);
-
-			for(int i = 0; i < bufferLength; i++) {
-				data[6 + (2 * i)] = (byte)(buffer[i] >> 8);
-				data[6 + (2 * i + 1)] = (byte)(buffer[i]);
+			if (freq > 100000) {
+				freq = 100000;
 			}
 
-			daq.AddAnalogOutput(1, (offset / 1000.0));
+			int amplitude = 0;
+			int.TryParse(analogOutAChannel1Amp.Text, out amplitude);
+			if (amplitude > 25000) {
+				amplitude = 25000;
+			}
 
-			//SerialSendCommand(Opcodes.setAnalogOutACH, data);
+			int dutyCycle = 0;
+			int.TryParse(analogOutAChannel1DC.Text, out dutyCycle);
+			if (dutyCycle > 100) {
+				dutyCycle = 100;
+			}
+
+			if (analogOutAChannel1Mode.SelectedIndex == 0) {
+				//OFF Mode: DC output with 0V
+				double[] values = new double[1];
+
+				values[0] = 0;
+
+				daq.AddAnalogOutput(1, values, 0);
+			}
+			else if (analogOutAChannel1Mode.SelectedIndex == 1) {
+				//DC Mode
+				double[] values = new double[1];
+
+				values[0] = (offset / 1000.0);
+
+				daq.AddAnalogOutput(1, values, 0);
+			}
+			else if (analogOutAChannel1Mode.SelectedIndex == 2) {
+				//Sine Mode
+				const int maxSampleFreq = 2000000;  //For Sine 2 MHz seems to work fine
+
+				if(freq == 0) {
+					return;
+				}
+
+				int bufferLen = maxSampleFreq / freq;
+				if(bufferLen > 100) {
+					bufferLen = 100;
+				}
+
+				//Sine Generation
+				double[] values = new double[bufferLen];
+				for (int i = 0; i < values.Length; i++) {
+					values[i] = (offset / 1000.0) + (amplitude / (2 * 1000.0)) * Math.Sin(2 * Math.PI * (i / (double)values.Length));
+				}
+
+				freq = freq * values.Length;
+
+				daq.AddAnalogOutput(1, values, freq);
+			}
+			else if (analogOutAChannel1Mode.SelectedIndex == 3) {
+				//Square Mode
+				const int maxSampleFreq = 1000000;  //Normal max sample rate of 1MHz, from datasheet
+
+				if (freq == 0) {
+					return;
+				}
+
+				int bufferLen = maxSampleFreq / freq;
+				if (bufferLen > 100) {
+					bufferLen = 100;
+				}
+
+				//Sqaure Wave generation
+				int transitionIndex = ((bufferLen * (100 - dutyCycle)) / 100);
+				double[] values = new double[bufferLen];
+				for (int i = 0; i < values.Length; i++) {
+					if(i < transitionIndex) {
+						//PWM/Square Wave Low time
+						values[i] = (offset / 1000.0) - (amplitude / (2 * 1000.0));
+					}
+					else {
+						//PWM/Square Wave High time
+						values[i] = (offset / 1000.0) + (amplitude / (2 * 1000.0));
+					}
+				}
+
+				freq = freq * values.Length;
+
+				daq.AddAnalogOutput(1, values, freq);
+			}
+			else if (analogOutAChannel1Mode.SelectedIndex == 4) {
+				//Ramp Mode
+				const int maxSampleFreq = 2000000;  //For Ramps 2 MHz seems to work fine
+
+				if (freq == 0) {
+					return;
+				}
+
+				int bufferLen = maxSampleFreq / freq;
+				if (bufferLen > 100) {
+					bufferLen = 100;
+				}
+
+				//Ramp Wave generation
+				int transitionIndex = ((bufferLen * (100 - dutyCycle)) / 100);
+				double[] values = new double[bufferLen];
+				for (int i = 0; i < values.Length; i++) {
+					if (i < transitionIndex) {
+						//Ramp Rising Edge time
+						double step = ((amplitude / 1000.0) * (i / (double)transitionIndex));
+						values[i] = (offset / 1000.0) - (amplitude / (2 * 1000.0)) + step;
+					}
+					else {
+						//Ramp Falling Edge time
+						double step = ((amplitude / 1000.0) * ((i - transitionIndex) / (double)(values.Length - transitionIndex)));
+						values[i] = (offset / 1000.0) + (amplitude / (2 * 1000.0)) - step;
+					}
+				}
+
+				freq = freq * values.Length;
+
+				daq.AddAnalogOutput(1, values, freq);
+			}
+			else if (analogOutAChannel1Mode.SelectedIndex == 5) {
+				//Noise Mode
+			}
 		}
 
 		private void AnalogOutAChannel2Changed(object sender, RoutedEventArgs e) {
@@ -635,20 +728,137 @@ namespace STM32G4DAQ {
 
 			int offset = 0;
 			int.TryParse(analogOutAChannel2Offset.Text, out offset);
+			if (offset > 12500) {
+				offset = 12500;
+			}
+			else if (offset < -12500) {
+				offset = -12500;
+			}
 
 			int freq = 0;
 			int.TryParse(analogOutAChannel2Freq.Text, out freq);
+			if (freq > 100000) {
+				freq = 100000;
+			}
 
-			int amp = 0;
-			int.TryParse(analogOutAChannel2Amp.Text, out amp);
+			int amplitude = 0;
+			int.TryParse(analogOutAChannel2Amp.Text, out amplitude);
+			if (amplitude > 25000) {
+				amplitude = 25000;
+			}
 
-			int dc = 0;
-			int.TryParse(analogOutAChannel2DC.Text, out dc);
+			int dutyCycle = 0;
+			int.TryParse(analogOutAChannel2DC.Text, out dutyCycle);
+			if (dutyCycle > 100) {
+				dutyCycle = 100;
+			}
 
-			float baseFreq = 10000000;
-			float freqDiv = baseFreq / freq;
+			if (analogOutAChannel2Mode.SelectedIndex == 0) {
+				//OFF Mode: DC output with 0V
+				double[] values = new double[1];
 
-			daq.AddAnalogOutput(2, (offset / 1000.0));
+				values[0] = 0;
+
+				daq.AddAnalogOutput(2, values, 0);
+			}
+			else if (analogOutAChannel2Mode.SelectedIndex == 1) {
+				//DC Mode
+				double[] values = new double[1];
+
+				values[0] = (offset / 1000.0);
+
+				daq.AddAnalogOutput(2, values, 0);
+			}
+			else if (analogOutAChannel2Mode.SelectedIndex == 2) {
+				//Sine Mode
+				const int maxSampleFreq = 2000000;  //For Sine 2 MHz seem to work fine
+
+				if (freq == 0) {
+					return;
+				}
+
+				int bufferLen = maxSampleFreq / freq;
+				if (bufferLen > 100) {
+					bufferLen = 100;
+				}
+
+				//Sine Generation
+				double[] values = new double[bufferLen];
+				for (int i = 0; i < values.Length; i++) {
+					values[i] = (offset / 1000.0) + (amplitude / (2 * 1000.0)) * Math.Sin(2 * Math.PI * (i / (double)values.Length));
+				}
+
+				freq = freq * values.Length;
+
+				daq.AddAnalogOutput(2, values, freq);
+			}
+			else if (analogOutAChannel2Mode.SelectedIndex == 3) {
+				//Square Mode
+				const int maxSampleFreq = 1000000;  //Normal max sample rate of 1MHz, from datasheet
+
+				if (freq == 0) {
+					return;
+				}
+
+				int bufferLen = maxSampleFreq / freq;
+				if (bufferLen > 100) {
+					bufferLen = 100;
+				}
+
+				//Sqaure Wave generation
+				int transitionIndex = ((bufferLen * (100 - dutyCycle)) / 100);
+				double[] values = new double[bufferLen];
+				for (int i = 0; i < values.Length; i++) {
+					if (i < transitionIndex) {
+						//PWM/Square Wave Low time
+						values[i] = (offset / 1000.0) - (amplitude / (2 * 1000.0));
+					}
+					else {
+						//PWM/Square Wave High time
+						values[i] = (offset / 1000.0) + (amplitude / (2 * 1000.0));
+					}
+				}
+
+				freq = freq * values.Length;
+
+				daq.AddAnalogOutput(2, values, freq);
+			}
+			else if (analogOutAChannel2Mode.SelectedIndex == 4) {
+				//Ramp Mode
+				const int maxSampleFreq = 2000000;  //For Ramps 2 MHz seems to work fine
+
+				if (freq == 0) {
+					return;
+				}
+
+				int bufferLen = maxSampleFreq / freq;
+				if (bufferLen > 100) {
+					bufferLen = 100;
+				}
+
+				//Ramp Wave generation
+				int transitionIndex = ((bufferLen * (100 - dutyCycle)) / 100);
+				double[] values = new double[bufferLen];
+				for (int i = 0; i < values.Length; i++) {
+					if (i < transitionIndex) {
+						//Ramp Rising Edge time
+						double step = ((amplitude / 1000.0) * (i / (double)transitionIndex));
+						values[i] = (offset / 1000.0) - (amplitude / (2 * 1000.0)) + step;
+					}
+					else {
+						//Ramp Falling Edge time
+						double step = ((amplitude / 1000.0) * ((i - transitionIndex) / (double)(values.Length - transitionIndex)));
+						values[i] = (offset / 1000.0) + (amplitude / (2 * 1000.0)) - step;
+					}
+				}
+
+				freq = freq * values.Length;
+
+				daq.AddAnalogOutput(2, values, freq);
+			}
+			else if (analogOutAChannel2Mode.SelectedIndex == 5) {
+				//Noise Mode
+			}
 		}
 
 		private void AnalogOutBChannel1Changed(object sender, RoutedEventArgs e) {
@@ -658,20 +868,137 @@ namespace STM32G4DAQ {
 
 			int offset = 0;
 			int.TryParse(analogOutBChannel1Offset.Text, out offset);
+			if (offset > 12500) {
+				offset = 12500;
+			}
+			else if (offset < -12500) {
+				offset = -12500;
+			}
 
 			int freq = 0;
 			int.TryParse(analogOutBChannel1Freq.Text, out freq);
+			if (freq > 100000) {
+				freq = 100000;
+			}
 
-			int amp = 0;
-			int.TryParse(analogOutBChannel1Amp.Text, out amp);
+			int amplitude = 0;
+			int.TryParse(analogOutBChannel1Amp.Text, out amplitude);
+			if (amplitude > 25000) {
+				amplitude = 25000;
+			}
 
-			int dc = 0;
-			int.TryParse(analogOutBChannel1DC.Text, out dc);
+			int dutyCycle = 0;
+			int.TryParse(analogOutBChannel1DC.Text, out dutyCycle);
+			if (dutyCycle > 100) {
+				dutyCycle = 100;
+			}
 
-			float baseFreq = 10000000;
-			float freqDiv = baseFreq / freq;
+			if (analogOutBChannel1Mode.SelectedIndex == 0) {
+				//OFF Mode: DC output with 0V
+				double[] values = new double[1];
 
-			daq.AddAnalogOutput(3, (offset / 1000.0));
+				values[0] = 0;
+
+				daq.AddAnalogOutput(3, values, 0);
+			}
+			else if (analogOutBChannel1Mode.SelectedIndex == 1) {
+				//DC Mode
+				double[] values = new double[1];
+
+				values[0] = (offset / 1000.0);
+
+				daq.AddAnalogOutput(3, values, 0);
+			}
+			else if (analogOutBChannel1Mode.SelectedIndex == 2) {
+				//Sine Mode
+				const int maxSampleFreq = 2000000;  //For Sine 2 MHz seem to work fine
+
+				if (freq == 0) {
+					return;
+				}
+
+				int bufferLen = maxSampleFreq / freq;
+				if (bufferLen > 100) {
+					bufferLen = 100;
+				}
+
+				//Sine Generation
+				double[] values = new double[bufferLen];
+				for (int i = 0; i < values.Length; i++) {
+					values[i] = (offset / 1000.0) + (amplitude / (2 * 1000.0)) * Math.Sin(2 * Math.PI * (i / (double)values.Length));
+				}
+
+				freq = freq * values.Length;
+
+				daq.AddAnalogOutput(3, values, freq);
+			}
+			else if (analogOutBChannel1Mode.SelectedIndex == 3) {
+				//Square Mode
+				const int maxSampleFreq = 1000000;  //Normal max sample rate of 1MHz, from datasheet
+
+				if (freq == 0) {
+					return;
+				}
+
+				int bufferLen = maxSampleFreq / freq;
+				if (bufferLen > 100) {
+					bufferLen = 100;
+				}
+
+				//Sqaure Wave generation
+				int transitionIndex = ((bufferLen * (100 - dutyCycle)) / 100);
+				double[] values = new double[bufferLen];
+				for (int i = 0; i < values.Length; i++) {
+					if (i < transitionIndex) {
+						//PWM/Square Wave Low time
+						values[i] = (offset / 1000.0) - (amplitude / (2 * 1000.0));
+					}
+					else {
+						//PWM/Square Wave High time
+						values[i] = (offset / 1000.0) + (amplitude / (2 * 1000.0));
+					}
+				}
+
+				freq = freq * values.Length;
+
+				daq.AddAnalogOutput(3, values, freq);
+			}
+			else if (analogOutBChannel1Mode.SelectedIndex == 4) {
+				//Ramp Mode
+				const int maxSampleFreq = 2000000;  //For Ramps 2 MHz seems to work fine
+
+				if (freq == 0) {
+					return;
+				}
+
+				int bufferLen = maxSampleFreq / freq;
+				if (bufferLen > 100) {
+					bufferLen = 100;
+				}
+
+				//Ramp Wave generation
+				int transitionIndex = ((bufferLen * (100 - dutyCycle)) / 100);
+				double[] values = new double[bufferLen];
+				for (int i = 0; i < values.Length; i++) {
+					if (i < transitionIndex) {
+						//Ramp Rising Edge time
+						double step = ((amplitude / 1000.0) * (i / (double)transitionIndex));
+						values[i] = (offset / 1000.0) - (amplitude / (2 * 1000.0)) + step;
+					}
+					else {
+						//Ramp Falling Edge time
+						double step = ((amplitude / 1000.0) * ((i - transitionIndex) / (double)(values.Length - transitionIndex)));
+						values[i] = (offset / 1000.0) + (amplitude / (2 * 1000.0)) - step;
+					}
+				}
+
+				freq = freq * values.Length;
+
+				daq.AddAnalogOutput(3, values, freq);
+			}
+			else if (analogOutBChannel1Mode.SelectedIndex == 5) {
+				//Noise Mode
+			}
 		}
 
 		private void AnalogOutBChannel2Changed(object sender, RoutedEventArgs e) {
@@ -681,20 +1008,137 @@ namespace STM32G4DAQ {
 
 			int offset = 0;
 			int.TryParse(analogOutBChannel2Offset.Text, out offset);
+			if (offset > 12500) {
+				offset = 12500;
+			}
+			else if (offset < -12500) {
+				offset = -12500;
+			}
 
 			int freq = 0;
 			int.TryParse(analogOutBChannel2Freq.Text, out freq);
+			if (freq > 100000) {
+				freq = 100000;
+			}
 
-			int amp = 0;
-			int.TryParse(analogOutBChannel2Amp.Text, out amp);
+			int amplitude = 0;
+			int.TryParse(analogOutBChannel2Amp.Text, out amplitude);
+			if (amplitude > 25000) {
+				amplitude = 25000;
+			}
 
-			int dc = 0;
-			int.TryParse(analogOutBChannel2DC.Text, out dc);
+			int dutyCycle = 0;
+			int.TryParse(analogOutBChannel2DC.Text, out dutyCycle);
+			if (dutyCycle > 100) {
+				dutyCycle = 100;
+			}
 
-			float baseFreq = 10000000;
-			float freqDiv = baseFreq / freq;
+			if (analogOutBChannel2Mode.SelectedIndex == 0) {
+				//OFF Mode: DC output with 0V
+				double[] values = new double[1];
 
-			daq.AddAnalogOutput(4, (offset / 1000.0));
+				values[0] = 0;
+
+				daq.AddAnalogOutput(4, values, 0);
+			}
+			else if (analogOutBChannel2Mode.SelectedIndex == 1) {
+				//DC Mode
+				double[] values = new double[1];
+
+				values[0] = (offset / 1000.0);
+
+				daq.AddAnalogOutput(4, values, 0);
+			}
+			else if (analogOutBChannel2Mode.SelectedIndex == 2) {
+				//Sine Mode
+				const int maxSampleFreq = 2000000;  //For Sine 2 MHz seem to work fine
+
+				if (freq == 0) {
+					return;
+				}
+
+				int bufferLen = maxSampleFreq / freq;
+				if (bufferLen > 100) {
+					bufferLen = 100;
+				}
+
+				//Sine Generation
+				double[] values = new double[bufferLen];
+				for (int i = 0; i < values.Length; i++) {
+					values[i] = (offset / 1000.0) + (amplitude / (2 * 1000.0)) * Math.Sin(2 * Math.PI * (i / (double)values.Length));
+				}
+
+				freq = freq * values.Length;
+
+				daq.AddAnalogOutput(4, values, freq);
+			}
+			else if (analogOutBChannel2Mode.SelectedIndex == 3) {
+				//Square Mode
+				const int maxSampleFreq = 1000000;  //Normal max sample rate of 1MHz, from datasheet
+
+				if (freq == 0) {
+					return;
+				}
+
+				int bufferLen = maxSampleFreq / freq;
+				if (bufferLen > 100) {
+					bufferLen = 100;
+				}
+
+				//Sqaure Wave generation
+				int transitionIndex = ((bufferLen * (100 - dutyCycle)) / 100);
+				double[] values = new double[bufferLen];
+				for (int i = 0; i < values.Length; i++) {
+					if (i < transitionIndex) {
+						//PWM/Square Wave Low time
+						values[i] = (offset / 1000.0) - (amplitude / (2 * 1000.0));
+					}
+					else {
+						//PWM/Square Wave High time
+						values[i] = (offset / 1000.0) + (amplitude / (2 * 1000.0));
+					}
+				}
+
+				freq = freq * values.Length;
+
+				daq.AddAnalogOutput(4, values, freq);
+			}
+			else if (analogOutBChannel2Mode.SelectedIndex == 4) {
+				//Ramp Mode
+				const int maxSampleFreq = 2000000;  //For Ramps 2 MHz seems to work fine
+
+				if (freq == 0) {
+					return;
+				}
+
+				int bufferLen = maxSampleFreq / freq;
+				if (bufferLen > 100) {
+					bufferLen = 100;
+				}
+
+				//Ramp Wave generation
+				int transitionIndex = ((bufferLen * (100 - dutyCycle)) / 100);
+				double[] values = new double[bufferLen];
+				for (int i = 0; i < values.Length; i++) {
+					if (i < transitionIndex) {
+						//Ramp Rising Edge time
+						double step = ((amplitude / 1000.0) * (i / (double)transitionIndex));
+						values[i] = (offset / 1000.0) - (amplitude / (2 * 1000.0)) + step;
+					}
+					else {
+						//Ramp Falling Edge time
+						double step = ((amplitude / 1000.0) * ((i - transitionIndex) / (double)(values.Length - transitionIndex)));
+						values[i] = (offset / 1000.0) + (amplitude / (2 * 1000.0)) - step;
+					}
+				}
+
+				freq = freq * values.Length;
+
+				daq.AddAnalogOutput(4, values, freq);
+			}
+			else if (analogOutBChannel2Mode.SelectedIndex == 5) {
+				//Noise Mode
+			}
 		}
 	}
 }
