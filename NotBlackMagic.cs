@@ -346,7 +346,7 @@ namespace NotBlackMagic {
 			}
 		}
 
-		public float[] ReadAnalogInVolt(int channel, int count) {
+		public double[] ReadAnalogInVolt(int channel, int count) {
 			if (analogInAChannels[channel - 1] != null) {
 				double scaling = analogInAChannels[channel - 1].GetVoltageScaling();
 
@@ -356,9 +356,9 @@ namespace NotBlackMagic {
 				//double scaling = (vRef / gain) / (1 << (resolution - 1));
 				//double voltValue = (values[i] - (1 << (resolution - 1))) * scaling;
 
-				float[] voltValue = new float[count];
+				double[] voltValue = new double[count];
 				for(int i = 0; i < count; i++) {
-					voltValue[i] = (float)((values[i] - 2048) * scaling);
+					voltValue[i] = ((values[i] - 2048) * scaling);
 				}
 
 				return voltValue;

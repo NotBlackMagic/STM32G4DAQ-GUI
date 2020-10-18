@@ -4,7 +4,6 @@
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:local="clr-namespace:STM32G4DAQ"
-		xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
 		xmlns:ports="clr-namespace:System.IO.Ports;assembly=System"
 		mc:Ignorable="d"
 		Title="STM32G4DAQ" 
@@ -775,18 +774,7 @@
 		</StackPanel>
 
 		<Grid>
-			<lvc:CartesianChart x:Name="analogInChart" Series="{Binding SeriesAnalogIn}" LegendLocation="Top" DisableAnimations="True" Hoverable="False" DataTooltip="{x:Null}">
-				<lvc:CartesianChart.AxisX>
-					<lvc:Axis MinValue="0" MaxValue="1000"/>
-				</lvc:CartesianChart.AxisX>
-				<lvc:CartesianChart.AxisY>
-					<lvc:Axis Title="Voltage (V)" MinValue="-16" MaxValue="16">
-						<lvc:Axis.Separator>
-							<lvc:Separator Step="2"/>
-						</lvc:Axis.Separator>
-					</lvc:Axis>
-				</lvc:CartesianChart.AxisY>
-			</lvc:CartesianChart>
+			<WpfPlot Name="CartesianChart" />
 
 			<StackPanel Margin="0,0,5,0" HorizontalAlignment="Right" VerticalAlignment="Top">
 				<Label x:Name="stdCH1Label" Content="CH1 Std: 0.00" Foreground="Red" Width="100" Padding="0,0,0,0"/>

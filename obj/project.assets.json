@@ -2,27 +2,6 @@
   "version": 3,
   "targets": {
     ".NETCoreApp,Version=v3.1": {
-      "LiveCharts/0.9.7": {
-        "type": "package",
-        "compile": {
-          "lib/net45/LiveCharts.dll": {}
-        },
-        "runtime": {
-          "lib/net45/LiveCharts.dll": {}
-        }
-      },
-      "LiveCharts.Wpf/0.9.7": {
-        "type": "package",
-        "dependencies": {
-          "LiveCharts": "0.9.7"
-        },
-        "compile": {
-          "lib/net45/LiveCharts.Wpf.dll": {}
-        },
-        "runtime": {
-          "lib/net45/LiveCharts.Wpf.dll": {}
-        }
-      },
       "Microsoft.NETCore.Platforms/3.1.0": {
         "type": "package",
         "compile": {
@@ -50,6 +29,24 @@
             "rid": "unix"
           },
           "runtimes/win/lib/netstandard2.0/Microsoft.Win32.Registry.dll": {
+            "assetType": "runtime",
+            "rid": "win"
+          }
+        }
+      },
+      "Microsoft.Win32.SystemEvents/4.7.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "3.1.0"
+        },
+        "compile": {
+          "ref/netstandard2.0/_._": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.Win32.SystemEvents.dll": {}
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/netcoreapp3.0/Microsoft.Win32.SystemEvents.dll": {
             "assetType": "runtime",
             "rid": "win"
           }
@@ -97,6 +94,57 @@
           "runtimes/osx-x64/native/System.IO.Ports.Native.dylib": {
             "assetType": "native",
             "rid": "osx-x64"
+          }
+        }
+      },
+      "ScottPlot/4.0.42": {
+        "type": "package",
+        "dependencies": {
+          "System.Drawing.Common": "4.7.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/ScottPlot.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/ScottPlot.dll": {}
+        }
+      },
+      "ScottPlot.WPF/4.0.42": {
+        "type": "package",
+        "dependencies": {
+          "ScottPlot": "4.0.42",
+          "System.Drawing.Common": "4.7.0"
+        },
+        "compile": {
+          "lib/netcoreapp3.0/ScottPlot.WPF.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.0/ScottPlot.WPF.dll": {}
+        },
+        "frameworkReferences": [
+          "Microsoft.WindowsDesktop.App.WPF"
+        ]
+      },
+      "System.Drawing.Common/4.7.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "3.1.0",
+          "Microsoft.Win32.SystemEvents": "4.7.0"
+        },
+        "compile": {
+          "ref/netcoreapp3.0/System.Drawing.Common.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/System.Drawing.Common.dll": {}
+        },
+        "runtimeTargets": {
+          "runtimes/unix/lib/netcoreapp3.0/System.Drawing.Common.dll": {
+            "assetType": "runtime",
+            "rid": "unix"
+          },
+          "runtimes/win/lib/netcoreapp3.0/System.Drawing.Common.dll": {
+            "assetType": "runtime",
+            "rid": "win"
           }
         }
       },
@@ -168,46 +216,6 @@
     }
   },
   "libraries": {
-    "LiveCharts/0.9.7": {
-      "sha512": "p4xyBrUaNNfkWZSNsIle0r51cyVyFg0Yi0uBRZM5GQtdFiA/7guZHlffFyNUILIdux10Ch2hUaJpcZENVU9aaQ==",
-      "type": "package",
-      "path": "livecharts/0.9.7",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/net40/LiveCharts.dll",
-        "lib/net40/LiveCharts.pdb",
-        "lib/net40/LiveCharts.xml",
-        "lib/net45/LiveCharts.dll",
-        "lib/net45/LiveCharts.pdb",
-        "lib/net45/LiveCharts.xml",
-        "lib/portable-net45+win8+wp8/LiveCharts.XML",
-        "lib/portable-net45+win8+wp8/LiveCharts.dll",
-        "lib/portable-net45+win8+wp8/LiveCharts.pdb",
-        "livecharts.0.9.7.nupkg.sha512",
-        "livecharts.nuspec",
-        "readme.txt"
-      ]
-    },
-    "LiveCharts.Wpf/0.9.7": {
-      "sha512": "lv6YZoK0B4yWykMq5b9grZXtIbTj+OWu4sVN9GDpdgV6zffu64m4d5CW8KSjfSl9rB8VU649x1NZvhoU67hCDg==",
-      "type": "package",
-      "path": "livecharts.wpf/0.9.7",
-      "hasTools": true,
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/net40/LiveCharts.Wpf.XML",
-        "lib/net40/LiveCharts.Wpf.dll",
-        "lib/net40/LiveCharts.Wpf.pdb",
-        "lib/net45/LiveCharts.Wpf.XML",
-        "lib/net45/LiveCharts.Wpf.dll",
-        "lib/net45/LiveCharts.Wpf.pdb",
-        "livecharts.wpf.0.9.7.nupkg.sha512",
-        "livecharts.wpf.nuspec",
-        "tools/install.ps1"
-      ]
-    },
     "Microsoft.NETCore.Platforms/3.1.0": {
       "sha512": "z7aeg8oHln2CuNulfhiLYxCVMPEwBl3rzicjvIX+4sUuCwvXw5oXQEtbiU2c0z4qYL5L3Kmx0mMA/+t/SbY67w==",
       "type": "package",
@@ -268,6 +276,35 @@
         "runtimes/win/lib/netstandard1.3/Microsoft.Win32.Registry.dll",
         "runtimes/win/lib/netstandard2.0/Microsoft.Win32.Registry.dll",
         "runtimes/win/lib/netstandard2.0/Microsoft.Win32.Registry.xml",
+        "useSharedDesignerContext.txt",
+        "version.txt"
+      ]
+    },
+    "Microsoft.Win32.SystemEvents/4.7.0": {
+      "sha512": "mtVirZr++rq+XCDITMUdnETD59XoeMxSpLRIII7JRI6Yj0LEDiO1pPn0ktlnIj12Ix8bfvQqQDMMIF9wC98oCA==",
+      "type": "package",
+      "path": "microsoft.win32.systemevents/4.7.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net461/Microsoft.Win32.SystemEvents.dll",
+        "lib/net461/Microsoft.Win32.SystemEvents.xml",
+        "lib/netstandard2.0/Microsoft.Win32.SystemEvents.dll",
+        "lib/netstandard2.0/Microsoft.Win32.SystemEvents.xml",
+        "microsoft.win32.systemevents.4.7.0.nupkg.sha512",
+        "microsoft.win32.systemevents.nuspec",
+        "ref/net461/Microsoft.Win32.SystemEvents.dll",
+        "ref/net461/Microsoft.Win32.SystemEvents.xml",
+        "ref/net472/Microsoft.Win32.SystemEvents.dll",
+        "ref/net472/Microsoft.Win32.SystemEvents.xml",
+        "ref/netstandard2.0/Microsoft.Win32.SystemEvents.dll",
+        "ref/netstandard2.0/Microsoft.Win32.SystemEvents.xml",
+        "runtimes/win/lib/netcoreapp2.0/Microsoft.Win32.SystemEvents.dll",
+        "runtimes/win/lib/netcoreapp2.0/Microsoft.Win32.SystemEvents.xml",
+        "runtimes/win/lib/netcoreapp3.0/Microsoft.Win32.SystemEvents.dll",
+        "runtimes/win/lib/netcoreapp3.0/Microsoft.Win32.SystemEvents.xml",
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
@@ -347,6 +384,77 @@
         "runtime.osx-x64.runtime.native.system.io.ports.4.7.0.nupkg.sha512",
         "runtime.osx-x64.runtime.native.system.io.ports.nuspec",
         "runtimes/osx-x64/native/System.IO.Ports.Native.dylib",
+        "useSharedDesignerContext.txt",
+        "version.txt"
+      ]
+    },
+    "ScottPlot/4.0.42": {
+      "sha512": "4uM1+7AYlCTDfJON7Xohx4QO9WU00xiY4QbE8M9V69znDV8KjMo40b7aq7GyJ3KtAeuinchqZV5rZZuceSHsug==",
+      "type": "package",
+      "path": "scottplot/4.0.42",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "icon.ico",
+        "icon.png",
+        "lib/netstandard2.0/ScottPlot.dll",
+        "scottplot.4.0.42.nupkg.sha512",
+        "scottplot.nuspec"
+      ]
+    },
+    "ScottPlot.WPF/4.0.42": {
+      "sha512": "hsHMOrLXM54RvHpJjoe4IvR6tzZ9eBsIfEJZ+aXV8arTjwLPV3cqEsxm6DUBf3V65RIgAbwLZpbjONAcab4uVw==",
+      "type": "package",
+      "path": "scottplot.wpf/4.0.42",
+      "hasTools": true,
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "icon.ico",
+        "icon.png",
+        "lib/net461/ScottPlot.WPF.dll",
+        "lib/net472/ScottPlot.WPF.dll",
+        "lib/netcoreapp3.0/ScottPlot.WPF.dll",
+        "scottplot.wpf.4.0.42.nupkg.sha512",
+        "scottplot.wpf.nuspec",
+        "tools/VisualStudioToolsManifest.xml"
+      ]
+    },
+    "System.Drawing.Common/4.7.0": {
+      "sha512": "v+XbyYHaZjDfn0ENmJEV1VYLgGgCTx1gnfOBcppowbpOAriglYgGCvFCPr2EEZyBvXlpxbEsTwkOlInl107ahA==",
+      "type": "package",
+      "path": "system.drawing.common/4.7.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/MonoAndroid10/_._",
+        "lib/MonoTouch10/_._",
+        "lib/net461/System.Drawing.Common.dll",
+        "lib/netstandard2.0/System.Drawing.Common.dll",
+        "lib/xamarinios10/_._",
+        "lib/xamarinmac20/_._",
+        "lib/xamarintvos10/_._",
+        "lib/xamarinwatchos10/_._",
+        "ref/MonoAndroid10/_._",
+        "ref/MonoTouch10/_._",
+        "ref/net461/System.Drawing.Common.dll",
+        "ref/netcoreapp3.0/System.Drawing.Common.dll",
+        "ref/netcoreapp3.0/System.Drawing.Common.xml",
+        "ref/netstandard2.0/System.Drawing.Common.dll",
+        "ref/xamarinios10/_._",
+        "ref/xamarinmac20/_._",
+        "ref/xamarintvos10/_._",
+        "ref/xamarinwatchos10/_._",
+        "runtimes/unix/lib/netcoreapp2.0/System.Drawing.Common.dll",
+        "runtimes/unix/lib/netcoreapp3.0/System.Drawing.Common.dll",
+        "runtimes/unix/lib/netcoreapp3.0/System.Drawing.Common.xml",
+        "runtimes/win/lib/netcoreapp2.0/System.Drawing.Common.dll",
+        "runtimes/win/lib/netcoreapp3.0/System.Drawing.Common.dll",
+        "runtimes/win/lib/netcoreapp3.0/System.Drawing.Common.xml",
+        "system.drawing.common.4.7.0.nupkg.sha512",
+        "system.drawing.common.nuspec",
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
@@ -488,24 +596,24 @@
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
-      "LiveCharts.Wpf >= 0.9.7",
+      "ScottPlot.WPF >= 4.0.42",
       "System.IO.Ports >= 4.7.0"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\fabia\\.nuget\\packages\\": {}
+    "C:\\Users\\Fabian Näf\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\fabia\\Documents\\Visual Studio 2019\\Projects\\STM32G4DAQ\\STM32G4DAQ.csproj",
+      "projectUniqueName": "C:\\Users\\Fabian Näf\\Documents\\Visual Studio 2019\\Projects\\STM32G4DAQ\\STM32G4DAQ.csproj",
       "projectName": "STM32G4DAQ",
-      "projectPath": "C:\\Users\\fabia\\Documents\\Visual Studio 2019\\Projects\\STM32G4DAQ\\STM32G4DAQ.csproj",
-      "packagesPath": "C:\\Users\\fabia\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\fabia\\Documents\\Visual Studio 2019\\Projects\\STM32G4DAQ\\obj\\",
+      "projectPath": "C:\\Users\\Fabian Näf\\Documents\\Visual Studio 2019\\Projects\\STM32G4DAQ\\STM32G4DAQ.csproj",
+      "packagesPath": "C:\\Users\\Fabian Näf\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Fabian Näf\\Documents\\Visual Studio 2019\\Projects\\STM32G4DAQ\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\fabia\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Fabian Näf\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -529,9 +637,9 @@
     "frameworks": {
       "netcoreapp3.1": {
         "dependencies": {
-          "LiveCharts.Wpf": {
+          "ScottPlot.WPF": {
             "target": "Package",
-            "version": "[0.9.7, )"
+            "version": "[4.0.42, )"
           },
           "System.IO.Ports": {
             "target": "Package",
@@ -556,30 +664,8 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.401\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.403\\RuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'LiveCharts 0.9.7' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework '.NETCoreApp,Version=v3.1'. This package may not be fully compatible with your project.",
-      "libraryId": "LiveCharts",
-      "targetGraphs": [
-        ".NETCoreApp,Version=v3.1"
-      ]
-    },
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'LiveCharts.Wpf 0.9.7' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework '.NETCoreApp,Version=v3.1'. This package may not be fully compatible with your project.",
-      "libraryId": "LiveCharts.Wpf",
-      "targetGraphs": [
-        ".NETCoreApp,Version=v3.1"
-      ]
-    }
-  ]
+  }
 }

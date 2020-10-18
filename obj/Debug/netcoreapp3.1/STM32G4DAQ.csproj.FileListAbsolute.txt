@@ -9,8 +9,6 @@ C:\Users\Fabian Näf\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\
 C:\Users\Fabian Näf\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\STM32G4DAQ.runtimeconfig.dev.json
 C:\Users\Fabian Näf\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\STM32G4DAQ.dll
 C:\Users\Fabian Näf\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\STM32G4DAQ.pdb
-C:\Users\Fabian Näf\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\LiveCharts.dll
-C:\Users\Fabian Näf\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\LiveCharts.Wpf.dll
 C:\Users\Fabian Näf\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\System.IO.Ports.dll
 C:\Users\Fabian Näf\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\runtimes\linux-arm\native\System.IO.Ports.Native.so
 C:\Users\Fabian Näf\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\runtimes\linux-arm64\native\System.IO.Ports.Native.so
@@ -58,3 +56,5 @@ C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\obj\Debug\netcor
 C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\obj\Debug\netcoreapp3.1\STM32G4DAQ.dll
 C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\obj\Debug\netcoreapp3.1\STM32G4DAQ.pdb
 C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\obj\Debug\netcoreapp3.1\STM32G4DAQ.genruntimeconfig.cache
+C:\Users\Fabian Näf\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\ScottPlot.dll
+C:\Users\Fabian Näf\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\ScottPlot.WPF.dll

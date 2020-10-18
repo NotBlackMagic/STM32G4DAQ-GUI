@@ -10,6 +10,7 @@
 //------------------------------------------------------------------------------
 
 using STM32G4DAQ;
+using ScottPlot;
 using System;
 using System.Diagnostics;
 using System.Windows;

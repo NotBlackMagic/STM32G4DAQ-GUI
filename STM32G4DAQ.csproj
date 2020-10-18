@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="LiveCharts.Wpf" Version="0.9.7" />
+    <PackageReference Include="ScottPlot.WPF" Version="4.0.42" />
     <PackageReference Include="System.IO.Ports" Version="4.7.0" />
   </ItemGroup>
 

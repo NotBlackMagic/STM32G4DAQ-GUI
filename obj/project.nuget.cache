@@ -1,42 +1,23 @@
 {
   "version": 2,
-  "dgSpecHash": "mZAvGuOG2xvyT3W56ZJCXid15Py3eGkOEiBtvMKyruJu9+J03IQkSv6GNyxVAyDtLaIwPO+WZ+/biFASw+3gww==",
+  "dgSpecHash": "1/K1HmOR/wAvS1tgejnCU7v66X8iQN85IpyoU1qg5GCv9ZKqt8+Gpk41DURfOVoTbauWT6t3Sv5Fz3Q2TpccFg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\fabia\\Documents\\Visual Studio 2019\\Projects\\STM32G4DAQ\\STM32G4DAQ.csproj",
+  "projectFilePath": "C:\\Users\\Fabian Näf\\Documents\\Visual Studio 2019\\Projects\\STM32G4DAQ\\STM32G4DAQ.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\fabia\\.nuget\\packages\\livecharts\\0.9.7\\livecharts.0.9.7.nupkg.sha512",
-    "C:\\Users\\fabia\\.nuget\\packages\\livecharts.wpf\\0.9.7\\livecharts.wpf.0.9.7.nupkg.sha512",
-    "C:\\Users\\fabia\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.0\\microsoft.netcore.platforms.3.1.0.nupkg.sha512",
-    "C:\\Users\\fabia\\.nuget\\packages\\microsoft.win32.registry\\4.7.0\\microsoft.win32.registry.4.7.0.nupkg.sha512",
-    "C:\\Users\\fabia\\.nuget\\packages\\runtime.linux-arm.runtime.native.system.io.ports\\4.7.0\\runtime.linux-arm.runtime.native.system.io.ports.4.7.0.nupkg.sha512",
-    "C:\\Users\\fabia\\.nuget\\packages\\runtime.linux-arm64.runtime.native.system.io.ports\\4.7.0\\runtime.linux-arm64.runtime.native.system.io.ports.4.7.0.nupkg.sha512",
-    "C:\\Users\\fabia\\.nuget\\packages\\runtime.linux-x64.runtime.native.system.io.ports\\4.7.0\\runtime.linux-x64.runtime.native.system.io.ports.4.7.0.nupkg.sha512",
-    "C:\\Users\\fabia\\.nuget\\packages\\runtime.native.system.io.ports\\4.7.0\\runtime.native.system.io.ports.4.7.0.nupkg.sha512",
-    "C:\\Users\\fabia\\.nuget\\packages\\runtime.osx-x64.runtime.native.system.io.ports\\4.7.0\\runtime.osx-x64.runtime.native.system.io.ports.4.7.0.nupkg.sha512",
-    "C:\\Users\\fabia\\.nuget\\packages\\system.io.ports\\4.7.0\\system.io.ports.4.7.0.nupkg.sha512",
-    "C:\\Users\\fabia\\.nuget\\packages\\system.security.accesscontrol\\4.7.0\\system.security.accesscontrol.4.7.0.nupkg.sha512",
-    "C:\\Users\\fabia\\.nuget\\packages\\system.security.principal.windows\\4.7.0\\system.security.principal.windows.4.7.0.nupkg.sha512"
+    "C:\\Users\\Fabian Näf\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.0\\microsoft.netcore.platforms.3.1.0.nupkg.sha512",
+    "C:\\Users\\Fabian Näf\\.nuget\\packages\\microsoft.win32.registry\\4.7.0\\microsoft.win32.registry.4.7.0.nupkg.sha512",
+    "C:\\Users\\Fabian Näf\\.nuget\\packages\\microsoft.win32.systemevents\\4.7.0\\microsoft.win32.systemevents.4.7.0.nupkg.sha512",
+    "C:\\Users\\Fabian Näf\\.nuget\\packages\\runtime.linux-arm.runtime.native.system.io.ports\\4.7.0\\runtime.linux-arm.runtime.native.system.io.ports.4.7.0.nupkg.sha512",
+    "C:\\Users\\Fabian Näf\\.nuget\\packages\\runtime.linux-arm64.runtime.native.system.io.ports\\4.7.0\\runtime.linux-arm64.runtime.native.system.io.ports.4.7.0.nupkg.sha512",
+    "C:\\Users\\Fabian Näf\\.nuget\\packages\\runtime.linux-x64.runtime.native.system.io.ports\\4.7.0\\runtime.linux-x64.runtime.native.system.io.ports.4.7.0.nupkg.sha512",
+    "C:\\Users\\Fabian Näf\\.nuget\\packages\\runtime.native.system.io.ports\\4.7.0\\runtime.native.system.io.ports.4.7.0.nupkg.sha512",
+    "C:\\Users\\Fabian Näf\\.nuget\\packages\\runtime.osx-x64.runtime.native.system.io.ports\\4.7.0\\runtime.osx-x64.runtime.native.system.io.ports.4.7.0.nupkg.sha512",
+    "C:\\Users\\Fabian Näf\\.nuget\\packages\\scottplot\\4.0.42\\scottplot.4.0.42.nupkg.sha512",
+    "C:\\Users\\Fabian Näf\\.nuget\\packages\\scottplot.wpf\\4.0.42\\scottplot.wpf.4.0.42.nupkg.sha512",
+    "C:\\Users\\Fabian Näf\\.nuget\\packages\\system.drawing.common\\4.7.0\\system.drawing.common.4.7.0.nupkg.sha512",
+    "C:\\Users\\Fabian Näf\\.nuget\\packages\\system.io.ports\\4.7.0\\system.io.ports.4.7.0.nupkg.sha512",
+    "C:\\Users\\Fabian Näf\\.nuget\\packages\\system.security.accesscontrol\\4.7.0\\system.security.accesscontrol.4.7.0.nupkg.sha512",
+    "C:\\Users\\Fabian Näf\\.nuget\\packages\\system.security.principal.windows\\4.7.0\\system.security.principal.windows.4.7.0.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'LiveCharts 0.9.7' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework '.NETCoreApp,Version=v3.1'. This package may not be fully compatible with your project.",
-      "libraryId": "LiveCharts",
-      "targetGraphs": [
-        ".NETCoreApp,Version=v3.1"
-      ]
-    },
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'LiveCharts.Wpf 0.9.7' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework '.NETCoreApp,Version=v3.1'. This package may not be fully compatible with your project.",
-      "libraryId": "LiveCharts.Wpf",
-      "targetGraphs": [
-        ".NETCoreApp,Version=v3.1"
-      ]
-    }
-  ]
+  "logs": []
 }

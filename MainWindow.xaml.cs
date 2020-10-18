@@ -18,10 +18,6 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
-using LiveCharts;
-using LiveCharts.Helpers;
-using LiveCharts.Wpf;
-
 using NotBlackMagic;
 
 namespace STM32G4DAQ {
@@ -42,27 +38,17 @@ namespace STM32G4DAQ {
 
 		const int graphPoints = 512;
 
-		int[] analogInADataIndex = new int[8];
 		float[] analogInRanges = new float[8];
 		double[][] analogInAData = new double[8][];
 
 		bool enableValueChangedEvents = false;
 
-		public SeriesCollection SeriesAnalogIn { get; set; }
 		public MainWindow() {
 			enableValueChangedEvents = false;
 			InitializeComponent();
 			enableValueChangedEvents = true;
 
 			//Init Variables
-			analogInADataIndex[0] = 0;
-			analogInADataIndex[1] = 0;
-			analogInADataIndex[2] = 0;
-			analogInADataIndex[3] = 0;
-			analogInADataIndex[4] = 0;
-			analogInADataIndex[5] = 0;
-			analogInADataIndex[6] = 0;
-			analogInADataIndex[7] = 0;
 			analogInRanges[0] = 0;
 			analogInRanges[1] = 0;
 			analogInRanges[2] = 0;
@@ -82,84 +68,37 @@ namespace STM32G4DAQ {
 
 			//Init GUI Update dispatcher
 			DispatcherTimer dispatcherTimer = new DispatcherTimer();
-			dispatcherTimer.Interval = TimeSpan.FromMilliseconds(1000);
+			dispatcherTimer.Interval = TimeSpan.FromMilliseconds(100);
 			dispatcherTimer.Tick += GUIUpdateHandler;
 			dispatcherTimer.Start();
 
-			//Init Graph Series
-			SeriesAnalogIn = new SeriesCollection {
-				new LineSeries {
-					Title = "CH1",
-					Values = new ChartValues<float>(),
-					PointGeometry = null,
-					LineSmoothness = 0,
-					Stroke = Brushes.Red,
-					Fill = Brushes.Transparent
-				},
-				new LineSeries {
-					Title = "CH2",
-					Values = new ChartValues<float>(),
-					PointGeometry = null,
-					LineSmoothness = 0,
-					Stroke = Brushes.Orange,
-					Fill = Brushes.Transparent
-				},
-				new LineSeries {
-					Title = "CH3",
-					Values = new ChartValues<float>(),
-					PointGeometry = null,
-					LineSmoothness = 0,
-					Stroke = Brushes.Green,
-					Fill = Brushes.Transparent
-				},
-				new LineSeries {
-					Title = "CH4",
-					Values = new ChartValues<float>(),
-					PointGeometry = null,
-					LineSmoothness = 0,
-					Stroke = Brushes.Lime,
-					Fill = Brushes.Transparent
-				},
-				new LineSeries {
-					Title = "CH5",
-					Values = new ChartValues<float>(),
-					PointGeometry = null,
-					LineSmoothness = 0,
-					Stroke = Brushes.Blue,
-					Fill = Brushes.Transparent
-				},
-				new LineSeries {
-					Title = "CH6",
-					Values = new ChartValues<float>(),
-					PointGeometry = null,
-					LineSmoothness = 0,
-					Stroke = Brushes.Aqua,
-					Fill = Brushes.Transparent
-				},
-				new LineSeries {
-					Title = "CH7",
-					Values = new ChartValues<float>(),
-					PointGeometry = null,
-					LineSmoothness = 0,
-					Stroke = Brushes.Purple,
-					Fill = Brushes.Transparent
-				},
-				new LineSeries {
-					Title = "CH8",
-					Values = new ChartValues<float>(),
-					PointGeometry = null,
-					LineSmoothness = 0,
-					Stroke = Brushes.Violet,
-					Fill = Brushes.Transparent
-				}
-			};
+			//Init Graph
+			CartesianChart.plt.PlotSignal(analogInAData[0], label: "CH1", color: System.Drawing.Color.Red, lineWidth: 2);
+			CartesianChart.plt.PlotSignal(analogInAData[1], label: "CH2", color: System.Drawing.Color.Orange, lineWidth: 2);
+			CartesianChart.plt.PlotSignal(analogInAData[2], label: "CH3", color: System.Drawing.Color.Green, lineWidth: 2);
+			CartesianChart.plt.PlotSignal(analogInAData[3], label: "CH4", color: System.Drawing.Color.Lime, lineWidth: 2);
+			CartesianChart.plt.PlotSignal(analogInAData[4], label: "CH5", color: System.Drawing.Color.Blue, lineWidth: 2);
+			CartesianChart.plt.PlotSignal(analogInAData[5], label: "CH6", color: System.Drawing.Color.Aqua, lineWidth: 2);
+			CartesianChart.plt.PlotSignal(analogInAData[6], label: "CH7", color: System.Drawing.Color.Purple, lineWidth: 2);
+			CartesianChart.plt.PlotSignal(analogInAData[7], label: "CH8", color: System.Drawing.Color.Violet, lineWidth: 2);
 
-			analogInChart.AxisX.Clear();
-			Axis axisX = new Axis { MinValue = 0, MaxValue = graphPoints};
-			axisX.Separator = new LiveCharts.Wpf.Separator { Step = (graphPoints / 16.0) };
-			analogInChart.AxisX.Add(axisX);
+			//Set Axis Scale
+			CartesianChart.plt.Axis(0, graphPoints, -16, 16);
 
-			DataContext = this;
+			//Set Labels
+			//CartesianChart.plt.Legend(
+			//	enableLegend: true,
+			//	location: ScottPlot.legendLocation.upperCenter
+			//);
+
+			//Other Configs
+			CartesianChart.Configure(
+				enablePanning: false,
+				enableRightClickZoom: false,
+				enableScrollWheelZoom: false
+			);
+
+			CartesianChart.Render();
 		}
 
 		private void OnWindowClosing(object sender, EventArgs e) {
@@ -180,9 +119,11 @@ namespace STM32G4DAQ {
 			double avg = 0;
 			double sumSquares = 0;
 			for (int ch = 1; ch < 9; ch++) {
-				float[] chValues = daq.ReadAnalogInVolt(ch, graphPoints);
-				if (chValues != null) {
-					SeriesAnalogIn[ch - 1].Values = new ChartValues<float>(chValues);
+				double[] temp = daq.ReadAnalogInVolt(ch, graphPoints);
+				if (temp != null) {
+					for(int i = 0; i < graphPoints; i++) {
+						analogInAData[ch - 1][i] = temp[i];
+					}
 
 					//Calculate Standart Deviation in ADC counts, raw mode
 					int[] rawValues = daq.ReadAnalogIn(ch, graphPoints);
@@ -208,6 +149,8 @@ namespace STM32G4DAQ {
 					}
 				}
 			}
+
+			CartesianChart.Render(skipIfCurrentlyRendering: true);
 		}
 
 		private void SerialButtonClick(object sender, RoutedEventArgs e) {
@@ -279,10 +222,7 @@ namespace STM32G4DAQ {
 
 			Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
 
-			analogInChart.AxisY.Clear();
-			Axis axisY = new Axis { MinValue = -maxRange, MaxValue = maxRange, LabelFormatter = formatFunc };
-			axisY.Separator = new LiveCharts.Wpf.Separator { Step = (maxRange / 16.0) };
-			analogInChart.AxisY.Add(axisY);
+			CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
 
 			daq.AddAnalogIn(1, range, (AnalogInMode)analogInAChannel1Mode.SelectedIndex);
 		}
@@ -305,10 +245,7 @@ namespace STM32G4DAQ {
 
 			Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
 
-			analogInChart.AxisY.Clear();
-			Axis axisY = new Axis { MinValue = -maxRange, MaxValue = maxRange, LabelFormatter = formatFunc };
-			axisY.Separator = new LiveCharts.Wpf.Separator { Step = (maxRange / 16.0) };
-			analogInChart.AxisY.Add(axisY);
+			CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
 
 			daq.AddAnalogIn(2, range, (AnalogInMode)analogInAChannel1Mode.SelectedIndex);
 		}
@@ -331,10 +268,7 @@ namespace STM32G4DAQ {
 
 			Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
 
-			analogInChart.AxisY.Clear();
-			Axis axisY = new Axis { MinValue = -maxRange, MaxValue = maxRange, LabelFormatter = formatFunc };
-			axisY.Separator = new LiveCharts.Wpf.Separator { Step = (maxRange / 16.0) };
-			analogInChart.AxisY.Add(axisY);
+			CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
 
 			daq.AddAnalogIn(3, range, (AnalogInMode)analogInAChannel3Mode.SelectedIndex);
 		}
@@ -357,10 +291,7 @@ namespace STM32G4DAQ {
 
 			Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
 
-			analogInChart.AxisY.Clear();
-			Axis axisY = new Axis { MinValue = -maxRange, MaxValue = maxRange, LabelFormatter = formatFunc };
-			axisY.Separator = new LiveCharts.Wpf.Separator { Step = (maxRange / 16.0) };
-			analogInChart.AxisY.Add(axisY);
+			CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
 
 			daq.AddAnalogIn(4, range, (AnalogInMode)analogInAChannel3Mode.SelectedIndex);
 		}
@@ -383,10 +314,7 @@ namespace STM32G4DAQ {
 
 			Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
 
-			analogInChart.AxisY.Clear();
-			Axis axisY = new Axis { MinValue = -maxRange, MaxValue = maxRange, LabelFormatter = formatFunc };
-			axisY.Separator = new LiveCharts.Wpf.Separator { Step = (maxRange / 16.0) };
-			analogInChart.AxisY.Add(axisY);
+			CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
 
 			daq.AddAnalogIn(5, range, (AnalogInMode)analogInAChannel5Mode.SelectedIndex);
 		}
@@ -409,10 +337,7 @@ namespace STM32G4DAQ {
 
 			Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
 
-			analogInChart.AxisY.Clear();
-			Axis axisY = new Axis { MinValue = -maxRange, MaxValue = maxRange, LabelFormatter = formatFunc };
-			axisY.Separator = new LiveCharts.Wpf.Separator { Step = (maxRange / 16.0) };
-			analogInChart.AxisY.Add(axisY);
+			CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
 
 			daq.AddAnalogIn(6, range, (AnalogInMode)analogInAChannel5Mode.SelectedIndex);
 		}
@@ -435,10 +360,7 @@ namespace STM32G4DAQ {
 
 			Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
 
-			analogInChart.AxisY.Clear();
-			Axis axisY = new Axis { MinValue = -maxRange, MaxValue = maxRange, LabelFormatter = formatFunc };
-			axisY.Separator = new LiveCharts.Wpf.Separator { Step = (maxRange / 16.0) };
-			analogInChart.AxisY.Add(axisY);
+			CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
 
 			daq.AddAnalogIn(7, range, (AnalogInMode)analogInAChannel7Mode.SelectedIndex);
 		}
@@ -461,10 +383,7 @@ namespace STM32G4DAQ {
 
 			Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
 
-			analogInChart.AxisY.Clear();
-			Axis axisY = new Axis { MinValue = -maxRange, MaxValue = maxRange, LabelFormatter = formatFunc };
-			axisY.Separator = new LiveCharts.Wpf.Separator { Step = (maxRange / 16.0) };
-			analogInChart.AxisY.Add(axisY);
+			CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
 
 			daq.AddAnalogIn(8, range, (AnalogInMode)analogInAChannel7Mode.SelectedIndex);
 		}
