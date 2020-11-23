@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.0.1" />
     <PackageReference Include="ScottPlot.WPF" Version="4.0.42" />
     <PackageReference Include="System.IO.Ports" Version="4.7.0" />
   </ItemGroup>

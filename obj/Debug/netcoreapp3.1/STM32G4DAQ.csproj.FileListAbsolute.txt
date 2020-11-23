@@ -32,8 +32,6 @@ C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcor
 C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\STM32G4DAQ.runtimeconfig.dev.json
 C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\STM32G4DAQ.dll
 C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\STM32G4DAQ.pdb
-C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\LiveCharts.dll
-C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\LiveCharts.Wpf.dll
 C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\System.IO.Ports.dll
 C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\runtimes\linux-arm\native\System.IO.Ports.Native.so
 C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\runtimes\linux-arm64\native\System.IO.Ports.Native.so
@@ -58,3 +56,21 @@ C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\obj\Debug\netcor
 C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\obj\Debug\netcoreapp3.1\STM32G4DAQ.genruntimeconfig.cache
 C:\Users\Fabian Näf\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\ScottPlot.dll
 C:\Users\Fabian Näf\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\ScottPlot.WPF.dll
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\ScottPlot.dll
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\ScottPlot.WPF.dll
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\Xceed.Wpf.AvalonDock.Themes.Aero.dll
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\Xceed.Wpf.AvalonDock.Themes.Metro.dll
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\Xceed.Wpf.AvalonDock.Themes.VS2010.dll
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\Xceed.Wpf.AvalonDock.dll
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\Xceed.Wpf.Toolkit.dll
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\cs-CZ\Xceed.Wpf.AvalonDock.resources.dll
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\de\Xceed.Wpf.AvalonDock.resources.dll
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\es\Xceed.Wpf.AvalonDock.resources.dll
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\fr\Xceed.Wpf.AvalonDock.resources.dll
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\hu\Xceed.Wpf.AvalonDock.resources.dll
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\it\Xceed.Wpf.AvalonDock.resources.dll
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\pt-BR\Xceed.Wpf.AvalonDock.resources.dll
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\ro\Xceed.Wpf.AvalonDock.resources.dll
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\ru\Xceed.Wpf.AvalonDock.resources.dll
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\sv\Xceed.Wpf.AvalonDock.resources.dll
+C:\Users\fabia\Documents\Visual Studio 2019\Projects\STM32G4DAQ\bin\Debug\netcoreapp3.1\zh-Hans\Xceed.Wpf.AvalonDock.resources.dll

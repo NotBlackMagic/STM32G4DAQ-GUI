@@ -21,12 +21,16 @@ namespace NotBlackMagic {
 		public const byte setCurrentB = 0x12;
 
 		public const byte setAnalogInA = 0x13;
-		public const byte setAnalogInACH = 0x14;
+		public const byte setAnalogInB = 0x14;
 
-		public const byte setAnalogOutACH = 0x15;
-		public const byte setAnalogOutBCH = 0x16;
+		public const byte setAnalogInACH = 0x15;
+		public const byte setAnalogInBCH = 0x16;
+
+		public const byte setAnalogOutACH = 0x17;
+		public const byte setAnalogOutBCH = 0x18;
 
 		public const byte txAnalogInA = 0x81;
+		public const byte txAnalogInB = 0x82;
 	}
 	class DAQPacket {
 		public int opcode;
@@ -138,7 +142,7 @@ namespace NotBlackMagic {
 		float usbRXDatarate = 0;
 		float usbRXErrorRate = 0;
 
-		AnalogInChannel[] analogInAChannels = new AnalogInChannel[8];
+		AnalogInChannel[] analogInChannels = new AnalogInChannel[16];
 
 		public bool Connect(string port) {
 			if(serialPort.IsOpen == false) {
@@ -274,18 +278,37 @@ namespace NotBlackMagic {
 				case Opcodes.txAnalogInA:  {
 					int channel = packet.payload[0];
 
-					if(channel < 1 || channel > analogInAChannels.Length) {
+					if(channel < 1 || channel > (analogInChannels.Length / 2)) {
 						return 1;
 					}
 
-					if (analogInAChannels[channel - 1] != null) {
+					if (analogInChannels[channel - 1] != null) {
 						int sampleNum = (packet.payloadLength - 1) / 2;
 						int[] values = new int[sampleNum];
 						for (int i = 0; i < sampleNum; i++) {
 							values[i] = (packet.payload[1 + (2 * i)] << 8) + packet.payload[1 + (2 * i + 1)];
 						}
 
-						analogInAChannels[channel - 1].AddValues(values);
+						analogInChannels[channel - 1].AddValues(values);
+					}
+					break;
+				}
+				case Opcodes.txAnalogInB: {
+					int channel = packet.payload[0];
+
+					if (channel < 1 || channel > (analogInChannels.Length / 2)) {
+						return 1;
+					}
+
+					channel += 8;
+					if (analogInChannels[channel - 1] != null) {
+						int sampleNum = (packet.payloadLength - 1) / 2;
+						int[] values = new int[sampleNum];
+						for (int i = 0; i < sampleNum; i++) {
+							values[i] = (packet.payload[1 + (2 * i)] << 8) + packet.payload[1 + (2 * i + 1)];
+						}
+
+						analogInChannels[channel - 1].AddValues(values);
 					}
 					break;
 				}
@@ -302,7 +325,7 @@ namespace NotBlackMagic {
 		}
 
 		public void AddAnalogIn(int channel, float range, AnalogInMode mode) {
-			analogInAChannels[channel - 1] = new AnalogInChannel(channel, range, mode);
+			analogInChannels[channel - 1] = new AnalogInChannel(channel, range, mode);
 
 			//Set DAQ settings: Set Analog In Block
 			//byte[] data = new byte[3];
@@ -312,34 +335,46 @@ namespace NotBlackMagic {
 			//USBWrite(Opcodes.setAnalogInA, data);
 
 			int nChannels = 0;
-			for(int i = 0; i < analogInAChannels.Length; i++) {
-				if(analogInAChannels[i] != null) {
+			for(int i = 0; i < analogInChannels.Length; i++) {
+				if(analogInChannels[i] != null) {
 					nChannels += 1;
 				}
 			}
 
 			//Set DAQ settings: Set Analog In Channel
 			byte[] data = new byte[5];
-			data[0] = (byte)channel;			//To set channel
-			data[1] = (byte)mode;				//Channel Mode, Differential or Single Ended
-			data[2] = (byte)nChannels;			//Set Sampling Rate/Time division
-			data[3] = 4;						//Set Resolution
-			data[4] = (byte)(3 + (int)Math.Ceiling(Math.Log2(2.048 / range)));	//Set Gain
-			USBWrite(Opcodes.setAnalogInACH, data);
+			data[1] = (byte)mode;               //Channel Mode, Differential or Single Ended
+			data[2] = (byte)nChannels;          //Set Sampling Rate/Time division
+			data[3] = 4;                        //Set Resolution
+			data[4] = (byte)(3 + (int)Math.Ceiling(Math.Log2(2.048 / range)));  //Set Gain
+
+			if (channel <= (analogInChannels.Length / 2)) {
+				data[0] = (byte)channel;            //To set channel
+				USBWrite(Opcodes.setAnalogInACH, data);
+			}
+			else {
+				data[0] = (byte)(channel - 8);		//To set channel
+				USBWrite(Opcodes.setAnalogInBCH, data);
+			} 
 		}
 
-		public void SetAnalogInSampligRate(int samplingRate) {
+		public void SetAnalogInSampligRate(int channel, int samplingRate) {
 			int rate = (int)((250000.0 / samplingRate) - 1.0);
 
 			byte[] data = new byte[2];
 			data[0] = (byte)rate;		//Set Sample Rate
-			data[1] = 0;				//Set Scale
-			USBWrite(Opcodes.setAnalogInA, data);
+			data[1] = 0;                //Set Scale
+			if (channel <= (analogInChannels.Length / 2)) {
+				USBWrite(Opcodes.setAnalogInA, data);
+			}
+			else {
+				USBWrite(Opcodes.setAnalogInB, data);
+			}
 		}
 
 		public int[] ReadAnalogIn(int channel, int count) {
-			if(analogInAChannels[channel - 1] != null) {
-				return analogInAChannels[channel - 1].GetValues(count);
+			if(analogInChannels[channel - 1] != null) {
+				return analogInChannels[channel - 1].GetValues(count);
 			}
 			else {
 				return null;
@@ -347,11 +382,11 @@ namespace NotBlackMagic {
 		}
 
 		public double[] ReadAnalogInVolt(int channel, int count) {
-			if (analogInAChannels[channel - 1] != null) {
-				double scaling = analogInAChannels[channel - 1].GetVoltageScaling();
+			if (analogInChannels[channel - 1] != null) {
+				double scaling = analogInChannels[channel - 1].GetVoltageScaling();
 
 				int[] values = new int[count];
-				values = analogInAChannels[channel - 1].GetValues(count);
+				values = analogInChannels[channel - 1].GetValues(count);
 
 				//double scaling = (vRef / gain) / (1 << (resolution - 1));
 				//double voltValue = (values[i] - (1 << (resolution - 1))) * scaling;

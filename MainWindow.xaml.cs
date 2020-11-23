@@ -21,25 +21,18 @@ using System.Windows.Threading;
 using NotBlackMagic;
 
 namespace STM32G4DAQ {
-
-	public static class Opcodes {
-		public const byte setCurrentA = 0x01;
-		public const byte setCurrentB = 0x02;
-
-		public const byte setAnalogInA = 0x03;
-		public const byte setAnalogInACH = 0x04;
-
-		public const byte setAnalogOutACH = 0x05;
-
-		public const byte txAnalogInA = 0x81;
-	}
 	public partial class MainWindow : Window {
 		STMDAQ daq = new STMDAQ();
 
 		const int graphPoints = 512;
 
-		float[] analogInRanges = new float[8];
+		float[] analogInARanges = new float[8];
 		double[][] analogInAData = new double[8][];
+		ScottPlot.PlottableSignal[] plottableSignalsA = new ScottPlot.PlottableSignal[8];
+
+		float[] analogInBRanges = new float[8];
+		double[][] analogInBData = new double[8][];
+		ScottPlot.PlottableSignal[] plottableSignalsB = new ScottPlot.PlottableSignal[8];
 
 		bool enableValueChangedEvents = false;
 
@@ -49,14 +42,14 @@ namespace STM32G4DAQ {
 			enableValueChangedEvents = true;
 
 			//Init Variables
-			analogInRanges[0] = 0;
-			analogInRanges[1] = 0;
-			analogInRanges[2] = 0;
-			analogInRanges[3] = 0;
-			analogInRanges[4] = 0;
-			analogInRanges[5] = 0;
-			analogInRanges[6] = 0;
-			analogInRanges[7] = 0;
+			analogInARanges[0] = 0;
+			analogInARanges[1] = 0;
+			analogInARanges[2] = 0;
+			analogInARanges[3] = 0;
+			analogInARanges[4] = 0;
+			analogInARanges[5] = 0;
+			analogInARanges[6] = 0;
+			analogInARanges[7] = 0;
 			analogInAData[0] = new double[graphPoints];
 			analogInAData[1] = new double[graphPoints];
 			analogInAData[2] = new double[graphPoints];
@@ -66,6 +59,23 @@ namespace STM32G4DAQ {
 			analogInAData[6] = new double[graphPoints];
 			analogInAData[7] = new double[graphPoints];
 
+			analogInBRanges[0] = 0;
+			analogInBRanges[1] = 0;
+			analogInBRanges[2] = 0;
+			analogInBRanges[3] = 0;
+			analogInBRanges[4] = 0;
+			analogInBRanges[5] = 0;
+			analogInBRanges[6] = 0;
+			analogInBRanges[7] = 0;
+			analogInBData[0] = new double[graphPoints];
+			analogInBData[1] = new double[graphPoints];
+			analogInBData[2] = new double[graphPoints];
+			analogInBData[3] = new double[graphPoints];
+			analogInBData[4] = new double[graphPoints];
+			analogInBData[5] = new double[graphPoints];
+			analogInBData[6] = new double[graphPoints];
+			analogInBData[7] = new double[graphPoints];
+
 			//Init GUI Update dispatcher
 			DispatcherTimer dispatcherTimer = new DispatcherTimer();
 			dispatcherTimer.Interval = TimeSpan.FromMilliseconds(100);
@@ -73,14 +83,39 @@ namespace STM32G4DAQ {
 			dispatcherTimer.Start();
 
 			//Init Graph
-			CartesianChart.plt.PlotSignal(analogInAData[0], label: "CH1", color: System.Drawing.Color.Red, lineWidth: 2);
-			CartesianChart.plt.PlotSignal(analogInAData[1], label: "CH2", color: System.Drawing.Color.Orange, lineWidth: 2);
-			CartesianChart.plt.PlotSignal(analogInAData[2], label: "CH3", color: System.Drawing.Color.Green, lineWidth: 2);
-			CartesianChart.plt.PlotSignal(analogInAData[3], label: "CH4", color: System.Drawing.Color.Lime, lineWidth: 2);
-			CartesianChart.plt.PlotSignal(analogInAData[4], label: "CH5", color: System.Drawing.Color.Blue, lineWidth: 2);
-			CartesianChart.plt.PlotSignal(analogInAData[5], label: "CH6", color: System.Drawing.Color.Aqua, lineWidth: 2);
-			CartesianChart.plt.PlotSignal(analogInAData[6], label: "CH7", color: System.Drawing.Color.Purple, lineWidth: 2);
-			CartesianChart.plt.PlotSignal(analogInAData[7], label: "CH8", color: System.Drawing.Color.Violet, lineWidth: 2);
+			//plottableSignalsA[0] = CartesianChart.plt.PlotSignal(analogInAData[0], label: "CH1A", color: System.Drawing.Color.Red, lineWidth: 2);
+			//plottableSignalsA[1] = CartesianChart.plt.PlotSignal(analogInAData[1], label: "CH2A", color: System.Drawing.Color.Orange, lineWidth: 2);
+			//plottableSignalsA[2] = CartesianChart.plt.PlotSignal(analogInAData[2], label: "CH3A", color: System.Drawing.Color.Green, lineWidth: 2);
+			//plottableSignalsA[3] = CartesianChart.plt.PlotSignal(analogInAData[3], label: "CH4A", color: System.Drawing.Color.Lime, lineWidth: 2);
+			//plottableSignalsA[4] = CartesianChart.plt.PlotSignal(analogInAData[4], label: "CH5A", color: System.Drawing.Color.Blue, lineWidth: 2);
+			//plottableSignalsA[5] = CartesianChart.plt.PlotSignal(analogInAData[5], label: "CH6A", color: System.Drawing.Color.Aqua, lineWidth: 2);
+			//plottableSignalsA[6] = CartesianChart.plt.PlotSignal(analogInAData[6], label: "CH7A", color: System.Drawing.Color.Purple, lineWidth: 2);
+			//plottableSignalsA[7] = CartesianChart.plt.PlotSignal(analogInAData[7], label: "CH8A", color: System.Drawing.Color.Violet, lineWidth: 2);
+			plottableSignalsA[0] = null;
+			plottableSignalsA[1] = null;
+			plottableSignalsA[2] = null;
+			plottableSignalsA[3] = null;
+			plottableSignalsA[4] = null;
+			plottableSignalsA[5] = null;
+			plottableSignalsA[6] = null;
+			plottableSignalsA[7] = null;
+
+			//plottableSignalsB[0] = CartesianChart.plt.PlotSignal(analogInBData[0], label: "CH1B", color: System.Drawing.Color.Red, lineWidth: 2);
+			//plottableSignalsB[1] = CartesianChart.plt.PlotSignal(analogInBData[1], label: "CH2B", color: System.Drawing.Color.Orange, lineWidth: 2);
+			//plottableSignalsB[2] = CartesianChart.plt.PlotSignal(analogInBData[2], label: "CH3B", color: System.Drawing.Color.Green, lineWidth: 2);
+			//plottableSignalsB[3] = CartesianChart.plt.PlotSignal(analogInBData[3], label: "CH4B", color: System.Drawing.Color.Lime, lineWidth: 2);
+			//plottableSignalsB[4] = CartesianChart.plt.PlotSignal(analogInBData[4], label: "CH5B", color: System.Drawing.Color.Blue, lineWidth: 2);
+			//plottableSignalsB[5] = CartesianChart.plt.PlotSignal(analogInBData[5], label: "CH6B", color: System.Drawing.Color.Aqua, lineWidth: 2);
+			//plottableSignalsB[6] = CartesianChart.plt.PlotSignal(analogInBData[6], label: "CH7B", color: System.Drawing.Color.Purple, lineWidth: 2);
+			//plottableSignalsB[7] = CartesianChart.plt.PlotSignal(analogInBData[7], label: "CH8B", color: System.Drawing.Color.Violet, lineWidth: 2);
+			plottableSignalsB[0] = null;
+			plottableSignalsB[1] = null;
+			plottableSignalsB[2] = null;
+			plottableSignalsB[3] = null;
+			plottableSignalsB[4] = null;
+			plottableSignalsB[5] = null;
+			plottableSignalsB[6] = null;
+			plottableSignalsB[7] = null;
 
 			//Set Axis Scale
 			CartesianChart.plt.Axis(0, graphPoints, -16, 16);
@@ -116,20 +151,16 @@ namespace STM32G4DAQ {
 			//analogInACH2kspsLabel.Content = analogInAksps[1].ToString("0.0");
 			//analogInACH3kspsLabel.Content = analogInAksps[2].ToString("0.0");
 			//analogInACH4kspsLabel.Content = analogInAksps[3].ToString("0.0");
-			double avg = 0;
-			double sumSquares = 0;
 			for (int ch = 1; ch < 9; ch++) {
 				double[] temp = daq.ReadAnalogInVolt(ch, graphPoints);
 				if (temp != null) {
-					for(int i = 0; i < graphPoints; i++) {
-						analogInAData[ch - 1][i] = temp[i];
-					}
+					Array.Copy(temp, analogInAData[ch - 1], graphPoints);
 
 					//Calculate Standart Deviation in ADC counts, raw mode
 					int[] rawValues = daq.ReadAnalogIn(ch, graphPoints);
 
-					avg = rawValues.Average();
-					sumSquares = 0;
+					double avg = rawValues.Average();
+					double sumSquares = 0;
 					for (int i = 0; i < rawValues.Length; i++) {
 						sumSquares += (rawValues[i] - avg) * (rawValues[i] - avg);
 					}
@@ -150,6 +181,13 @@ namespace STM32G4DAQ {
 				}
 			}
 
+			for (int ch = 1; ch < 9; ch++) {
+				double[] temp = daq.ReadAnalogInVolt((8+ch), graphPoints);
+				if (temp != null) {
+					Array.Copy(temp, analogInBData[ch - 1], graphPoints);
+				}
+			}
+
 			CartesianChart.Render(skipIfCurrentlyRendering: true);
 		}
 
@@ -166,6 +204,11 @@ namespace STM32G4DAQ {
 				serialButton.Content = "Connect";
 				serialButton.Background = Brushes.Red;
 			}
+		}
+
+		private void NumberValidationTextBox(object sender, TextCompositionEventArgs e) {
+			Regex regex = new Regex("[^0-9-]+");
+			e.Handled = regex.IsMatch(e.Text);
 		}
 
 		private void CurrentOutputAChanged(object sender, RoutedEventArgs e) {
@@ -193,15 +236,16 @@ namespace STM32G4DAQ {
 			}
 
 			int sampligRate = (int)(250000.0 / (1 + analogInASamplerate.SelectedIndex));
-			daq.SetAnalogInSampligRate(sampligRate);
+			daq.SetAnalogInSampligRate(1, sampligRate);
+		}
 
-			byte[] data = new byte[6];
+		private void AnalogInBChanged(object sender, RoutedEventArgs e) {
+			if (enableValueChangedEvents == false) {
+				return;
+			}
 
-			//data[0] = (byte)analogInAMode.SelectedIndex;
-			data[1] = (byte)analogInASamplerate.SelectedIndex;
-			data[2] = (byte)analogInAScale.SelectedIndex;
-
-			//SerialSendCommand(Opcodes.setAnalogInA, data);
+			int sampligRate = (int)(250000.0 / (1 + analogInBSamplerate.SelectedIndex));
+			daq.SetAnalogInSampligRate(9, sampligRate);
 		}
 
 		private void AnalogInAChannel1Changed(object sender, RoutedEventArgs e) {
@@ -211,18 +255,23 @@ namespace STM32G4DAQ {
 
 			float range = (float)Math.Pow(2, (5 - analogInAChannel1Range.SelectedIndex));
 
-			analogInRanges[0] = range;
+			analogInARanges[0] = range;
 
 			float maxRange = 0;
-			for(int i = 0; i < analogInRanges.Length; i++) {
-				if(analogInRanges[i] > maxRange) {
-					maxRange = analogInRanges[i];
+			for(int i = 0; i < analogInARanges.Length; i++) {
+				if(analogInARanges[i] > maxRange) {
+					maxRange = analogInARanges[i];
 				}
 			}
 
-			Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
+			System.Drawing.Color drawColor = System.Drawing.Color.FromArgb(analogInAChannel1Color.SelectedColor.Value.A, analogInAChannel1Color.SelectedColor.Value.R, analogInAChannel1Color.SelectedColor.Value.G, analogInAChannel1Color.SelectedColor.Value.B);
+			//Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
+			CartesianChart.plt.Remove(plottableSignalsA[0]);
+			if ((AnalogInMode)analogInAChannel1Mode.SelectedIndex == AnalogInMode.Mode_Single || (AnalogInMode)analogInAChannel1Mode.SelectedIndex == AnalogInMode.Mode_Diff) {
+				plottableSignalsA[0] = CartesianChart.plt.PlotSignal(analogInAData[0], label: "CH1A", color: drawColor, lineWidth: 2);
 
-			CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
+				CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
+			}
 
 			daq.AddAnalogIn(1, range, (AnalogInMode)analogInAChannel1Mode.SelectedIndex);
 		}
@@ -234,18 +283,23 @@ namespace STM32G4DAQ {
 
 			float range = (float)Math.Pow(2, (5 - analogInAChannel2Range.SelectedIndex));
 
-			analogInRanges[1] = range;
+			analogInARanges[1] = range;
 
 			float maxRange = 0;
-			for (int i = 0; i < analogInRanges.Length; i++) {
-				if (analogInRanges[i] > maxRange) {
-					maxRange = analogInRanges[i];
+			for (int i = 0; i < analogInARanges.Length; i++) {
+				if (analogInARanges[i] > maxRange) {
+					maxRange = analogInARanges[i];
 				}
 			}
 
-			Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
+			System.Drawing.Color drawColor = System.Drawing.Color.FromArgb(analogInAChannel2Color.SelectedColor.Value.A, analogInAChannel2Color.SelectedColor.Value.R, analogInAChannel2Color.SelectedColor.Value.G, analogInAChannel2Color.SelectedColor.Value.B);
+			//Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
+			CartesianChart.plt.Remove(plottableSignalsA[1]);
+			if ((AnalogInMode)analogInAChannel2Mode.SelectedIndex == AnalogInMode.Mode_Single) {
+				plottableSignalsA[1] = CartesianChart.plt.PlotSignal(analogInAData[1], label: "CH2A", color: drawColor, lineWidth: 2);
 
-			CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
+				CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
+			}
 
 			daq.AddAnalogIn(2, range, (AnalogInMode)analogInAChannel1Mode.SelectedIndex);
 		}
@@ -257,18 +311,23 @@ namespace STM32G4DAQ {
 
 			float range = (float)Math.Pow(2, (5 - analogInAChannel3Range.SelectedIndex));
 
-			analogInRanges[2] = range;
+			analogInARanges[2] = range;
 
 			float maxRange = 0;
-			for (int i = 0; i < analogInRanges.Length; i++) {
-				if (analogInRanges[i] > maxRange) {
-					maxRange = analogInRanges[i];
+			for (int i = 0; i < analogInARanges.Length; i++) {
+				if (analogInARanges[i] > maxRange) {
+					maxRange = analogInARanges[i];
 				}
 			}
 
-			Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
+			System.Drawing.Color drawColor = System.Drawing.Color.FromArgb(analogInAChannel3Color.SelectedColor.Value.A, analogInAChannel3Color.SelectedColor.Value.R, analogInAChannel3Color.SelectedColor.Value.G, analogInAChannel3Color.SelectedColor.Value.B);
+			//Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
+			CartesianChart.plt.Remove(plottableSignalsA[2]);
+			if ((AnalogInMode)analogInAChannel3Mode.SelectedIndex == AnalogInMode.Mode_Single || (AnalogInMode)analogInAChannel3Mode.SelectedIndex == AnalogInMode.Mode_Diff) {
+				plottableSignalsA[2] = CartesianChart.plt.PlotSignal(analogInAData[2], label: "CH3A", color: drawColor, lineWidth: 2);
 
-			CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
+				CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
+			}
 
 			daq.AddAnalogIn(3, range, (AnalogInMode)analogInAChannel3Mode.SelectedIndex);
 		}
@@ -280,18 +339,23 @@ namespace STM32G4DAQ {
 
 			float range = (float)Math.Pow(2, (5 - analogInAChannel4Range.SelectedIndex));
 
-			analogInRanges[3] = range;
+			analogInARanges[3] = range;
 
 			float maxRange = 0;
-			for (int i = 0; i < analogInRanges.Length; i++) {
-				if (analogInRanges[i] > maxRange) {
-					maxRange = analogInRanges[i];
+			for (int i = 0; i < analogInARanges.Length; i++) {
+				if (analogInARanges[i] > maxRange) {
+					maxRange = analogInARanges[i];
 				}
 			}
 
-			Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
+			System.Drawing.Color drawColor = System.Drawing.Color.FromArgb(analogInAChannel4Color.SelectedColor.Value.A, analogInAChannel4Color.SelectedColor.Value.R, analogInAChannel4Color.SelectedColor.Value.G, analogInAChannel4Color.SelectedColor.Value.B);
+			//Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
+			CartesianChart.plt.Remove(plottableSignalsA[3]);
+			if ((AnalogInMode)analogInAChannel4Mode.SelectedIndex == AnalogInMode.Mode_Single) {
+				plottableSignalsA[3] = CartesianChart.plt.PlotSignal(analogInAData[3], label: "CH4A", color: drawColor, lineWidth: 2);
 
-			CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
+				CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
+			}
 
 			daq.AddAnalogIn(4, range, (AnalogInMode)analogInAChannel3Mode.SelectedIndex);
 		}
@@ -303,18 +367,23 @@ namespace STM32G4DAQ {
 
 			float range = (float)Math.Pow(2, (5 - analogInAChannel5Range.SelectedIndex));
 
-			analogInRanges[4] = range;
+			analogInARanges[4] = range;
 
 			float maxRange = 0;
-			for (int i = 0; i < analogInRanges.Length; i++) {
-				if (analogInRanges[i] > maxRange) {
-					maxRange = analogInRanges[i];
+			for (int i = 0; i < analogInARanges.Length; i++) {
+				if (analogInARanges[i] > maxRange) {
+					maxRange = analogInARanges[i];
 				}
 			}
 
-			Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
+			System.Drawing.Color drawColor = System.Drawing.Color.FromArgb(analogInAChannel5Color.SelectedColor.Value.A, analogInAChannel5Color.SelectedColor.Value.R, analogInAChannel5Color.SelectedColor.Value.G, analogInAChannel5Color.SelectedColor.Value.B);
+			//Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
+			CartesianChart.plt.Remove(plottableSignalsA[4]);
+			if ((AnalogInMode)analogInAChannel5Mode.SelectedIndex == AnalogInMode.Mode_Single || (AnalogInMode)analogInAChannel5Mode.SelectedIndex == AnalogInMode.Mode_Diff) {
+				plottableSignalsA[4] = CartesianChart.plt.PlotSignal(analogInAData[4], label: "CH5A", color: drawColor, lineWidth: 2);
 
-			CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
+				CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
+			}
 
 			daq.AddAnalogIn(5, range, (AnalogInMode)analogInAChannel5Mode.SelectedIndex);
 		}
@@ -326,18 +395,23 @@ namespace STM32G4DAQ {
 
 			float range = (float)Math.Pow(2, (5 - analogInAChannel6Range.SelectedIndex));
 
-			analogInRanges[5] = range;
+			analogInARanges[5] = range;
 
 			float maxRange = 0;
-			for (int i = 0; i < analogInRanges.Length; i++) {
-				if (analogInRanges[i] > maxRange) {
-					maxRange = analogInRanges[i];
+			for (int i = 0; i < analogInARanges.Length; i++) {
+				if (analogInARanges[i] > maxRange) {
+					maxRange = analogInARanges[i];
 				}
 			}
 
-			Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
+			System.Drawing.Color drawColor = System.Drawing.Color.FromArgb(analogInAChannel6Color.SelectedColor.Value.A, analogInAChannel6Color.SelectedColor.Value.R, analogInAChannel6Color.SelectedColor.Value.G, analogInAChannel6Color.SelectedColor.Value.B);
+			//Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
+			CartesianChart.plt.Remove(plottableSignalsA[5]);
+			if ((AnalogInMode)analogInAChannel6Mode.SelectedIndex == AnalogInMode.Mode_Single) {
+				plottableSignalsA[5] = CartesianChart.plt.PlotSignal(analogInAData[5], label: "CH6A", color: drawColor, lineWidth: 2);
 
-			CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
+				CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
+			}
 
 			daq.AddAnalogIn(6, range, (AnalogInMode)analogInAChannel5Mode.SelectedIndex);
 		}
@@ -349,18 +423,23 @@ namespace STM32G4DAQ {
 
 			float range = (float)Math.Pow(2, (5 - analogInAChannel7Range.SelectedIndex));
 
-			analogInRanges[6] = range;
+			analogInARanges[6] = range;
 
 			float maxRange = 0;
-			for (int i = 0; i < analogInRanges.Length; i++) {
-				if (analogInRanges[i] > maxRange) {
-					maxRange = analogInRanges[i];
+			for (int i = 0; i < analogInARanges.Length; i++) {
+				if (analogInARanges[i] > maxRange) {
+					maxRange = analogInARanges[i];
 				}
 			}
 
-			Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
+			System.Drawing.Color drawColor = System.Drawing.Color.FromArgb(analogInAChannel7Color.SelectedColor.Value.A, analogInAChannel7Color.SelectedColor.Value.R, analogInAChannel7Color.SelectedColor.Value.G, analogInAChannel7Color.SelectedColor.Value.B);
+			//Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
+			CartesianChart.plt.Remove(plottableSignalsA[6]);
+			if ((AnalogInMode)analogInAChannel7Mode.SelectedIndex == AnalogInMode.Mode_Single || (AnalogInMode)analogInAChannel7Mode.SelectedIndex == AnalogInMode.Mode_Diff) {
+				plottableSignalsA[6] = CartesianChart.plt.PlotSignal(analogInAData[6], label: "CH7A", color: drawColor, lineWidth: 2);
 
-			CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
+				CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
+			}
 
 			daq.AddAnalogIn(7, range, (AnalogInMode)analogInAChannel7Mode.SelectedIndex);
 		}
@@ -372,134 +451,252 @@ namespace STM32G4DAQ {
 
 			float range = (float)Math.Pow(2, (5 - analogInAChannel8Range.SelectedIndex));
 
-			analogInRanges[7] = range;
+			analogInARanges[7] = range;
 
 			float maxRange = 0;
-			for (int i = 0; i < analogInRanges.Length; i++) {
-				if (analogInRanges[i] > maxRange) {
-					maxRange = analogInRanges[i];
+			for (int i = 0; i < analogInARanges.Length; i++) {
+				if (analogInARanges[i] > maxRange) {
+					maxRange = analogInARanges[i];
 				}
 			}
 
-			Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
+			System.Drawing.Color drawColor = System.Drawing.Color.FromArgb(analogInAChannel8Color.SelectedColor.Value.A, analogInAChannel8Color.SelectedColor.Value.R, analogInAChannel8Color.SelectedColor.Value.G, analogInAChannel8Color.SelectedColor.Value.B);
+			//Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
+			CartesianChart.plt.Remove(plottableSignalsA[7]);
+			if ((AnalogInMode)analogInAChannel8Mode.SelectedIndex == AnalogInMode.Mode_Single) {
+				plottableSignalsA[7] = CartesianChart.plt.PlotSignal(analogInAData[7], label: "CH8A", color: drawColor, lineWidth: 2);
 
-			CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
+				CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
+			}
 
 			daq.AddAnalogIn(8, range, (AnalogInMode)analogInAChannel7Mode.SelectedIndex);
 		}
 
-		private void AnalogOutOffsetValidation(object sender, TextCompositionEventArgs e) {
-			Regex regex = new Regex("[^0-9-]+");
-
-			bool isNumber = regex.IsMatch(e.Text);
-
-			if(isNumber) {
-				//Get Whole text in textbox
-				string offsetStr = ((TextBox)sender).Text + e.Text;
-
-				//Convert to int
-				int offset = 0;
-				int.TryParse(offsetStr, out offset);
-
-				//Check input range
-				if(offset > 12500) {
-					offset = 12500;
-				}
-				else if(offset < -12500) {
-					offset = -12500;
-				}
-
-				((TextBox)sender).Text = offset.ToString();
-
-				e.Handled = true;
+		private void AnalogInBChannel1Changed(object sender, RoutedEventArgs e) {
+			if (enableValueChangedEvents == false) {
+				return;
 			}
-			else {
-				e.Handled = false;
+
+			float range = (float)Math.Pow(2, (5 - analogInBChannel1Range.SelectedIndex));
+
+			analogInBRanges[0] = range;
+
+			float maxRange = 0;
+			for (int i = 0; i < analogInBRanges.Length; i++) {
+				if (analogInBRanges[i] > maxRange) {
+					maxRange = analogInBRanges[i];
+				}
 			}
+
+			System.Drawing.Color drawColor = System.Drawing.Color.FromArgb(analogInBChannel1Color.SelectedColor.Value.A, analogInBChannel1Color.SelectedColor.Value.R, analogInBChannel1Color.SelectedColor.Value.G, analogInBChannel1Color.SelectedColor.Value.B);
+			//Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
+			CartesianChart.plt.Remove(plottableSignalsB[0]);
+			if ((AnalogInMode)analogInBChannel1Mode.SelectedIndex == AnalogInMode.Mode_Single || (AnalogInMode)analogInBChannel1Mode.SelectedIndex == AnalogInMode.Mode_Diff) {
+				plottableSignalsB[0] = CartesianChart.plt.PlotSignal(analogInBData[0], label: "CH1B", color: drawColor, lineWidth: 2);
+
+				CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
+			}
+
+			daq.AddAnalogIn(8+1, range, (AnalogInMode)analogInBChannel1Mode.SelectedIndex);
 		}
 
-		private void AnalogOutFrequencyValidation(object sender, TextCompositionEventArgs e) {
-			Regex regex = new Regex("[^0-9]+");
+		private void AnalogInBChannel2Changed(object sender, RoutedEventArgs e) {
+			if (enableValueChangedEvents == false) {
+				return;
+			}
 
-			bool isNumber = regex.IsMatch(e.Text);
-			if (isNumber) {
-				//Get Whole text in textbox
-				string freqStr = ((TextBox)sender).Text + e.Text;
+			float range = (float)Math.Pow(2, (5 - analogInBChannel2Range.SelectedIndex));
 
-				//Convert to int
-				int frequency = 0;
-				int.TryParse(freqStr, out frequency);
+			analogInBRanges[1] = range;
 
-				//Check input range
-				if (frequency > 100000) {
-					frequency = 100000;
+			float maxRange = 0;
+			for (int i = 0; i < analogInBRanges.Length; i++) {
+				if (analogInBRanges[i] > maxRange) {
+					maxRange = analogInBRanges[i];
 				}
-
-				((TextBox)sender).Text = frequency.ToString();
-
-				e.Handled = true;
 			}
-			else {
-				e.Handled = false;
+
+			System.Drawing.Color drawColor = System.Drawing.Color.FromArgb(analogInBChannel2Color.SelectedColor.Value.A, analogInBChannel2Color.SelectedColor.Value.R, analogInBChannel2Color.SelectedColor.Value.G, analogInBChannel2Color.SelectedColor.Value.B);
+			//Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
+			CartesianChart.plt.Remove(plottableSignalsB[1]);
+			if ((AnalogInMode)analogInBChannel2Mode.SelectedIndex == AnalogInMode.Mode_Single) {
+				plottableSignalsB[1] = CartesianChart.plt.PlotSignal(analogInBData[1], label: "CH2B", color: drawColor, lineWidth: 2);
+
+				CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
 			}
+
+			daq.AddAnalogIn(8+2, range, (AnalogInMode)analogInBChannel1Mode.SelectedIndex);
 		}
 
-		private void AnalogOutAmplitudeValidation(object sender, TextCompositionEventArgs e) {
-			Regex regex = new Regex("[^0-9]+");
+		private void AnalogInBChannel3Changed(object sender, RoutedEventArgs e) {
+			if (enableValueChangedEvents == false) {
+				return;
+			}
 
-			bool isNumber = regex.IsMatch(e.Text);
-			if (isNumber) {
-				//Get Whole text in textbox
-				string ampStr = ((TextBox)sender).Text + e.Text;
+			float range = (float)Math.Pow(2, (5 - analogInBChannel3Range.SelectedIndex));
 
-				//Convert to int
-				int amplitude = 0;
-				int.TryParse(ampStr, out amplitude);
+			analogInBRanges[2] = range;
 
-				//Check input range
-				if (amplitude > 25000) {
-					amplitude = 25000;
+			float maxRange = 0;
+			for (int i = 0; i < analogInBRanges.Length; i++) {
+				if (analogInBRanges[i] > maxRange) {
+					maxRange = analogInBRanges[i];
 				}
-
-				//Convert to valid values, DAC steps
-				float step = 25000 / 4096;
-				int nSteps = Convert.ToInt32(amplitude / step);
-				amplitude = Convert.ToInt32(nSteps * step);
-
-				((TextBox)sender).Text = amplitude.ToString();
-
-				e.Handled = true;
 			}
-			else {
-				e.Handled = false;
+
+			System.Drawing.Color drawColor = System.Drawing.Color.FromArgb(analogInBChannel3Color.SelectedColor.Value.A, analogInBChannel3Color.SelectedColor.Value.R, analogInBChannel3Color.SelectedColor.Value.G, analogInBChannel3Color.SelectedColor.Value.B);
+			//Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
+			CartesianChart.plt.Remove(plottableSignalsB[2]);
+			if ((AnalogInMode)analogInBChannel3Mode.SelectedIndex == AnalogInMode.Mode_Single || (AnalogInMode)analogInBChannel3Mode.SelectedIndex == AnalogInMode.Mode_Diff) {
+				plottableSignalsB[2] = CartesianChart.plt.PlotSignal(analogInBData[2], label: "CH3B", color: drawColor, lineWidth: 2);
+
+				CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
 			}
+
+			daq.AddAnalogIn(8+3, range, (AnalogInMode)analogInBChannel3Mode.SelectedIndex);
 		}
 
-		private void AnalogOutDCValidation(object sender, TextCompositionEventArgs e) {
-			Regex regex = new Regex("[^0-9]+");
+		private void AnalogInBChannel4Changed(object sender, RoutedEventArgs e) {
+			if (enableValueChangedEvents == false) {
+				return;
+			}
 
-			bool isNumber = regex.IsMatch(e.Text);
-			if (isNumber) {
-				//Get Whole text in textbox
-				string dcStr = ((TextBox)sender).Text + e.Text;
+			float range = (float)Math.Pow(2, (5 - analogInBChannel4Range.SelectedIndex));
 
-				//Convert to int
-				int dc = 0;
-				int.TryParse(dcStr, out dc);
+			analogInBRanges[3] = range;
 
-				//Check input range
-				if (dc > 100) {
-					dc = 100;
+			float maxRange = 0;
+			for (int i = 0; i < analogInBRanges.Length; i++) {
+				if (analogInBRanges[i] > maxRange) {
+					maxRange = analogInBRanges[i];
 				}
-
-				((TextBox)sender).Text = dc.ToString();
-
-				e.Handled = true;
 			}
-			else {
-				e.Handled = false;
+
+			System.Drawing.Color drawColor = System.Drawing.Color.FromArgb(analogInBChannel4Color.SelectedColor.Value.A, analogInBChannel4Color.SelectedColor.Value.R, analogInBChannel4Color.SelectedColor.Value.G, analogInBChannel4Color.SelectedColor.Value.B);
+			//Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
+			CartesianChart.plt.Remove(plottableSignalsB[3]);
+			if ((AnalogInMode)analogInBChannel4Mode.SelectedIndex == AnalogInMode.Mode_Single) { 
+				plottableSignalsB[3] = CartesianChart.plt.PlotSignal(analogInBData[3], label: "CH4B", color: drawColor, lineWidth: 2);
+
+				CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
 			}
+
+			daq.AddAnalogIn(8+4, range, (AnalogInMode)analogInBChannel3Mode.SelectedIndex);
 		}
+
+		private void AnalogInBChannel5Changed(object sender, RoutedEventArgs e) {
+			if (enableValueChangedEvents == false) {
+				return;
+			}
+
+			float range = (float)Math.Pow(2, (5 - analogInBChannel5Range.SelectedIndex));
+
+			analogInBRanges[4] = range;
+
+			float maxRange = 0;
+			for (int i = 0; i < analogInBRanges.Length; i++) {
+				if (analogInBRanges[i] > maxRange) {
+					maxRange = analogInBRanges[i];
+				}
+			}
+
+			System.Drawing.Color drawColor = System.Drawing.Color.FromArgb(analogInBChannel5Color.SelectedColor.Value.A, analogInBChannel5Color.SelectedColor.Value.R, analogInBChannel5Color.SelectedColor.Value.G, analogInBChannel5Color.SelectedColor.Value.B);
+			//Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
+			CartesianChart.plt.Remove(plottableSignalsB[4]);
+			if ((AnalogInMode)analogInBChannel5Mode.SelectedIndex == AnalogInMode.Mode_Single || (AnalogInMode)analogInBChannel5Mode.SelectedIndex == AnalogInMode.Mode_Diff) {
+				plottableSignalsB[4] = CartesianChart.plt.PlotSignal(analogInBData[4], label: "CH5B", color: drawColor, lineWidth: 2);
+
+				CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
+			}
+
+			daq.AddAnalogIn(8+5, range, (AnalogInMode)analogInBChannel5Mode.SelectedIndex);
+		}
+
+		private void AnalogInBChannel6Changed(object sender, RoutedEventArgs e) {
+			if (enableValueChangedEvents == false) {
+				return;
+			}
+
+			float range = (float)Math.Pow(2, (5 - analogInBChannel6Range.SelectedIndex));
+
+			analogInBRanges[5] = range;
+
+			float maxRange = 0;
+			for (int i = 0; i < analogInBRanges.Length; i++) {
+				if (analogInBRanges[i] > maxRange) {
+					maxRange = analogInBRanges[i];
+				}
+			}
+
+			System.Drawing.Color drawColor = System.Drawing.Color.FromArgb(analogInBChannel6Color.SelectedColor.Value.A, analogInBChannel6Color.SelectedColor.Value.R, analogInBChannel6Color.SelectedColor.Value.G, analogInBChannel6Color.SelectedColor.Value.B);
+			//Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
+			CartesianChart.plt.Remove(plottableSignalsB[5]);
+			if((AnalogInMode)analogInBChannel6Mode.SelectedIndex == AnalogInMode.Mode_Single) {
+				plottableSignalsB[5] = CartesianChart.plt.PlotSignal(analogInBData[5], label: "CH6B", color: drawColor, lineWidth: 2);
+
+				CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
+			}
+
+			daq.AddAnalogIn(8+6, range, (AnalogInMode)analogInBChannel5Mode.SelectedIndex);
+		}
+
+		private void AnalogInBChannel7Changed(object sender, RoutedEventArgs e) {
+			if (enableValueChangedEvents == false) {
+				return;
+			}
+
+			float range = (float)Math.Pow(2, (5 - analogInBChannel7Range.SelectedIndex));
+
+			analogInBRanges[6] = range;
+
+			float maxRange = 0;
+			for (int i = 0; i < analogInBRanges.Length; i++) {
+				if (analogInBRanges[i] > maxRange) {
+					maxRange = analogInBRanges[i];
+				}
+			}
+
+			System.Drawing.Color drawColor = System.Drawing.Color.FromArgb(analogInBChannel7Color.SelectedColor.Value.A, analogInBChannel7Color.SelectedColor.Value.R, analogInBChannel7Color.SelectedColor.Value.G, analogInBChannel7Color.SelectedColor.Value.B);
+			//Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
+			CartesianChart.plt.Remove(plottableSignalsB[6]);
+			if ((AnalogInMode)analogInBChannel7Mode.SelectedIndex == AnalogInMode.Mode_Single || (AnalogInMode)analogInBChannel7Mode.SelectedIndex == AnalogInMode.Mode_Diff) {
+				plottableSignalsB[6] = CartesianChart.plt.PlotSignal(analogInBData[6], label: "CH7B", color: drawColor, lineWidth: 2);
+
+				CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
+			}
+
+			daq.AddAnalogIn(8+7, range, (AnalogInMode)analogInBChannel7Mode.SelectedIndex);
+		}
+
+		private void AnalogInBChannel8Changed(object sender, RoutedEventArgs e) {
+			if (enableValueChangedEvents == false) {
+				return;
+			}
+
+			float range = (float)Math.Pow(2, (5 - analogInBChannel8Range.SelectedIndex));
+
+			analogInBRanges[7] = range;
+
+			float maxRange = 0;
+			for (int i = 0; i < analogInBRanges.Length; i++) {
+				if (analogInBRanges[i] > maxRange) {
+					maxRange = analogInBRanges[i];
+				}
+			}
+
+			System.Drawing.Color drawColor = System.Drawing.Color.FromArgb(analogInBChannel8Color.SelectedColor.Value.A, analogInBChannel8Color.SelectedColor.Value.R, analogInBChannel8Color.SelectedColor.Value.G, analogInBChannel8Color.SelectedColor.Value.B);
+			//Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
+			CartesianChart.plt.Remove(plottableSignalsB[7]);
+			if ((AnalogInMode)analogInBChannel8Mode.SelectedIndex == AnalogInMode.Mode_Single) {
+				plottableSignalsB[7] = CartesianChart.plt.PlotSignal(analogInBData[7], label: "CH8B", color: drawColor, lineWidth: 2);
+
+				CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
+			}
+
+			daq.AddAnalogIn(8+8, range, (AnalogInMode)analogInBChannel7Mode.SelectedIndex);
+		}
+
+
 		private void AnalogOutAChannel1Changed(object sender, RoutedEventArgs e) {
 			if (enableValueChangedEvents == false) {
 				return;
@@ -513,24 +710,43 @@ namespace STM32G4DAQ {
 			else if (offset < -12500) {
 				offset = -12500;
 			}
+			analogOutAChannel1Offset.Text = offset.ToString();
 
 			int freq = 0;
 			int.TryParse(analogOutAChannel1Freq.Text, out freq);
 			if (freq > 100000) {
 				freq = 100000;
 			}
+			else if(freq < 0) {
+				freq = 0;
+			}
+			analogOutAChannel1Freq.Text = freq.ToString();
 
 			int amplitude = 0;
 			int.TryParse(analogOutAChannel1Amp.Text, out amplitude);
 			if (amplitude > 25000) {
 				amplitude = 25000;
 			}
+			else if(amplitude < 0) {
+				amplitude = 0;
+			}
+
+			//Convert to valid values, DAC steps
+			//float step = 25000 / 4096;
+			//int nSteps = Convert.ToInt32(amplitude / step);
+			//amplitude = Convert.ToInt32(nSteps * step);
+
+			analogOutAChannel1Amp.Text = amplitude.ToString();
 
 			int dutyCycle = 0;
 			int.TryParse(analogOutAChannel1DC.Text, out dutyCycle);
 			if (dutyCycle > 100) {
 				dutyCycle = 100;
 			}
+			if(dutyCycle < 0) {
+				dutyCycle = 0;
+			}
+			analogOutAChannel1DC.Text = dutyCycle.ToString();
 
 			if (analogOutAChannel1Mode.SelectedIndex == 0) {
 				//OFF Mode: DC output with 0V
@@ -653,24 +869,44 @@ namespace STM32G4DAQ {
 			else if (offset < -12500) {
 				offset = -12500;
 			}
+			analogOutAChannel2Offset.Text = offset.ToString();
 
 			int freq = 0;
 			int.TryParse(analogOutAChannel2Freq.Text, out freq);
 			if (freq > 100000) {
 				freq = 100000;
 			}
+			else if (freq < 0) {
+				freq = 0;
+			}
+			analogOutAChannel2Freq.Text = freq.ToString();
 
 			int amplitude = 0;
 			int.TryParse(analogOutAChannel2Amp.Text, out amplitude);
 			if (amplitude > 25000) {
 				amplitude = 25000;
 			}
+			else if (amplitude < 0) {
+				amplitude = 0;
+			}
+
+			//Convert to valid values, DAC steps
+			//float step = 25000 / 4096;
+			//int nSteps = Convert.ToInt32(amplitude / step);
+			//amplitude = Convert.ToInt32(nSteps * step);
+
+			analogOutAChannel2Amp.Text = amplitude.ToString();
 
 			int dutyCycle = 0;
 			int.TryParse(analogOutAChannel2DC.Text, out dutyCycle);
 			if (dutyCycle > 100) {
 				dutyCycle = 100;
 			}
+			if (dutyCycle < 0) {
+				dutyCycle = 0;
+			}
+			analogOutAChannel2DC.Text = dutyCycle.ToString();
+
 
 			if (analogOutAChannel2Mode.SelectedIndex == 0) {
 				//OFF Mode: DC output with 0V
@@ -793,24 +1029,43 @@ namespace STM32G4DAQ {
 			else if (offset < -12500) {
 				offset = -12500;
 			}
+			analogOutBChannel1Offset.Text = offset.ToString();
 
 			int freq = 0;
 			int.TryParse(analogOutBChannel1Freq.Text, out freq);
 			if (freq > 100000) {
 				freq = 100000;
 			}
+			else if (freq < 0) {
+				freq = 0;
+			}
+			analogOutBChannel1Freq.Text = freq.ToString();
 
 			int amplitude = 0;
 			int.TryParse(analogOutBChannel1Amp.Text, out amplitude);
 			if (amplitude > 25000) {
 				amplitude = 25000;
 			}
+			else if (amplitude < 0) {
+				amplitude = 0;
+			}
+
+			//Convert to valid values, DAC steps
+			//float step = 25000 / 4096;
+			//int nSteps = Convert.ToInt32(amplitude / step);
+			//amplitude = Convert.ToInt32(nSteps * step);
+
+			analogOutBChannel1Amp.Text = amplitude.ToString();
 
 			int dutyCycle = 0;
 			int.TryParse(analogOutBChannel1DC.Text, out dutyCycle);
 			if (dutyCycle > 100) {
 				dutyCycle = 100;
 			}
+			if (dutyCycle < 0) {
+				dutyCycle = 0;
+			}
+			analogOutBChannel1DC.Text = dutyCycle.ToString();
 
 			if (analogOutBChannel1Mode.SelectedIndex == 0) {
 				//OFF Mode: DC output with 0V
@@ -933,24 +1188,44 @@ namespace STM32G4DAQ {
 			else if (offset < -12500) {
 				offset = -12500;
 			}
+			analogOutBChannel2Offset.Text = offset.ToString();
 
 			int freq = 0;
 			int.TryParse(analogOutBChannel2Freq.Text, out freq);
 			if (freq > 100000) {
 				freq = 100000;
 			}
+			else if (freq < 0) {
+				freq = 0;
+			}
+			analogOutBChannel2Freq.Text = freq.ToString();
 
 			int amplitude = 0;
 			int.TryParse(analogOutBChannel2Amp.Text, out amplitude);
 			if (amplitude > 25000) {
 				amplitude = 25000;
 			}
+			else if (amplitude < 0) {
+				amplitude = 0;
+			}
+
+			//Convert to valid values, DAC steps
+			//float step = 25000 / 4096;
+			//int nSteps = Convert.ToInt32(amplitude / step);
+			//amplitude = Convert.ToInt32(nSteps * step);
+
+			analogOutBChannel2Amp.Text = amplitude.ToString();
 
 			int dutyCycle = 0;
 			int.TryParse(analogOutBChannel2DC.Text, out dutyCycle);
 			if (dutyCycle > 100) {
 				dutyCycle = 100;
 			}
+			if (dutyCycle < 0) {
+				dutyCycle = 0;
+			}
+			analogOutBChannel2DC.Text = dutyCycle.ToString();
+
 
 			if (analogOutBChannel2Mode.SelectedIndex == 0) {
 				//OFF Mode: DC output with 0V

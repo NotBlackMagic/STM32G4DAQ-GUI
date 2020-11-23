@@ -3,6 +3,7 @@
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
 		xmlns:local="clr-namespace:STM32G4DAQ"
 		xmlns:ports="clr-namespace:System.IO.Ports;assembly=System"
 		mc:Ignorable="d"
@@ -208,6 +209,10 @@
 								<ComboBoxItem Content="±0.016"/>
 							</ComboBox>
 						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Draw Color:</Label>
+							<xctk:ColorPicker x:Name="analogInAChannel1Color" SelectedColor="Red" SelectedColorChanged="AnalogInAChannel1Changed" Width="70"></xctk:ColorPicker>
+						</StackPanel>
 					</StackPanel>
 					<Border Grid.Column="2" BorderThickness="1" BorderBrush="DarkGray"/>
 					<StackPanel Grid.Column="2" Margin="5,3,5,3">
@@ -263,6 +268,10 @@
 								<ComboBoxItem Content="±0.032"/>
 								<ComboBoxItem Content="±0.016"/>
 							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Draw Color:</Label>
+							<xctk:ColorPicker x:Name="analogInAChannel2Color" SelectedColor="Orange" SelectedColorChanged="AnalogInAChannel2Changed" Width="70"></xctk:ColorPicker>
 						</StackPanel>
 					</StackPanel>
 					<Border Grid.Column="3" BorderThickness="1" BorderBrush="DarkGray"/>
@@ -320,6 +329,10 @@
 								<ComboBoxItem Content="±0.016"/>
 							</ComboBox>
 						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Draw Color:</Label>
+							<xctk:ColorPicker x:Name="analogInAChannel3Color" SelectedColor="Green" SelectedColorChanged="AnalogInAChannel3Changed" Width="70"></xctk:ColorPicker>
+						</StackPanel>
 					</StackPanel>
 					<Border Grid.Column="4" BorderThickness="1" BorderBrush="DarkGray"/>
 					<StackPanel Grid.Column="4" Margin="5,3,5,3">
@@ -375,6 +388,10 @@
 								<ComboBoxItem Content="±0.032"/>
 								<ComboBoxItem Content="±0.016"/>
 							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Draw Color:</Label>
+							<xctk:ColorPicker x:Name="analogInAChannel4Color" SelectedColor="Lime" SelectedColorChanged="AnalogInAChannel4Changed" Width="70"></xctk:ColorPicker>
 						</StackPanel>
 					</StackPanel>
 					<Border Grid.Column="5" BorderThickness="1" BorderBrush="DarkGray"/>
@@ -432,6 +449,10 @@
 								<ComboBoxItem Content="±0.016"/>
 							</ComboBox>
 						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Draw Color:</Label>
+							<xctk:ColorPicker x:Name="analogInAChannel5Color" SelectedColor="Blue" SelectedColorChanged="AnalogInAChannel5Changed" Width="70"></xctk:ColorPicker>
+						</StackPanel>
 					</StackPanel>
 					<Border Grid.Column="6" BorderThickness="1" BorderBrush="DarkGray"/>
 					<StackPanel Grid.Column="6" Margin="5,3,5,3">
@@ -487,6 +508,10 @@
 								<ComboBoxItem Content="±0.032"/>
 								<ComboBoxItem Content="±0.016"/>
 							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Draw Color:</Label>
+							<xctk:ColorPicker x:Name="analogInAChannel6Color" SelectedColor="Aqua" SelectedColorChanged="AnalogInAChannel6Changed" Width="70"></xctk:ColorPicker>
 						</StackPanel>
 					</StackPanel>
 					<Border Grid.Column="7" BorderThickness="1" BorderBrush="DarkGray"/>
@@ -544,6 +569,10 @@
 								<ComboBoxItem Content="±0.016"/>
 							</ComboBox>
 						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Draw Color:</Label>
+							<xctk:ColorPicker x:Name="analogInAChannel7Color" SelectedColor="Purple" SelectedColorChanged="AnalogInAChannel7Changed" Width="70"></xctk:ColorPicker>
+						</StackPanel>
 					</StackPanel>
 					<Border Grid.Column="8" BorderThickness="1" BorderBrush="DarkGray"/>
 					<StackPanel Grid.Column="8" Margin="5,3,5,3">
@@ -600,6 +629,534 @@
 								<ComboBoxItem Content="±0.016"/>
 							</ComboBox>
 						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Draw Color:</Label>
+							<xctk:ColorPicker x:Name="analogInAChannel8Color" SelectedColor="Violet" SelectedColorChanged="AnalogInAChannel8Changed" Width="70"></xctk:ColorPicker>
+						</StackPanel>
+					</StackPanel>
+				</Grid>
+			</TabItem>
+			<TabItem Header="Analog In B">
+				<Grid DockPanel.Dock="Top" Height="150px" Background="LightGray">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="Auto"/>
+					</Grid.ColumnDefinitions>
+					<Border Grid.Column="0" BorderThickness="1" BorderBrush="DarkGray"/>
+					<StackPanel Grid.Column="0" Margin="5,3,5,3">
+						<Label Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" FontWeight="Bold" Padding="0">Analog In B</Label>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Sample (ksps):</Label>
+							<ComboBox x:Name="analogInBSamplerate" SelectedIndex="2" SelectionChanged="AnalogInBChanged" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="250"/>
+								<ComboBoxItem Content="125"/>
+								<ComboBoxItem Content="62.5"/>
+								<ComboBoxItem Content="31.25"/>
+								<ComboBoxItem Content="15.63"/>
+								<ComboBoxItem Content="7.81"/>
+								<ComboBoxItem Content="3.91"/>
+								<ComboBoxItem Content="1.95"/>
+								<ComboBoxItem Content="0.98"/>
+								<ComboBoxItem Content="0.49"/>
+								<ComboBoxItem Content="0.24"/>
+								<ComboBoxItem Content="0.12"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Scale (V/V):</Label>
+							<ComboBox x:Name="analogInBScale" SelectedIndex="0" SelectionChanged="AnalogInBChanged" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="1.0"/>
+								<ComboBoxItem Content="1.25"/>
+								<ComboBoxItem Content="1.375"/>
+							</ComboBox>
+						</StackPanel>
+					</StackPanel>
+					<Border Grid.Column="1" BorderThickness="1" BorderBrush="DarkGray"/>
+					<StackPanel Grid.Column="1" Margin="5,3,5,3">
+						<Label Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" FontWeight="Bold" Padding="0">Channel 1</Label>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Mode:</Label>
+							<ComboBox x:Name="analogInBChannel1Mode" SelectedIndex="0" SelectionChanged="AnalogInBChannel1Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="OFF"/>
+								<ComboBoxItem Content="DIFF"/>
+								<ComboBoxItem Content="SNG"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Rate Sub-Div:</Label>
+							<ComboBox x:Name="analogInBChannel1RateDiv" SelectedIndex="0" SelectionChanged="AnalogInBChannel1Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="1/1"/>
+								<ComboBoxItem Content="1/2"/>
+								<ComboBoxItem Content="1/4"/>
+								<ComboBoxItem Content="1/8"/>
+								<ComboBoxItem Content="1/16"/>
+								<ComboBoxItem Content="1/32"/>
+								<ComboBoxItem Content="1/64"/>
+								<ComboBoxItem Content="1/128"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Resolution:</Label>
+							<ComboBox x:Name="analogInBChannel1Resolution" SelectedIndex="4" SelectionChanged="AnalogInBChannel1Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="8 Bits"/>
+								<ComboBoxItem Content="9 Bits"/>
+								<ComboBoxItem Content="10 Bits"/>
+								<ComboBoxItem Content="11 Bits"/>
+								<ComboBoxItem Content="12 Bits"/>
+								<ComboBoxItem Content="13 Bits"/>
+								<ComboBoxItem Content="14 Bits"/>
+								<ComboBoxItem Content="15 Bits"/>
+								<ComboBoxItem Content="16 Bits"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Range (V):</Label>
+							<ComboBox x:Name="analogInBChannel1Range" SelectedIndex="1" SelectionChanged="AnalogInBChannel1Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="±32"/>
+								<ComboBoxItem Content="±16"/>
+								<ComboBoxItem Content="±8"/>
+								<ComboBoxItem Content="±4"/>
+								<ComboBoxItem Content="±2"/>
+								<ComboBoxItem Content="±1"/>
+								<ComboBoxItem Content="±0.5"/>
+								<ComboBoxItem Content="±0.25"/>
+								<ComboBoxItem Content="±0.125"/>
+								<ComboBoxItem Content="±0.064"/>
+								<ComboBoxItem Content="±0.032"/>
+								<ComboBoxItem Content="±0.016"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Draw Color:</Label>
+							<xctk:ColorPicker x:Name="analogInBChannel1Color" SelectedColor="Red" SelectedColorChanged="AnalogInBChannel1Changed" Width="70"></xctk:ColorPicker>
+						</StackPanel>
+					</StackPanel>
+					<Border Grid.Column="2" BorderThickness="1" BorderBrush="DarkGray"/>
+					<StackPanel Grid.Column="2" Margin="5,3,5,3">
+						<Label Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" FontWeight="Bold" Padding="0">Channel 2</Label>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Mode:</Label>
+							<ComboBox x:Name="analogInBChannel2Mode" SelectedIndex="0" SelectionChanged="AnalogInBChannel2Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="OFF"/>
+								<ComboBoxItem Content="DIFF"/>
+								<ComboBoxItem Content="SNG"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Rate Sub-Div:</Label>
+							<ComboBox x:Name="analogInBChannel2RateDiv" SelectedIndex="0" SelectionChanged="AnalogInBChannel2Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="1/1"/>
+								<ComboBoxItem Content="1/2"/>
+								<ComboBoxItem Content="1/4"/>
+								<ComboBoxItem Content="1/8"/>
+								<ComboBoxItem Content="1/16"/>
+								<ComboBoxItem Content="1/32"/>
+								<ComboBoxItem Content="1/64"/>
+								<ComboBoxItem Content="1/128"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Resolution:</Label>
+							<ComboBox x:Name="analogInBChannel2Resolution" SelectedIndex="4" SelectionChanged="AnalogInBChannel2Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="8 Bits"/>
+								<ComboBoxItem Content="9 Bits"/>
+								<ComboBoxItem Content="10 Bits"/>
+								<ComboBoxItem Content="11 Bits"/>
+								<ComboBoxItem Content="12 Bits"/>
+								<ComboBoxItem Content="13 Bits"/>
+								<ComboBoxItem Content="14 Bits"/>
+								<ComboBoxItem Content="15 Bits"/>
+								<ComboBoxItem Content="16 Bits"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Range (V):</Label>
+							<ComboBox x:Name="analogInBChannel2Range" SelectedIndex="1" SelectionChanged="AnalogInBChannel2Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="±32"/>
+								<ComboBoxItem Content="±16"/>
+								<ComboBoxItem Content="±8"/>
+								<ComboBoxItem Content="±4"/>
+								<ComboBoxItem Content="±2"/>
+								<ComboBoxItem Content="±1"/>
+								<ComboBoxItem Content="±0.5"/>
+								<ComboBoxItem Content="±0.25"/>
+								<ComboBoxItem Content="±0.125"/>
+								<ComboBoxItem Content="±0.064"/>
+								<ComboBoxItem Content="±0.032"/>
+								<ComboBoxItem Content="±0.016"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Draw Color:</Label>
+							<xctk:ColorPicker x:Name="analogInBChannel2Color" SelectedColor="Orange" SelectedColorChanged="AnalogInBChannel2Changed" Width="70"></xctk:ColorPicker>
+						</StackPanel>
+					</StackPanel>
+					<Border Grid.Column="3" BorderThickness="1" BorderBrush="DarkGray"/>
+					<StackPanel Grid.Column="3" Margin="5,3,5,3">
+						<Label Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" FontWeight="Bold" Padding="0">Channel 3</Label>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Mode:</Label>
+							<ComboBox x:Name="analogInBChannel3Mode" SelectedIndex="0" SelectionChanged="AnalogInBChannel3Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="OFF"/>
+								<ComboBoxItem Content="DIFF"/>
+								<ComboBoxItem Content="SNG"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Rate Sub-Div:</Label>
+							<ComboBox x:Name="analogInBChannel3RateDiv" SelectedIndex="0" SelectionChanged="AnalogInBChannel3Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="1/1"/>
+								<ComboBoxItem Content="1/2"/>
+								<ComboBoxItem Content="1/4"/>
+								<ComboBoxItem Content="1/8"/>
+								<ComboBoxItem Content="1/16"/>
+								<ComboBoxItem Content="1/32"/>
+								<ComboBoxItem Content="1/64"/>
+								<ComboBoxItem Content="1/128"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Resolution:</Label>
+							<ComboBox x:Name="analogInBChannel3Resolution" SelectedIndex="4" SelectionChanged="AnalogInBChannel3Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="8 Bits"/>
+								<ComboBoxItem Content="9 Bits"/>
+								<ComboBoxItem Content="10 Bits"/>
+								<ComboBoxItem Content="11 Bits"/>
+								<ComboBoxItem Content="12 Bits"/>
+								<ComboBoxItem Content="13 Bits"/>
+								<ComboBoxItem Content="14 Bits"/>
+								<ComboBoxItem Content="15 Bits"/>
+								<ComboBoxItem Content="16 Bits"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Range (V):</Label>
+							<ComboBox x:Name="analogInBChannel3Range" SelectedIndex="1" SelectionChanged="AnalogInBChannel3Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="±32"/>
+								<ComboBoxItem Content="±16"/>
+								<ComboBoxItem Content="±8"/>
+								<ComboBoxItem Content="±4"/>
+								<ComboBoxItem Content="±2"/>
+								<ComboBoxItem Content="±1"/>
+								<ComboBoxItem Content="±0.5"/>
+								<ComboBoxItem Content="±0.25"/>
+								<ComboBoxItem Content="±0.125"/>
+								<ComboBoxItem Content="±0.064"/>
+								<ComboBoxItem Content="±0.032"/>
+								<ComboBoxItem Content="±0.016"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Draw Color:</Label>
+							<xctk:ColorPicker x:Name="analogInBChannel3Color" SelectedColor="Green" SelectedColorChanged="AnalogInBChannel3Changed" Width="70"></xctk:ColorPicker>
+						</StackPanel>
+					</StackPanel>
+					<Border Grid.Column="4" BorderThickness="1" BorderBrush="DarkGray"/>
+					<StackPanel Grid.Column="4" Margin="5,3,5,3">
+						<Label Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" FontWeight="Bold" Padding="0">Channel 4</Label>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Mode:</Label>
+							<ComboBox x:Name="analogInBChannel4Mode" SelectedIndex="0" SelectionChanged="AnalogInBChannel4Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="OFF"/>
+								<ComboBoxItem Content="DIFF"/>
+								<ComboBoxItem Content="SNG"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Rate Sub-Div:</Label>
+							<ComboBox x:Name="analogInBChannel4RateDiv" SelectedIndex="0" SelectionChanged="AnalogInBChannel4Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="1/1"/>
+								<ComboBoxItem Content="1/2"/>
+								<ComboBoxItem Content="1/4"/>
+								<ComboBoxItem Content="1/8"/>
+								<ComboBoxItem Content="1/16"/>
+								<ComboBoxItem Content="1/32"/>
+								<ComboBoxItem Content="1/64"/>
+								<ComboBoxItem Content="1/128"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Resolution:</Label>
+							<ComboBox x:Name="analogInBChannel4Resolution" SelectedIndex="4" SelectionChanged="AnalogInBChannel4Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="8 Bits"/>
+								<ComboBoxItem Content="9 Bits"/>
+								<ComboBoxItem Content="10 Bits"/>
+								<ComboBoxItem Content="11 Bits"/>
+								<ComboBoxItem Content="12 Bits"/>
+								<ComboBoxItem Content="13 Bits"/>
+								<ComboBoxItem Content="14 Bits"/>
+								<ComboBoxItem Content="15 Bits"/>
+								<ComboBoxItem Content="16 Bits"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Range (V):</Label>
+							<ComboBox x:Name="analogInBChannel4Range" SelectedIndex="1" SelectionChanged="AnalogInBChannel4Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="±32"/>
+								<ComboBoxItem Content="±16"/>
+								<ComboBoxItem Content="±8"/>
+								<ComboBoxItem Content="±4"/>
+								<ComboBoxItem Content="±2"/>
+								<ComboBoxItem Content="±1"/>
+								<ComboBoxItem Content="±0.5"/>
+								<ComboBoxItem Content="±0.25"/>
+								<ComboBoxItem Content="±0.125"/>
+								<ComboBoxItem Content="±0.064"/>
+								<ComboBoxItem Content="±0.032"/>
+								<ComboBoxItem Content="±0.016"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Draw Color:</Label>
+							<xctk:ColorPicker x:Name="analogInBChannel4Color" SelectedColor="Lime" SelectedColorChanged="AnalogInBChannel4Changed" Width="70"></xctk:ColorPicker>
+						</StackPanel>
+					</StackPanel>
+					<Border Grid.Column="5" BorderThickness="1" BorderBrush="DarkGray"/>
+					<StackPanel Grid.Column="5" Margin="5,3,5,3">
+						<Label Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" FontWeight="Bold" Padding="0">Channel 5</Label>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Mode:</Label>
+							<ComboBox x:Name="analogInBChannel5Mode" SelectedIndex="0" SelectionChanged="AnalogInBChannel5Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="OFF"/>
+								<ComboBoxItem Content="DIFF"/>
+								<ComboBoxItem Content="SNG"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Rate Sub-Div:</Label>
+							<ComboBox x:Name="analogInBChannel5RateDiv" SelectedIndex="0" SelectionChanged="AnalogInBChannel5Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="1/1"/>
+								<ComboBoxItem Content="1/2"/>
+								<ComboBoxItem Content="1/4"/>
+								<ComboBoxItem Content="1/8"/>
+								<ComboBoxItem Content="1/16"/>
+								<ComboBoxItem Content="1/32"/>
+								<ComboBoxItem Content="1/64"/>
+								<ComboBoxItem Content="1/128"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Resolution:</Label>
+							<ComboBox x:Name="analogInBChannel5Resolution" SelectedIndex="4" SelectionChanged="AnalogInBChannel5Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="8 Bits"/>
+								<ComboBoxItem Content="9 Bits"/>
+								<ComboBoxItem Content="10 Bits"/>
+								<ComboBoxItem Content="11 Bits"/>
+								<ComboBoxItem Content="12 Bits"/>
+								<ComboBoxItem Content="13 Bits"/>
+								<ComboBoxItem Content="14 Bits"/>
+								<ComboBoxItem Content="15 Bits"/>
+								<ComboBoxItem Content="16 Bits"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Range (V):</Label>
+							<ComboBox x:Name="analogInBChannel5Range" SelectedIndex="1" SelectionChanged="AnalogInBChannel5Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="±32"/>
+								<ComboBoxItem Content="±16"/>
+								<ComboBoxItem Content="±8"/>
+								<ComboBoxItem Content="±4"/>
+								<ComboBoxItem Content="±2"/>
+								<ComboBoxItem Content="±1"/>
+								<ComboBoxItem Content="±0.5"/>
+								<ComboBoxItem Content="±0.25"/>
+								<ComboBoxItem Content="±0.125"/>
+								<ComboBoxItem Content="±0.064"/>
+								<ComboBoxItem Content="±0.032"/>
+								<ComboBoxItem Content="±0.016"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Draw Color:</Label>
+							<xctk:ColorPicker x:Name="analogInBChannel5Color" SelectedColor="Blue" SelectedColorChanged="AnalogInBChannel5Changed" Width="70"></xctk:ColorPicker>
+						</StackPanel>
+					</StackPanel>
+					<Border Grid.Column="6" BorderThickness="1" BorderBrush="DarkGray"/>
+					<StackPanel Grid.Column="6" Margin="5,3,5,3">
+						<Label Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" FontWeight="Bold" Padding="0">Channel 6</Label>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Mode:</Label>
+							<ComboBox x:Name="analogInBChannel6Mode" SelectedIndex="0" SelectionChanged="AnalogInBChannel6Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="OFF"/>
+								<ComboBoxItem Content="DIFF"/>
+								<ComboBoxItem Content="SNG"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Rate Sub-Div:</Label>
+							<ComboBox x:Name="analogInBChannel6RateDiv" SelectedIndex="0" SelectionChanged="AnalogInBChannel6Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="1/1"/>
+								<ComboBoxItem Content="1/2"/>
+								<ComboBoxItem Content="1/4"/>
+								<ComboBoxItem Content="1/8"/>
+								<ComboBoxItem Content="1/16"/>
+								<ComboBoxItem Content="1/32"/>
+								<ComboBoxItem Content="1/64"/>
+								<ComboBoxItem Content="1/128"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Resolution:</Label>
+							<ComboBox x:Name="analogInBChannel6Resolution" SelectedIndex="4" SelectionChanged="AnalogInBChannel6Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="8 Bits"/>
+								<ComboBoxItem Content="9 Bits"/>
+								<ComboBoxItem Content="10 Bits"/>
+								<ComboBoxItem Content="11 Bits"/>
+								<ComboBoxItem Content="12 Bits"/>
+								<ComboBoxItem Content="13 Bits"/>
+								<ComboBoxItem Content="14 Bits"/>
+								<ComboBoxItem Content="15 Bits"/>
+								<ComboBoxItem Content="16 Bits"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Range (V):</Label>
+							<ComboBox x:Name="analogInBChannel6Range" SelectedIndex="1" SelectionChanged="AnalogInBChannel6Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="±32"/>
+								<ComboBoxItem Content="±16"/>
+								<ComboBoxItem Content="±8"/>
+								<ComboBoxItem Content="±4"/>
+								<ComboBoxItem Content="±2"/>
+								<ComboBoxItem Content="±1"/>
+								<ComboBoxItem Content="±0.5"/>
+								<ComboBoxItem Content="±0.25"/>
+								<ComboBoxItem Content="±0.125"/>
+								<ComboBoxItem Content="±0.064"/>
+								<ComboBoxItem Content="±0.032"/>
+								<ComboBoxItem Content="±0.016"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Draw Color:</Label>
+							<xctk:ColorPicker x:Name="analogInBChannel6Color" SelectedColor="Aqua" SelectedColorChanged="AnalogInBChannel6Changed" Width="70"></xctk:ColorPicker>
+						</StackPanel>
+					</StackPanel>
+					<Border Grid.Column="7" BorderThickness="1" BorderBrush="DarkGray"/>
+					<StackPanel Grid.Column="7" Margin="5,3,5,3">
+						<Label Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" FontWeight="Bold" Padding="0">Channel 7</Label>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Mode:</Label>
+							<ComboBox x:Name="analogInBChannel7Mode" SelectedIndex="0" SelectionChanged="AnalogInBChannel7Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="OFF"/>
+								<ComboBoxItem Content="DIFF"/>
+								<ComboBoxItem Content="SNG"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Rate Sub-Div:</Label>
+							<ComboBox x:Name="analogInBChannel7RateDiv" SelectedIndex="0" SelectionChanged="AnalogInBChannel7Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="1/1"/>
+								<ComboBoxItem Content="1/2"/>
+								<ComboBoxItem Content="1/4"/>
+								<ComboBoxItem Content="1/8"/>
+								<ComboBoxItem Content="1/16"/>
+								<ComboBoxItem Content="1/32"/>
+								<ComboBoxItem Content="1/64"/>
+								<ComboBoxItem Content="1/128"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Resolution:</Label>
+							<ComboBox x:Name="analogInBChannel7Resolution" SelectedIndex="4" SelectionChanged="AnalogInBChannel7Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="8 Bits"/>
+								<ComboBoxItem Content="9 Bits"/>
+								<ComboBoxItem Content="10 Bits"/>
+								<ComboBoxItem Content="11 Bits"/>
+								<ComboBoxItem Content="12 Bits"/>
+								<ComboBoxItem Content="13 Bits"/>
+								<ComboBoxItem Content="14 Bits"/>
+								<ComboBoxItem Content="15 Bits"/>
+								<ComboBoxItem Content="16 Bits"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Range (V):</Label>
+							<ComboBox x:Name="analogInBChannel7Range" SelectedIndex="1" SelectionChanged="AnalogInBChannel7Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="±32"/>
+								<ComboBoxItem Content="±16"/>
+								<ComboBoxItem Content="±8"/>
+								<ComboBoxItem Content="±4"/>
+								<ComboBoxItem Content="±2"/>
+								<ComboBoxItem Content="±1"/>
+								<ComboBoxItem Content="±0.5"/>
+								<ComboBoxItem Content="±0.25"/>
+								<ComboBoxItem Content="±0.125"/>
+								<ComboBoxItem Content="±0.064"/>
+								<ComboBoxItem Content="±0.032"/>
+								<ComboBoxItem Content="±0.016"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Draw Color:</Label>
+							<xctk:ColorPicker x:Name="analogInBChannel7Color" SelectedColor="Purple" SelectedColorChanged="AnalogInBChannel7Changed" Width="70"></xctk:ColorPicker>
+						</StackPanel>
+					</StackPanel>
+					<Border Grid.Column="8" BorderThickness="1" BorderBrush="DarkGray"/>
+					<StackPanel Grid.Column="8" Margin="5,3,5,3">
+						<Label Margin="0,0,0,3" HorizontalAlignment="Center" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" FontWeight="Bold" Padding="0">Channel 8</Label>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Mode:</Label>
+							<ComboBox x:Name="analogInBChannel8Mode" SelectedIndex="0" SelectionChanged="AnalogInBChannel8Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="OFF"/>
+								<ComboBoxItem Content="DIFF"/>
+								<ComboBoxItem Content="SNG"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Rate Sub-Div:</Label>
+							<ComboBox x:Name="analogInBChannel8RateDiv" SelectedIndex="0" SelectionChanged="AnalogInBChannel8Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="1/1"/>
+								<ComboBoxItem Content="1/2"/>
+								<ComboBoxItem Content="1/4"/>
+								<ComboBoxItem Content="1/8"/>
+								<ComboBoxItem Content="1/16"/>
+								<ComboBoxItem Content="1/32"/>
+								<ComboBoxItem Content="1/64"/>
+								<ComboBoxItem Content="1/128"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Resolution:</Label>
+							<ComboBox x:Name="analogInBChannel8Resolution" SelectedIndex="4" SelectionChanged="AnalogInBChannel8Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="8 Bits"/>
+								<ComboBoxItem Content="9 Bits"/>
+								<ComboBoxItem Content="10 Bits"/>
+								<ComboBoxItem Content="11 Bits"/>
+								<ComboBoxItem Content="12 Bits"/>
+								<ComboBoxItem Content="13 Bits"/>
+								<ComboBoxItem Content="14 Bits"/>
+								<ComboBoxItem Content="15 Bits"/>
+								<ComboBoxItem Content="16 Bits"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Range (V):</Label>
+							<ComboBox x:Name="analogInBChannel8Range" SelectedIndex="1" SelectionChanged="AnalogInBChannel8Changed" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right">
+								<ComboBoxItem Content="±32"/>
+								<ComboBoxItem Content="±16"/>
+								<ComboBoxItem Content="±8"/>
+								<ComboBoxItem Content="±4"/>
+								<ComboBoxItem Content="±2"/>
+								<ComboBoxItem Content="±1"/>
+								<ComboBoxItem Content="±0.5"/>
+								<ComboBoxItem Content="±0.25"/>
+								<ComboBoxItem Content="±0.125"/>
+								<ComboBoxItem Content="±0.064"/>
+								<ComboBoxItem Content="±0.032"/>
+								<ComboBoxItem Content="±0.016"/>
+							</ComboBox>
+						</StackPanel>
+						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
+							<Label Padding="0" Width="80" HorizontalAlignment="Left" VerticalContentAlignment="Center">Draw Color:</Label>
+							<xctk:ColorPicker x:Name="analogInBChannel8Color" SelectedColor="Violet" SelectedColorChanged="AnalogInBChannel8Changed" Width="70"></xctk:ColorPicker>
+						</StackPanel>
 					</StackPanel>
 				</Grid>
 			</TabItem>
@@ -628,19 +1185,19 @@
 						</StackPanel>
 						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
 							<Label Padding="0" Width="90" HorizontalAlignment="Left" VerticalContentAlignment="Center">Offset (mV):</Label>
-							<TextBox x:Name="analogOutAChannel1Offset" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutAChannel1Changed" PreviewTextInput="AnalogOutOffsetValidation" MaxLength="6" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
+							<TextBox x:Name="analogOutAChannel1Offset" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutAChannel1Changed" PreviewTextInput="NumberValidationTextBox" MaxLength="6" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
 						</StackPanel>
 						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
 							<Label Padding="0" Width="90" HorizontalAlignment="Left" VerticalContentAlignment="Center">Frequency (Hz):</Label>
-							<TextBox x:Name="analogOutAChannel1Freq" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutAChannel1Changed" PreviewTextInput="AnalogOutFrequencyValidation" MaxLength="6" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
+							<TextBox x:Name="analogOutAChannel1Freq" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutAChannel1Changed" PreviewTextInput="NumberValidationTextBox" MaxLength="6" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
 						</StackPanel>
 						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
 							<Label Padding="0" Width="90" HorizontalAlignment="Left" VerticalContentAlignment="Center">Amplitude (mV):</Label>
-							<TextBox x:Name="analogOutAChannel1Amp" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutAChannel1Changed" PreviewTextInput="AnalogOutAmplitudeValidation" MaxLength="6" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
+							<TextBox x:Name="analogOutAChannel1Amp" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutAChannel1Changed" PreviewTextInput="NumberValidationTextBox" MaxLength="6" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
 						</StackPanel>
 						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
 							<Label Padding="0" Width="90" HorizontalAlignment="Left" VerticalContentAlignment="Center">Duty Cycle (%):</Label>
-							<TextBox x:Name="analogOutAChannel1DC" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutAChannel1Changed" PreviewTextInput="AnalogOutDCValidation" MaxLength="3" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
+							<TextBox x:Name="analogOutAChannel1DC" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutAChannel1Changed" PreviewTextInput="NumberValidationTextBox" MaxLength="3" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
 						</StackPanel>
 					</StackPanel>
 					<Border Grid.Column="1" BorderThickness="1" BorderBrush="DarkGray"/>
@@ -659,19 +1216,19 @@
 						</StackPanel>
 						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
 							<Label Padding="0" Width="90" HorizontalAlignment="Left" VerticalContentAlignment="Center">Offset (mV):</Label>
-							<TextBox x:Name="analogOutAChannel2Offset" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutAChannel2Changed" PreviewTextInput="AnalogOutOffsetValidation" MaxLength="6" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
+							<TextBox x:Name="analogOutAChannel2Offset" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutAChannel2Changed" PreviewTextInput="NumberValidationTextBox" MaxLength="6" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
 						</StackPanel>
 						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
 							<Label Padding="0" Width="90" HorizontalAlignment="Left" VerticalContentAlignment="Center">Frequency (Hz):</Label>
-							<TextBox x:Name="analogOutAChannel2Freq" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutAChannel2Changed" PreviewTextInput="AnalogOutFrequencyValidation" MaxLength="6" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
+							<TextBox x:Name="analogOutAChannel2Freq" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutAChannel2Changed" PreviewTextInput="NumberValidationTextBox" MaxLength="6" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
 						</StackPanel>
 						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
 							<Label Padding="0" Width="90" HorizontalAlignment="Left" VerticalContentAlignment="Center">Amplitude (mV):</Label>
-							<TextBox x:Name="analogOutAChannel2Amp" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutAChannel2Changed" PreviewTextInput="AnalogOutAmplitudeValidation" MaxLength="6" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
+							<TextBox x:Name="analogOutAChannel2Amp" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutAChannel2Changed" PreviewTextInput="NumberValidationTextBox" MaxLength="6" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
 						</StackPanel>
 						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
 							<Label Padding="0" Width="90" HorizontalAlignment="Left" VerticalContentAlignment="Center">Duty Cycle (%):</Label>
-							<TextBox x:Name="analogOutAChannel2DC" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutAChannel2Changed" PreviewTextInput="AnalogOutDCValidation" MaxLength="3" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
+							<TextBox x:Name="analogOutAChannel2DC" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutAChannel2Changed" PreviewTextInput="NumberValidationTextBox" MaxLength="3" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
 						</StackPanel>
 					</StackPanel>
 					<Border Grid.Column="2" BorderThickness="1" BorderBrush="DarkGray"/>
@@ -690,19 +1247,19 @@
 						</StackPanel>
 						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
 							<Label Padding="0" Width="90" HorizontalAlignment="Left" VerticalContentAlignment="Center">Offset (mV):</Label>
-							<TextBox x:Name="analogOutBChannel1Offset" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutBChannel1Changed" PreviewTextInput="AnalogOutOffsetValidation" MaxLength="6" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
+							<TextBox x:Name="analogOutBChannel1Offset" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutBChannel1Changed" PreviewTextInput="NumberValidationTextBox" MaxLength="6" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
 						</StackPanel>
 						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
 							<Label Padding="0" Width="90" HorizontalAlignment="Left" VerticalContentAlignment="Center">Frequency (Hz):</Label>
-							<TextBox x:Name="analogOutBChannel1Freq" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutBChannel1Changed" PreviewTextInput="AnalogOutFrequencyValidation" MaxLength="6" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
+							<TextBox x:Name="analogOutBChannel1Freq" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutBChannel1Changed" PreviewTextInput="NumberValidationTextBox" MaxLength="6" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
 						</StackPanel>
 						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
 							<Label Padding="0" Width="90" HorizontalAlignment="Left" VerticalContentAlignment="Center">Amplitude (mV):</Label>
-							<TextBox x:Name="analogOutBChannel1Amp" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutBChannel1Changed" PreviewTextInput="AnalogOutAmplitudeValidation" MaxLength="6" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
+							<TextBox x:Name="analogOutBChannel1Amp" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutBChannel1Changed" PreviewTextInput="NumberValidationTextBox" MaxLength="6" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
 						</StackPanel>
 						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
 							<Label Padding="0" Width="90" HorizontalAlignment="Left" VerticalContentAlignment="Center">Duty Cycle (%):</Label>
-							<TextBox x:Name="analogOutBChannel1DC" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutBChannel1Changed" PreviewTextInput="AnalogOutDCValidation" MaxLength="3" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
+							<TextBox x:Name="analogOutBChannel1DC" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutBChannel1Changed" PreviewTextInput="NumberValidationTextBox" MaxLength="3" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
 						</StackPanel>
 					</StackPanel>
 					<Border Grid.Column="3" BorderThickness="1" BorderBrush="DarkGray"/>
@@ -721,19 +1278,19 @@
 						</StackPanel>
 						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
 							<Label Padding="0" Width="90" HorizontalAlignment="Left" VerticalContentAlignment="Center">Offset (mV):</Label>
-							<TextBox x:Name="analogOutBChannel2Offset" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutBChannel2Changed" PreviewTextInput="AnalogOutOffsetValidation" MaxLength="6" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
+							<TextBox x:Name="analogOutBChannel2Offset" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutBChannel2Changed" PreviewTextInput="NumberValidationTextBox" MaxLength="6" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
 						</StackPanel>
 						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
 							<Label Padding="0" Width="90" HorizontalAlignment="Left" VerticalContentAlignment="Center">Frequency (Hz):</Label>
-							<TextBox x:Name="analogOutBChannel2Freq" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutBChannel2Changed" PreviewTextInput="AnalogOutFrequencyValidation" MaxLength="6" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
+							<TextBox x:Name="analogOutBChannel2Freq" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutBChannel2Changed" PreviewTextInput="NumberValidationTextBox" MaxLength="6" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
 						</StackPanel>
 						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
 							<Label Padding="0" Width="90" HorizontalAlignment="Left" VerticalContentAlignment="Center">Amplitude (mV):</Label>
-							<TextBox x:Name="analogOutBChannel2Amp" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutBChannel2Changed" PreviewTextInput="AnalogOutAmplitudeValidation" MaxLength="6" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
+							<TextBox x:Name="analogOutBChannel2Amp" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutBChannel2Changed" PreviewTextInput="NumberValidationTextBox" MaxLength="6" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
 						</StackPanel>
 						<StackPanel Orientation="Horizontal" Margin="0,0,0,3">
 							<Label Padding="0" Width="90" HorizontalAlignment="Left" VerticalContentAlignment="Center">Duty Cycle (%):</Label>
-							<TextBox x:Name="analogOutBChannel2DC" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutBChannel2Changed" PreviewTextInput="AnalogOutDCValidation" MaxLength="3" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
+							<TextBox x:Name="analogOutBChannel2DC" Text="0" TextWrapping="Wrap" TextChanged="AnalogOutBChannel2Changed" PreviewTextInput="NumberValidationTextBox" MaxLength="3" Width="70" HorizontalAlignment="Left" HorizontalContentAlignment="Right"/>
 						</StackPanel>
 					</StackPanel>
 				</Grid>
