@@ -1334,10 +1334,14 @@
 			<WpfPlot Name="CartesianChart" />
 
 			<StackPanel Margin="0,0,5,0" HorizontalAlignment="Right" VerticalAlignment="Top">
-				<Label x:Name="stdCH1Label" Content="CH1 Std: 0.00" Foreground="Red" Width="100" Padding="0,0,0,0"/>
-				<Label x:Name="stdCH3Label" Content="CH3 Std: 0.00" Foreground="Green" Width="100" Padding="0,0,0,0"/>
-				<Label x:Name="stdCH5Label" Content="CH5 Std: 0.00" Foreground="Blue" Width="100" Padding="0,0,0,0"/>
-				<Label x:Name="stdCH7Label" Content="CH7 Std: 0.00" Foreground="Purple" Width="100" Padding="0,0,0,0"/>
+				<Label x:Name="stdCH1Label" Content="CH1 Avg: 0.00; Std: 0.00" Padding="0" Visibility="Collapsed"/>
+				<Label x:Name="stdCH2Label" Content="CH2 Avg: 0.00; Std: 0.00" Padding="0" Visibility="Collapsed"/>
+				<Label x:Name="stdCH3Label" Content="CH3 Avg: 0.00; Std: 0.00" Padding="0" Visibility="Collapsed"/>
+				<Label x:Name="stdCH4Label" Content="CH4 Avg: 0.00; Std: 0.00" Padding="0" Visibility="Collapsed"/>
+				<Label x:Name="stdCH5Label" Content="CH5 Avg: 0.00; Std: 0.00" Padding="0" Visibility="Collapsed"/>
+				<Label x:Name="stdCH6Label" Content="CH6 Avg: 0.00; Std: 0.00" Padding="0" Visibility="Collapsed"/>
+				<Label x:Name="stdCH7Label" Content="CH7 Avg: 0.00; Std: 0.00" Padding="0" Visibility="Collapsed"/>
+				<Label x:Name="stdCH8Label" Content="CH8 Avg: 0.00; Std: 0.00" Padding="0" Visibility="Collapsed"/>
 			</StackPanel>
 		</Grid>
 

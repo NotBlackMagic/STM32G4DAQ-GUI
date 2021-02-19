@@ -157,26 +157,50 @@ namespace STM32G4DAQ {
 					Array.Copy(temp, analogInAData[ch - 1], graphPoints);
 
 					//Calculate Standart Deviation in ADC counts, raw mode
-					int[] rawValues = daq.ReadAnalogIn(ch, graphPoints);
+					//int[] rawValues = daq.ReadAnalogIn(ch, graphPoints);
 
-					double avg = rawValues.Average();
+					double avg = temp.Average();
 					double sumSquares = 0;
-					for (int i = 0; i < rawValues.Length; i++) {
-						sumSquares += (rawValues[i] - avg) * (rawValues[i] - avg);
+					for (int i = 0; i < temp.Length; i++) {
+						sumSquares += (temp[i] - avg) * (temp[i] - avg);
 					}
-					double stdDev = Math.Sqrt(sumSquares / rawValues.Length);
+					double stdDev = Math.Sqrt(sumSquares / temp.Length);
+
+					string unit = " V";
+					if(Math.Abs(avg) < 0.001) {
+						avg = avg * 1000000;
+						stdDev = stdDev * 1000000;
+						unit = " uV";
+					}
+					else if(Math.Abs(avg) < 1) {
+						avg = avg * 1000;
+						stdDev = stdDev * 1000;
+						unit = " mV";
+					}
 
 					if (ch == 1) {
-						stdCH1Label.Content = "CH1 Std: " + stdDev.ToString("F2");
+						stdCH1Label.Content = "CH1 Avg: " + avg.ToString("00.00") + unit + "; Std: " + stdDev.ToString("00.00") + unit;
+					}
+					else if(ch == 2) {
+						stdCH2Label.Content = "CH2 Avg: " + avg.ToString("00.00") + unit + "; Std: " + stdDev.ToString("00.00") + unit;
 					}
 					else if (ch == 3) {
-						stdCH3Label.Content = "CH3 Std: " + stdDev.ToString("F2");
+						stdCH3Label.Content = "CH3 Avg: " + avg.ToString("00.00") + unit + "; Std: " + stdDev.ToString("00.00") + unit;
+					}
+					else if (ch == 4) {
+						stdCH4Label.Content = "CH4 Avg: " + avg.ToString("00.00") + unit + "; Std: " + stdDev.ToString("00.00") + unit;
 					}
 					else if (ch == 5) {
-						stdCH5Label.Content = "CH5 Std: " + stdDev.ToString("F2");
+						stdCH5Label.Content = "CH5 Avg: " + avg.ToString("00.00") + unit + "; Std: " + stdDev.ToString("00.00") + unit;
+					}
+					else if (ch == 6) {
+						stdCH6Label.Content = "CH6 Avg: " + avg.ToString("00.00") + unit + "; Std: " + stdDev.ToString("00.00") + unit;
 					}
 					else if (ch == 7) {
-						stdCH7Label.Content = "CH7 Std: " + stdDev.ToString("F2");
+						stdCH7Label.Content = "CH7 Avg: " + avg.ToString("00.00") + unit + "; Std: " + stdDev.ToString("00.00") + unit;
+					}
+					else if (ch == 8) {
+						stdCH8Label.Content = "CH8 Avg: " + avg.ToString("00.00") + unit + "; Std: " + stdDev.ToString("00.00") + unit;
 					}
 				}
 			}
@@ -235,8 +259,7 @@ namespace STM32G4DAQ {
 				return;
 			}
 
-			int sampligRate = (int)(250000.0 / (1 + analogInASamplerate.SelectedIndex));
-			daq.SetAnalogInSampligRate(1, sampligRate);
+			daq.SetAnalogInSampligRate(1, (AnalogInSampleRate)analogInASamplerate.SelectedIndex);
 		}
 
 		private void AnalogInBChanged(object sender, RoutedEventArgs e) {
@@ -244,8 +267,7 @@ namespace STM32G4DAQ {
 				return;
 			}
 
-			int sampligRate = (int)(250000.0 / (1 + analogInBSamplerate.SelectedIndex));
-			daq.SetAnalogInSampligRate(9, sampligRate);
+			daq.SetAnalogInSampligRate(9, (AnalogInSampleRate)analogInBSamplerate.SelectedIndex);
 		}
 
 		private void AnalogInAChannel1Changed(object sender, RoutedEventArgs e) {
@@ -264,6 +286,8 @@ namespace STM32G4DAQ {
 				}
 			}
 
+			maxRange = maxRange / 4;
+
 			System.Drawing.Color drawColor = System.Drawing.Color.FromArgb(analogInAChannel1Color.SelectedColor.Value.A, analogInAChannel1Color.SelectedColor.Value.R, analogInAChannel1Color.SelectedColor.Value.G, analogInAChannel1Color.SelectedColor.Value.B);
 			//Func<double, string> formatFunc = (x) => string.Format("{0:0.000}", x);
 			CartesianChart.plt.Remove(plottableSignalsA[0]);
@@ -271,9 +295,15 @@ namespace STM32G4DAQ {
 				plottableSignalsA[0] = CartesianChart.plt.PlotSignal(analogInAData[0], label: "CH1A", color: drawColor, lineWidth: 2);
 
 				CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
+
+				stdCH1Label.Foreground = new SolidColorBrush(analogInAChannel1Color.SelectedColor.Value);
+				stdCH1Label.Visibility = Visibility.Visible;
+			}
+			else {
+				stdCH1Label.Visibility = Visibility.Collapsed;
 			}
 
-			daq.AddAnalogIn(1, range, (AnalogInMode)analogInAChannel1Mode.SelectedIndex);
+			daq.AddAnalogIn(1, (AnalogInRange)analogInAChannel1Range.SelectedIndex, (AnalogInMode)analogInAChannel1Mode.SelectedIndex);
 		}
 
 		private void AnalogInAChannel2Changed(object sender, RoutedEventArgs e) {
@@ -299,9 +329,15 @@ namespace STM32G4DAQ {
 				plottableSignalsA[1] = CartesianChart.plt.PlotSignal(analogInAData[1], label: "CH2A", color: drawColor, lineWidth: 2);
 
 				CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
+
+				stdCH2Label.Foreground = new SolidColorBrush(analogInAChannel2Color.SelectedColor.Value);
+				stdCH2Label.Visibility = Visibility.Visible;
+			}
+			else {
+				stdCH2Label.Visibility = Visibility.Collapsed;
 			}
 
-			daq.AddAnalogIn(2, range, (AnalogInMode)analogInAChannel1Mode.SelectedIndex);
+			daq.AddAnalogIn(2, (AnalogInRange)analogInAChannel2Range.SelectedIndex, (AnalogInMode)analogInAChannel1Mode.SelectedIndex);
 		}
 
 		private void AnalogInAChannel3Changed(object sender, RoutedEventArgs e) {
@@ -327,9 +363,15 @@ namespace STM32G4DAQ {
 				plottableSignalsA[2] = CartesianChart.plt.PlotSignal(analogInAData[2], label: "CH3A", color: drawColor, lineWidth: 2);
 
 				CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
+
+				stdCH3Label.Foreground = new SolidColorBrush(analogInAChannel3Color.SelectedColor.Value);
+				stdCH3Label.Visibility = Visibility.Visible;
+			}
+			else {
+				stdCH3Label.Visibility = Visibility.Collapsed;
 			}
 
-			daq.AddAnalogIn(3, range, (AnalogInMode)analogInAChannel3Mode.SelectedIndex);
+			daq.AddAnalogIn(3, (AnalogInRange)analogInAChannel3Range.SelectedIndex, (AnalogInMode)analogInAChannel3Mode.SelectedIndex);
 		}
 
 		private void AnalogInAChannel4Changed(object sender, RoutedEventArgs e) {
@@ -355,9 +397,15 @@ namespace STM32G4DAQ {
 				plottableSignalsA[3] = CartesianChart.plt.PlotSignal(analogInAData[3], label: "CH4A", color: drawColor, lineWidth: 2);
 
 				CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
+
+				stdCH4Label.Foreground = new SolidColorBrush(analogInAChannel4Color.SelectedColor.Value);
+				stdCH4Label.Visibility = Visibility.Visible;
+			}
+			else {
+				stdCH4Label.Visibility = Visibility.Collapsed;
 			}
 
-			daq.AddAnalogIn(4, range, (AnalogInMode)analogInAChannel3Mode.SelectedIndex);
+			daq.AddAnalogIn(4, (AnalogInRange)analogInAChannel4Range.SelectedIndex, (AnalogInMode)analogInAChannel3Mode.SelectedIndex);
 		}
 
 		private void AnalogInAChannel5Changed(object sender, RoutedEventArgs e) {
@@ -383,9 +431,15 @@ namespace STM32G4DAQ {
 				plottableSignalsA[4] = CartesianChart.plt.PlotSignal(analogInAData[4], label: "CH5A", color: drawColor, lineWidth: 2);
 
 				CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
+
+				stdCH5Label.Foreground = new SolidColorBrush(analogInAChannel5Color.SelectedColor.Value);
+				stdCH5Label.Visibility = Visibility.Visible;
+			}
+			else {
+				stdCH5Label.Visibility = Visibility.Collapsed;
 			}
 
-			daq.AddAnalogIn(5, range, (AnalogInMode)analogInAChannel5Mode.SelectedIndex);
+			daq.AddAnalogIn(5, (AnalogInRange)analogInAChannel5Range.SelectedIndex, (AnalogInMode)analogInAChannel5Mode.SelectedIndex);
 		}
 
 		private void AnalogInAChannel6Changed(object sender, RoutedEventArgs e) {
@@ -411,9 +465,15 @@ namespace STM32G4DAQ {
 				plottableSignalsA[5] = CartesianChart.plt.PlotSignal(analogInAData[5], label: "CH6A", color: drawColor, lineWidth: 2);
 
 				CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
+
+				stdCH6Label.Foreground = new SolidColorBrush(analogInAChannel6Color.SelectedColor.Value);
+				stdCH6Label.Visibility = Visibility.Visible;
+			}
+			else {
+				stdCH6Label.Visibility = Visibility.Collapsed;
 			}
 
-			daq.AddAnalogIn(6, range, (AnalogInMode)analogInAChannel5Mode.SelectedIndex);
+			daq.AddAnalogIn(6, (AnalogInRange)analogInAChannel6Range.SelectedIndex, (AnalogInMode)analogInAChannel5Mode.SelectedIndex);
 		}
 
 		private void AnalogInAChannel7Changed(object sender, RoutedEventArgs e) {
@@ -439,9 +499,15 @@ namespace STM32G4DAQ {
 				plottableSignalsA[6] = CartesianChart.plt.PlotSignal(analogInAData[6], label: "CH7A", color: drawColor, lineWidth: 2);
 
 				CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
+
+				stdCH7Label.Foreground = new SolidColorBrush(analogInAChannel7Color.SelectedColor.Value);
+				stdCH7Label.Visibility = Visibility.Visible;
+			}
+			else {
+				stdCH7Label.Visibility = Visibility.Collapsed;
 			}
 
-			daq.AddAnalogIn(7, range, (AnalogInMode)analogInAChannel7Mode.SelectedIndex);
+			daq.AddAnalogIn(7, (AnalogInRange)analogInAChannel7Range.SelectedIndex, (AnalogInMode)analogInAChannel7Mode.SelectedIndex);
 		}
 
 		private void AnalogInAChannel8Changed(object sender, RoutedEventArgs e) {
@@ -467,9 +533,15 @@ namespace STM32G4DAQ {
 				plottableSignalsA[7] = CartesianChart.plt.PlotSignal(analogInAData[7], label: "CH8A", color: drawColor, lineWidth: 2);
 
 				CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
+
+				stdCH8Label.Foreground = new SolidColorBrush(analogInAChannel8Color.SelectedColor.Value);
+				stdCH8Label.Visibility = Visibility.Visible;
+			}
+			else {
+				stdCH8Label.Visibility = Visibility.Collapsed;
 			}
 
-			daq.AddAnalogIn(8, range, (AnalogInMode)analogInAChannel7Mode.SelectedIndex);
+			daq.AddAnalogIn(8, (AnalogInRange)analogInAChannel8Range.SelectedIndex, (AnalogInMode)analogInAChannel7Mode.SelectedIndex);
 		}
 
 		private void AnalogInBChannel1Changed(object sender, RoutedEventArgs e) {
@@ -497,7 +569,7 @@ namespace STM32G4DAQ {
 				CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
 			}
 
-			daq.AddAnalogIn(8+1, range, (AnalogInMode)analogInBChannel1Mode.SelectedIndex);
+			daq.AddAnalogIn(8+1, (AnalogInRange)analogInBChannel1Range.SelectedIndex, (AnalogInMode)analogInBChannel1Mode.SelectedIndex);
 		}
 
 		private void AnalogInBChannel2Changed(object sender, RoutedEventArgs e) {
@@ -525,7 +597,7 @@ namespace STM32G4DAQ {
 				CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
 			}
 
-			daq.AddAnalogIn(8+2, range, (AnalogInMode)analogInBChannel1Mode.SelectedIndex);
+			daq.AddAnalogIn(8+2, (AnalogInRange)analogInBChannel2Range.SelectedIndex, (AnalogInMode)analogInBChannel1Mode.SelectedIndex);
 		}
 
 		private void AnalogInBChannel3Changed(object sender, RoutedEventArgs e) {
@@ -553,7 +625,7 @@ namespace STM32G4DAQ {
 				CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
 			}
 
-			daq.AddAnalogIn(8+3, range, (AnalogInMode)analogInBChannel3Mode.SelectedIndex);
+			daq.AddAnalogIn(8+3, (AnalogInRange)analogInBChannel3Range.SelectedIndex, (AnalogInMode)analogInBChannel3Mode.SelectedIndex);
 		}
 
 		private void AnalogInBChannel4Changed(object sender, RoutedEventArgs e) {
@@ -581,7 +653,7 @@ namespace STM32G4DAQ {
 				CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
 			}
 
-			daq.AddAnalogIn(8+4, range, (AnalogInMode)analogInBChannel3Mode.SelectedIndex);
+			daq.AddAnalogIn(8+4, (AnalogInRange)analogInBChannel4Range.SelectedIndex, (AnalogInMode)analogInBChannel3Mode.SelectedIndex);
 		}
 
 		private void AnalogInBChannel5Changed(object sender, RoutedEventArgs e) {
@@ -609,7 +681,7 @@ namespace STM32G4DAQ {
 				CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
 			}
 
-			daq.AddAnalogIn(8+5, range, (AnalogInMode)analogInBChannel5Mode.SelectedIndex);
+			daq.AddAnalogIn(8+5, (AnalogInRange)analogInBChannel5Range.SelectedIndex, (AnalogInMode)analogInBChannel5Mode.SelectedIndex);
 		}
 
 		private void AnalogInBChannel6Changed(object sender, RoutedEventArgs e) {
@@ -637,7 +709,7 @@ namespace STM32G4DAQ {
 				CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
 			}
 
-			daq.AddAnalogIn(8+6, range, (AnalogInMode)analogInBChannel5Mode.SelectedIndex);
+			daq.AddAnalogIn(8+6, (AnalogInRange)analogInBChannel6Range.SelectedIndex, (AnalogInMode)analogInBChannel5Mode.SelectedIndex);
 		}
 
 		private void AnalogInBChannel7Changed(object sender, RoutedEventArgs e) {
@@ -665,7 +737,7 @@ namespace STM32G4DAQ {
 				CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
 			}
 
-			daq.AddAnalogIn(8+7, range, (AnalogInMode)analogInBChannel7Mode.SelectedIndex);
+			daq.AddAnalogIn(8+7, (AnalogInRange)analogInBChannel7Range.SelectedIndex, (AnalogInMode)analogInBChannel7Mode.SelectedIndex);
 		}
 
 		private void AnalogInBChannel8Changed(object sender, RoutedEventArgs e) {
@@ -693,7 +765,7 @@ namespace STM32G4DAQ {
 				CartesianChart.plt.Axis(y1: -maxRange, y2: maxRange);
 			}
 
-			daq.AddAnalogIn(8+8, range, (AnalogInMode)analogInBChannel7Mode.SelectedIndex);
+			daq.AddAnalogIn(8+8, (AnalogInRange)analogInBChannel8Range.SelectedIndex, (AnalogInMode)analogInBChannel7Mode.SelectedIndex);
 		}
 
 

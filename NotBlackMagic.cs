@@ -5,13 +5,43 @@ using System.Reflection.Emit;
 using System.Runtime.InteropServices.ComTypes;
 using System.Threading;
 
-
 namespace NotBlackMagic {
 	public enum AnalogInMode {
 		Mode_Off,
 		Mode_Diff,
 		Mode_Single,
 	}
+
+	public enum AnalogInSampleRate {
+		SampleRate_250k,
+		SampleRate_125k,
+		SampleRate_62k50,
+		SampleRate_31k25,
+		SampleRate_15k63,
+		SampleRate_7k81,
+		SampleRate_3k91,
+		SampleRate_1k95,
+		SampleRate_0k98,
+		SampleRate_0k49,
+		SampleRate_0k24,
+		SampleRate_0k12
+	}
+
+	public enum AnalogInRange {
+		InputRange_32,          //Analog Input Amplifer Gain of: 1/16
+		InputRange_16,           //Analog Input Amplifer Gain of: 1/8
+		InputRange_8,            //Analog Input Amplifer Gain of: 1/4
+		InputRange_4,            //Analog Input Amplifer Gain of: 1/2
+		InputRange_2,            //Analog Input Amplifer Gain of: 1
+		InputRange_1,            //Analog Input Amplifer Gain of: 2
+		InputRange_500m,         //Analog Input Amplifer Gain of: 4
+		InputRange_250m,         //Analog Input Amplifer Gain of: 8
+		InputRange_125m,         //Analog Input Amplifer Gain of: 16
+		InputRange_62m5,         //Analog Input Amplifer Gain of: 32
+		InputRange_31m25,        //Analog Input Amplifer Gain of: 64
+		InputRange_15m625        //Analog Input Amplifer Gain of: 128
+	}
+
 	static class Opcodes {
 		public const byte reset = 0x01;
 		public const byte connect = 0x02;
@@ -82,13 +112,11 @@ namespace NotBlackMagic {
 		volatile int index = 0;
 		volatile int[] values = new int[1024];
 
-		public AnalogInChannel(int channel, float range, AnalogInMode mode) {
+		public AnalogInChannel(int channel, AnalogInRange range, AnalogInMode mode) {
 			this.channel = channel;
 			this.mode = mode;
 
-			double g = Math.Log2(vRef / range);
-
-			this.gain = (float)Math.Pow(2, Math.Round(g));
+			this.gain = (float)Math.Pow(2, ((int)range - 4));
 		}
 
 		public void AddValues(int[] values) {
@@ -324,7 +352,7 @@ namespace NotBlackMagic {
 			}
 		}
 
-		public void AddAnalogIn(int channel, float range, AnalogInMode mode) {
+		public void AddAnalogIn(int channel, AnalogInRange range, AnalogInMode mode) {
 			analogInChannels[channel - 1] = new AnalogInChannel(channel, range, mode);
 
 			//Set DAQ settings: Set Analog In Block
@@ -346,7 +374,7 @@ namespace NotBlackMagic {
 			data[1] = (byte)mode;               //Channel Mode, Differential or Single Ended
 			data[2] = (byte)nChannels;          //Set Sampling Rate/Time division
 			data[3] = 4;                        //Set Resolution
-			data[4] = (byte)(3 + (int)Math.Ceiling(Math.Log2(2.048 / range)));  //Set Gain
+			data[4] = (byte)(range);			//Set Gain
 
 			if (channel <= (analogInChannels.Length / 2)) {
 				data[0] = (byte)channel;            //To set channel
@@ -358,11 +386,9 @@ namespace NotBlackMagic {
 			} 
 		}
 
-		public void SetAnalogInSampligRate(int channel, int samplingRate) {
-			int rate = (int)((250000.0 / samplingRate) - 1.0);
-
+		public void SetAnalogInSampligRate(int channel, AnalogInSampleRate samplingRate) {
 			byte[] data = new byte[2];
-			data[0] = (byte)rate;		//Set Sample Rate
+			data[0] = (byte)samplingRate;		//Set Sample Rate
 			data[1] = 0;                //Set Scale
 			if (channel <= (analogInChannels.Length / 2)) {
 				USBWrite(Opcodes.setAnalogInA, data);
